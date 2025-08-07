@@ -4,9 +4,7 @@ TSU, a 3270 BBS
 
 This is the same code that runs moshix' Forum3270 3270 terminal BBS. 
 
-It is a BBS / Productivity Suite for users on 3270 terminals. It's written in Go language and is made to compile with Go version 1.17 and up. 
-
-It uses minimum resources. For up to 50 concurrent users, it only uses 25MB (no GB...) of memory. The system has seen upwards of 150 concurrent users with 64MB of memory used. So, you only need a small server to host your own 3270 BBS. 
+It uses minimum resources. For up to 50 concurrent users, it only uses 25MB (not GB...) of memory. The system has seen upwards of 150 concurrent users with 64MB of memory used. So, you only need a small server to host your own 3270 BBS. A Rapsberry Pi, even an old one, is perfectly fine, as long as it's 64bit. 
 
 All data is stored in an SQLite3 database called tsu.db. You can run it in WAL mode or in single user mode. We recommend WAL for performance reasons, but you will need a matching database backup strategy. 
 
