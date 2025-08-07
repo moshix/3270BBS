@@ -101,9 +101,8 @@ Configuration of the BBS
 Add the following parameters to your tsu.cnf file to configure the FTP server.  
 The following **values are just examples** and you should change them to your needs: 
 ```
-# TLS ports
 # Server settings
-#
+# (c) 2025 by Moshix. All rights reserved. 
 # bbs_name is the name of your BBS, up to 10 characters wide only!
 bbs_name=My3270BBS
 
@@ -128,7 +127,7 @@ mvs_address=localhost # for forwarding MVS connectiong
 mvs_port=1111         # port
 
 start_FTPD=no       # start ftpd?
-start_proxy3270=yes # start proxy to mvs or VM?
+start_proxy3270=no # start proxy to mvs or VM?
 start_HTTPD=no      # start web server?
 
 # ssh server settings
@@ -180,7 +179,9 @@ Have a look at the ./essentials_scripts directory. It has some SQL scripts that 
   
 If you enable FTP, then users can upload notes to their NOTES directly, or also download them. This way they can edit longer notes and then upload them with FTP. Same wth HTTP. 
   
-From Notes, then users can post a note to Topics. 
+From Notes, then users can post a note to Topics.   
+
+Generally, the **httpd should not be opened to the public**, it's meant more for the admin.
 
 Admin Only Panels
 -----------------
