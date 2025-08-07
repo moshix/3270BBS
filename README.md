@@ -216,6 +216,10 @@ Same for PROXY, HTTPD, TN3270TLS, TN3270
 Final Notes
 -----------
 
+The code consits of roughly 40,000 lines of Go language. I wrote it all myself, and if you don't like this app, I am the only one to blame, no one else. 
+
+The library I use is [go3270](https://github.com/racingsmars/go3270) by the genial #racingmars. 
+
 This BBS application is made available in binary form only, strictly as is. It is provided without warranties of any kind, either express or implied, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose.
 
 The developers assume no responsibility or liability for any direct, indirect, incidental, or consequential damages that may result from the use, misuse, or inability to use this software. You are using this application at your own risk.
