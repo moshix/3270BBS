@@ -115,57 +115,25 @@ sshd_port=3296
 Installation And Start
 ----------------------
 
-##Requirements
+1. Download the binary for Linux or Windows for x8664 or for ARM64. 
 
-- **Go compiler version 1.17.0** is required to build and run this application.  1.21.0 is the recommended and tested version. You can download Go from https://golang.org/dl/
 
-##Go Module Dependencies
 
-The following Go modules are required (see go.mod):
 
-```
-require (
-    github.com/fclairamb/ftpserverlib v0.25.0
-    github.com/gorilla/mux v1.8.1
-    github.com/gorilla/sessions v1.4.0
-    github.com/mattn/go-sqlite3 v1.14.27
-    github.com/piquette/finance-go v1.1.0
-    github.com/racingmars/go3270 v0.9.2
-    github.com/spf13/afero v1.14.0
-)
-
-require (
-    github.com/fclairamb/go-log v0.5.0 // indirect
-    github.com/gorilla/securecookie v1.1.2 // indirect
-    github.com/shopspring/decimal v0.0.0-20180709203117-cd690d0c9e24 // indirect
-    golang.org/x/net v0.40.0 // indirect
-    golang.org/x/sys v0.33.0 // indirect
-    golang.org/x/text v0.25.0 // indirect
-)
-
-// Use the fork of finance-go that has fixes for the recent Yahoo Finance API changes
-replace github.com/piquette/finance-go => github.com/psanford/finance-go v0.0.0-20250222221941-906a725c60a0
-```
-
-##Building
-Option 1: run the INSTALL.bash script which will check your environment, create your database, check your configuration script and create the two minimum required accounts (admin and reply). 
-
-Option 2: 
-
-**Run the create_tsudb.sh script**. This will create tsu.db with 2 users admin/admin and noreply/noreply.  You must change these passwords when you log in as admin the first time. 
+2. **Run the create_tsudb.sh script**. This will create tsu.db with 2 users admin/admin and noreply/noreply.  You must change these passwords when you log in as admin the first time. 
 
 The first one allows you to log in and control your BBS and set other users to admin thru the admin_users, admin_topics, admin_posts panels. Admin users can also start and stop the various servers (tn3270, tn3270tls, FTPD, HTTPD, PROXY3270) from SDSF and from the console. 
   
-Make sure to change the passwords to admin and noreply before releasing to your public. 
 
 
-After either Option 1, or Option2:
   
-Create and edit tsu.greet which will be sent to all new users. 
+3. Create and edit tsu.greet which will be sent to all new users. 
   
-Start the BBS with the provided script start_tsu.sh, you should probably tee the log into a log file.
+4. Start the BBS with the provided script start_tsu.sh, you should probably tee the log into a log file.
 
-Announce your new BBS, and Bob is your uncle. 
+5. Announce your new BBS, and Bob is your uncle. **Make sure to report your BBS here because I will link to all known 3270 BBS instances out there from this page.**
+
+
 
 Operation of the BBS, User and Content Management
 -------------------------------------------------
@@ -178,7 +146,7 @@ Users can also delete their own account fromt the 0 Edit Profile option in the m
 
 There is a script to prune users who have not logged in for more than X days. Pruning does not remove their posts or topics, but does remove their messages from the database. The script is called remove_old_users.bash. 
 
- A dictionary is provided for the spell checker in the Editor and in the chat applets. If you need to insert more words into the dictionary, use the script insert_to_dictionary.bash.
+A dictionary is provided for the spell checker in the Editor and in the chat applets. If you need to insert more words into the dictionary, use the script insert_to_dictionary.bash.
 
 Finally there is a script import_calendar.sh to import .ics files into an individual calendar, if you want your Google calendar or whatever to be also featured in in the BBS 
 
@@ -208,10 +176,8 @@ SSH access
 ----------
 Configure the port at which the SSHD internal server will listen for users. Users must already be registered to be able to use ssh access. 
 
-
 SDSF Commands
 ------------
-
 In the SDSF Activity screen, admins can issue the following commands:
 
 'P FTPD       - Stop the FTPD server'  
