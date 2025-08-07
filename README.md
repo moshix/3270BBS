@@ -41,13 +41,13 @@ Features
 | Updating clock with seeing eye and IBM logo      | :white_check_mark: |
 | Hot air balloon game                             | :white_check_mark: |
 | Blackjack game                                   | :white_check_mark: |
+| Wordle in English/Italian/German                 | :white_check_mark: |
 | TSO command line with several utilities          | :white_check_mark: |
 | Log viewer                                       | :white_check_mark: |
 | TLS and TN3270 listeners                         | :white_check_mark: |
 | FTPD server and HTTPD server                     | :white_check_mark: |
 | Proxy3270 server to other mainframes             | :white_check_mark: |
 | Console view                                     | :white_check_mark: |
-| Log view                                         | :white_check_mark: |
 | Forex updated table                              | :white_check_mark: |
 | Stocks view                                      | :white_check_mark: |
 | All Seeing Eye from clock view                   | :white_check_mark: |
