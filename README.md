@@ -100,7 +100,9 @@ The editor function keys available are:
 
 Configuration of the BBS
 ------------------------
-Add the following parameters to your **tsu.cnf** file to configure your 3270BBS.  
+Add the following parameters to your **tsu.cnf** file to configure your 3270BBS.The 3270BBS application **needs*
+tsu.cnf to start up properly. So, you must create teh tsu.cnf, even if you just take the example below to get started fast. 
+  
 The following **values are just examples** and you should change them to your needs: 
 ```
 # Server settings
