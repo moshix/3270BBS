@@ -139,7 +139,7 @@ sshd_port=3296
 Installation And Start
 ----------------------
 
-1. Download the [binary for Macos, Linux 64amd and 64arm, or Windowze](https://github.com/moshix/3270BBS/releases/tag/26.7).
+1. Download the [binary for Macos, Linux 64amd and 64arm and s390x, FreeBSD, NetBSD, or -if you must - Windowze](https://github.com/moshix/3270BBS/releases/tag/26.7).
 
 
 2. **Run the create_tsudb.sh script**. This will create tsu.db with 2 users admin/admin and noreply/noreply.  You must change these passwords when you log in as admin the first time. 
