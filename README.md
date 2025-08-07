@@ -148,7 +148,7 @@ Option 1: run the INSTALL.bash script which will check your environment, create 
 
 Option 2: 
 
-**Run the create_tsudb.sh script**. This will create tsu.db with 2 users admin/admin and noreply/noreply.   
+**Run the create_tsudb.sh script**. This will create tsu.db with 2 users admin/admin and noreply/noreply.  You must change these passwords when you log in as admin the first time. 
 
 The first one allows you to log in and control your BBS and set other users to admin thru the admin_users, admin_topics, admin_posts panels. Admin users can also start and stop the various servers (tn3270, tn3270tls, FTPD, HTTPD, PROXY3270) from SDSF and from the console. 
   
@@ -186,18 +186,22 @@ If you enable FTP, then users can upload notes to their NOTES directly, or also 
 
 From Notes, then users can post a note to Topics. 
 
-##Admin Only Panels
+Admin Only Panels
+-----------------
 - LOG command from main menu
 - F4 from SDSF
 - start and stop components from the MVS Console in Extended Menu
 
-##Proxying to another mainframe
+Proxying to another mainframe
+-----------------------------
 3270 BBS can proxy users to another mainframe if you added it to the tsu.cnf file and if you enable the PROXY server from the tsu.cnf file or from SDSF. 
 
-##TLS terminal access
+TLS terminal access
+--------------------
 For secure TLS access, you will need certificates and you will have to point to the certificate from tsu.cnf
 
-#SSH access
+SSH access
+----------
 Configure the port at which the SSHD internal server will listen for users. Users must already be registered to be able to use ssh access. 
 
 
