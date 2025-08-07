@@ -9,6 +9,12 @@ It is a BBS / Productivity Suite for users on 3270 terminals. It's written in Go
 It uses minimum resources. For up to 50 concurrent users, it only uses 25MB (no GB...) of memory. The system has seen upwards of 150 concurrent users with 64MB of memory used. So, you only need a small server to host your own 3270 BBS. 
 
 All data is stored in an SQLite3 database called tsu.db. You can run it in WAL mode or in single user mode. We recommend WAL for performance reasons, but you will need a matching database backup strategy. 
+
+Pre-Requisites
+--------------
+
+-Make sure you have sqlite3 installed. 
+-And make sure you have a 3270 terminal to conntect, obviously. something like c3270 or x3270, or Vista3270 is perfectly fine. 
   
 Code Availability
 -----------------
