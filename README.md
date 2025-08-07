@@ -219,7 +219,7 @@ Same for PROXY, HTTPD, TN3270TLS, TN3270 (which are self-explanatory)
 Technical Implementation Details
 --------------------------------
 
-By far the most complex screen is the real time chat because of the number of things it does. It's heavily multi-threaded. If you want to read more about it's implemented, [read this]{https://github.com/moshix/BITNETServices/blob/master/forum3270_chat.md) 
+By far the most complex screen is the real time chat because of the number of things it does. It's heavily multi-threaded. If you want to read more about it's implemented, [read this](https://github.com/moshix/BITNETServices/blob/master/forum3270_chat.md) 
   
 Final Notes
 -----------
