@@ -60,19 +60,18 @@ Messages and Topics can be edited with these self-explanatory rendering tags:
 `<<blue>>, <<white>>, <<red>>, <<pink>>, <<green>>, <<yellow>>, <<turquoise>>, and <<reverse>> and <</reverse>>. These tags work best if put on a line of their own`
 
 The editor function keys available are:
-`
- F2  = Spell checker
- F4  = Delete current line
- F5  = Insert line below
- F6  = Insert line above
- F7  = Scroll up
- F8  = Scroll down
- F10 = Center current line
- F11 = Make centered box
- F13 = Centered box until next empty row
-`
- Save content with SAVE
- Exit editor unsaved with CANCEL
+
+- F2  = Spell checker
+- F4  = Delete current line
+- F5  = Insert line below
+- F6  = Insert line above
+- F7  = Scroll up
+- F8  = Scroll down
+- F10 = Center current line
+- F11 = Make centered box
+- F13 = Centered box until next empty row
+- Save content with SAVE
+- Exit editor unsaved with CANCEL
 
 
 
