@@ -148,7 +148,7 @@ The first one allows you to log in and control your BBS and set other users to a
 
 
   
-3. Create and edit tsu.greet which will be sent to all new users. 
+3. Create and edit tsu.greet which will be sent to all new users. Remember to keep it 80 characters wide, max,for easey reading on 3270 terminals. 
   
 4. Start the BBS with the provided script start_tsu.sh, you should probably tee the log into a log file.
 
