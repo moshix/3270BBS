@@ -99,8 +99,8 @@ The editor function keys available are:
 
 Configuration of the BBS
 ------------------------
-Add the following parameters to your tsu.cnf file to configure the FTP server.
-Following values are just examples and can be configured to your needs: 
+Add the following parameters to your tsu.cnf file to configure the FTP server.  
+The following **values are just examples** and you should change them to your needs: 
 ```
 # TLS ports
 # Server settings
