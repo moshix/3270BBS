@@ -191,6 +191,17 @@ Same for PROXY, HTTPD, TN3270TLS, TN3270
 '$PJES2,TERM  - Terminate the BBS gracefully '  
 'LOG          - View BBS log. Top/BOT F7/F8 will navigate inside the log view'  
   
-  
+Final Notes
+-----------
 
-Moshix, July 16, 2025 - Munich
+This BBS application is made available in binary form only, strictly as is. It is provided without warranties of any kind, either express or implied, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose.
+
+The developers assume no responsibility or liability for any direct, indirect, incidental, or consequential damages that may result from the use, misuse, or inability to use this software. You are using this application at your own risk.
+
+No technical support, updates, or maintenance releases are guaranteed. However, feedback and bug reports may be submitted through the appropriate community channels, and while not promised, improvements may be considered in future builds.
+
+By using this software, you agree to abide by any applicable local, national, or international laws regarding software usage and telecommunications. Unauthorized modification, reverse engineering, or redistribution is strictly prohibited unless explicitly permitted by the license or author.
+
+
+    
+Moshix, August 8, 2025 - Cutchogue
