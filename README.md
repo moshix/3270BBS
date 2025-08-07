@@ -141,19 +141,19 @@ Installation And Start
 
 1. Download the [binary for Macos, Linux 64amd and 64arm and s390x, FreeBSD, NetBSD, or -if you must - Windowze](https://github.com/moshix/3270BBS/releases/tag/26.7).
 
+2. **Rename it to jut tsu** for the provided scripts to work, or change the scripts. 
 
-2. **Run the create_tsudb.sh script**. This will create tsu.db with 2 users admin/admin and noreply/noreply.  You must change these passwords when you log in as admin the first time. 
+
+3. **Run the create_tsudb.sh script**. This will create tsu.db with 2 users admin/admin and noreply/noreply.  You must change these passwords when you log in as admin the first time. 
 
 The first one allows you to log in and control your BBS and set other users to admin thru the admin_users, admin_topics, admin_posts panels. Admin users can also start and stop the various servers (tn3270, tn3270tls, FTPD, HTTPD, PROXY3270) from SDSF and from the console. 
   
 
-
+4. Create and edit tsu.greet which will be sent to all new users. Remember to keep it 80 characters wide, max,for easey reading on 3270 terminals.   
   
-3. Create and edit tsu.greet which will be sent to all new users. Remember to keep it 80 characters wide, max,for easey reading on 3270 terminals. 
-  
-4. Start the BBS with the provided script start_tsu.sh, you should probably tee the log into a log file.
+5. Start the BBS with the provided script start_tsu.sh, you should probably tee the log into a log file.  
 
-5. Announce your new BBS, and Bob is your uncle. **Make sure to report your BBS here because I will link to all known 3270 BBS instances out there from this page.**
+6. Announce your new BBS, and Bob is your uncle. **Make sure to report your BBS here because I will link to all known 3270 BBS instances out there from this page.**  
 
 
 When in doubt how to install or operate your BBS, reach out to moshix on the Forum3270 with your 3270 terminal at www.moshix.tech port 2400
