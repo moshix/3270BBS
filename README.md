@@ -181,7 +181,7 @@ Have a look at the ./essentials_scripts directory. It has some SQL scripts that 
   
 If you enable FTP, then users can upload notes to their NOTES directly, or also download them. This way they can edit longer notes and then upload them with FTP. Same wth HTTP. 
   
-From Notes, then users can post a note to Topics.   
+From Notes, then users can post a note to Topics. This is useful to first edit the Note until  you are happy with it and then turn into a post with one function key.   
 
 Generally, the **httpd should not be opened to the public**, it's meant more for the admin.
 
@@ -193,7 +193,7 @@ Admin Only Panels
 
 Proxying to another mainframe
 -----------------------------
-3270 BBS can proxy users to another mainframe if you added it to the tsu.cnf file and if you enable the PROXY server from the tsu.cnf file or from SDSF. 
+3270 BBS can proxy users to another mainframe if you added it to the tsu.cnf file and if you enable the PROXY server from the tsu.cnf file or from SDSF. This other mainframe can of course also be just another instance of 3270BBS. 
 
 TLS terminal access
 --------------------
@@ -201,7 +201,7 @@ For secure TLS access, you will need certificates and you will have to point to 
 
 SSH access
 ----------
-Configure the port at which the SSHD internal server will listen for users. Users must already be registered to be able to use ssh access. 
+Configure the port at which the SSHD internal server will listen for users. Users must already be registered to be able to use ssh access. The same password is used for both 3270 and ssh access. 
 
 SDSF Commands
 ------------
