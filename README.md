@@ -208,10 +208,10 @@ SDSF Commands
 In the SDSF Activity screen, admins can issue the following commands:
 
 'P FTPD       - Stop the FTPD server'  
-'S fTPD       - Start the FTPD server'  
-Same for PROXY, HTTPD, TN3270TLS, TN3270  
+'S FTPD       - Start the FTPD server'  
+Same for PROXY, HTTPD, TN3270TLS, TN3270 (which are self-explanatory)
     
-'C U=MOSHIX   - Terminate the session of user MOSHIX'  
+'C U=MOSHIX   - Terminate the session of user MOSHIX' (sometimes people just leave their terminals open on the BBS and go on vacation (really happened). 
   
 '$PJES2,TERM  - Terminate the BBS gracefully '  
 'LOG          - View BBS log. Top/BOT F7/F8 will navigate inside the log view'  
