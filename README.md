@@ -106,6 +106,10 @@ mvs_port=1111         # port
 start_FTPD=no       # start ftpd?
 start_proxy3270=yes # start proxy to mvs or VM?
 start_HTTPD=no      # start web server?
+
+# ssh server settings
+start_SSHD=yes
+sshd_port=3296
 ```
 
 Installation And Start
