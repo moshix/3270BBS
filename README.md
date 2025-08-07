@@ -101,7 +101,7 @@ The editor function keys available are:
 
 Configuration of the BBS
 ------------------------
-Add the following parameters to your tsu.cnf file to configure the FTP server.  
+Add the following parameters to your **tsu.cnf** file to configure your 3270BBS.  
 The following **values are just examples** and you should change them to your needs: 
 ```
 # Server settings
