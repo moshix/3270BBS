@@ -10,6 +10,10 @@ It uses minimum resources. For up to 50 concurrent users, it only uses 25MB (no 
 
 All data is stored in an SQLite3 database called tsu.db. You can run it in WAL mode or in single user mode. We recommend WAL for performance reasons, but you will need a matching database backup strategy. 
   
+Code Availability
+-----------------
+
+Yes, I plan to release the full code, after a period of bug reports and more security audits. Also, I have a bunch of easter eggs that I want found before I release the code. 
 
 Features
 --------
