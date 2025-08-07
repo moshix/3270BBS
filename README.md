@@ -68,7 +68,6 @@ Features
 | Stocks view                                      | :white_check_mark: |
 | All Seeing Eye from clock view                   | :white_check_mark: |
 | TLS and SSL support with certificates            | :white_check_mark: |
-| Wordle in English, German and Italian            | :white_check_mark: |
 | SSH access to chat and topics                    | :white_check_mark: |
 
 
