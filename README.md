@@ -11,7 +11,7 @@ All data is stored in an SQLite3 database called tsu.db. You can run it in WAL m
 Pre-Requisites
 --------------
 
--Make sure you have sqlite3 installed.   
+-Make sure you have **sqlite3** installed.   
 -And make sure you have a 3270 terminal to conntect, obviously. something like c3270 or x3270, or Vista3270 is perfectly fine. 
   
 Code Availability
