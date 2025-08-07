@@ -143,7 +143,7 @@ Installation And Start
 
 1. Download the [binary for Macos, Linux 64amd and 64arm and s390x, FreeBSD, NetBSD, or -if you must - Windowze](https://github.com/moshix/3270BBS/releases/tag/26.7).
 
-2. **Rename it to jut tsu** for the provided scripts to work, or change the scripts. 
+2. **Rename the downloaded binary it to tsu** for the provided scripts to work, or change the scripts. 
 
 
 3. **Run the create_tsudb.sh script**. This will create tsu.db with 2 users admin/admin and noreply/noreply.  You must change these passwords when you log in as admin the first time. 
