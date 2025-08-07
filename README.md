@@ -1,5 +1,5 @@
-TSU, a 3270 BBS 
-===============
+A 3270 BBS 
+==========
 
 
 This is the same code that runs moshix' Forum3270 3270 terminal BBS. 
