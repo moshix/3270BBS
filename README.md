@@ -17,37 +17,44 @@ Yes, I plan to release the full code, after a period of bug reports and more sec
 
 Features
 --------
-- Topics Mgmt
-- Messages
-- Calendar
-- Personal notes management
-- Live Chat
-- Private chat
-- Marketplace
-- User rolodex
-- User mgmt
-- Admin panels
-- Session mgmt
-- DB creation script
-- FTP Server for notes access
-- console
-- SDSF activity panel
-- Updating clock with seeing eye and IBM logo
-- Hot air balloon game
-- Blackjack game
-- TSO command line with several utilities, including send message
-- Log viewer
-- TLS and TN3270 listeners
-- FTPD server and HTTPD server
-- Proxy3270 server to other mainframes
-- Console view
-- Log view
-- Forex updated table
-- Stocks view
-- All Seeing Eye from clock view
-- TLS and SSL support with certificates
-- Wordle in English, German and Italian
-- SSH access to chat and topics
+
+Features
+========
+
+
+| Feature                                           | Supported          |
+|--------------------------------------------------|--------------------|
+| Topics Mgmt                                      | :white_check_mark: |
+| Messages                                         | :white_check_mark: |
+| Calendar                                         | :white_check_mark: |
+| Live Chat                                        | :white_check_mark: |
+| Private chat                                     | :white_check_mark: |
+| Marketplace                                      | :white_check_mark: |
+| User rolodex                                     | :white_check_mark: |
+| User mgmt                                        | :white_check_mark: |
+| Admin panels                                     | :white_check_mark: |
+| Session mgmt                                     | :white_check_mark: |
+| DB creation script                               | :white_check_mark: |
+| FTP Server for notes access                      | :white_check_mark: |
+| Console                                          | :white_check_mark: |
+| SDSF activity panel                              | :white_check_mark: |
+| Updating clock with seeing eye and IBM logo      | :white_check_mark: |
+| Hot air balloon game                             | :white_check_mark: |
+| Blackjack game                                   | :white_check_mark: |
+| TSO command line with several utilities          | :white_check_mark: |
+| Log viewer                                       | :white_check_mark: |
+| TLS and TN3270 listeners                         | :white_check_mark: |
+| FTPD server and HTTPD server                     | :white_check_mark: |
+| Proxy3270 server to other mainframes             | :white_check_mark: |
+| Console view                                     | :white_check_mark: |
+| Log view                                         | :white_check_mark: |
+| Forex updated table                              | :white_check_mark: |
+| Stocks view                                      | :white_check_mark: |
+| All Seeing Eye from clock view                   | :white_check_mark: |
+| TLS and SSL support with certificates            | :white_check_mark: |
+| Wordle in English, German and Italian            | :white_check_mark: |
+| SSH access to chat and topics                    | :white_check_mark: |
+
 
 
 Content Editing
