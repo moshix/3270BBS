@@ -106,7 +106,7 @@ Following values are just examples and can be configured to your needs:
 # Server settings
 #
 # bbs_name is the name of your BBS, up to 10 characters wide only!
-bbs_name=Forum3270
+bbs_name=My3270BBS
 
 port=2300   #port for non-encrypted traffic
 
@@ -118,7 +118,7 @@ tlskey=your.key
 
 #port where the web server listens
 httpd_port=9000 # port for the HTTPD listenr
-MOTD="Kindly log off by doing a LOGOFF from TSO to free up resources"
+MOTD="Welcome to my 3270 BBS"
 
 # FTP server settings
 FTP_port=2100       # Port for FTP server (default: 2100)
