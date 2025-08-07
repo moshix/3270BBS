@@ -134,6 +134,8 @@ The first one allows you to log in and control your BBS and set other users to a
 5. Announce your new BBS, and Bob is your uncle. **Make sure to report your BBS here because I will link to all known 3270 BBS instances out there from this page.**
 
 
+When in doubt how to install or operate your BBS, reach out to moshix on the Forum3270 with your 3270 terminal at www.moshix.tech port 2400
+
 
 Operation of the BBS, User and Content Management
 -------------------------------------------------
