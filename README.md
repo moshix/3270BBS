@@ -162,24 +162,24 @@ When in doubt how to install or operate your BBS, reach out to moshix on the For
 Operation of the BBS, User and Content Management
 -------------------------------------------------
 
-The application is very stable and stays up for months on end. However, any BBS requires constant care and content maintenance. Trolls naturally appear where online communities form and their posts and dropppings need to be cleaned. 
-
-Even though the BBS has a password retrieval process with PF9 from the logon panel, some users will forget the city they live in, and their email so recovery in those cases is impossible and they have to register a new user and you will have to delete the old one from admin_users. 
-
-Users can also delete their own account fromt the 0 Edit Profile option in the main menu. 
-
-There is a script to prune users who have not logged in for more than X days. Pruning does not remove their posts or topics, but does remove their messages from the database. The script is called remove_old_users.bash. 
-
-A dictionary is provided for the spell checker in the Editor and in the chat applets. If you need to insert more words into the dictionary, use the script insert_to_dictionary.bash.
-
-Finally there is a script import_calendar.sh to import .ics files into an individual calendar, if you want your Google calendar or whatever to be also featured in in the BBS 
-
+The application is very stable and stays up for months on end. However, any BBS requires constant care and content maintenance. Trolls naturally form where online communities exist, and their many dropppings need to be cleaned. A BBS without some kind of moderator activity will either wither and die, or degenerate into a reputational problem for you. 
+  
 Daily pruning and removing of bad content is much easier than doing it once a month or once a  year. Stay in touch with your users and advertise your BBS in the communities where you want to attract users from. 
-
+  
+There is a script to prune users who have not logged in for more than X days. Pruning does not remove their posts or topics, but does remove their messages from the database. The script is called remove_old_users.bash. 
+  
+Even though the BBS has a password retrieval process with PF9 from the logon panel, some users will forget the city they live in, and their email so recovery in those cases is impossible and they have to register a new user and you will have to delete the old one from admin_users. 
+  
+Users can also delete their own account fromt the 0 Edit Profile option in the main menu. 
+  
+A dictionary is provided for the spell checker in the Editor and in the chat applets. If you need to insert more words into the dictionary, use the script insert_to_dictionary.bash.
+  
+Finally there is a script import_calendar.sh to import .ics files into an individual calendar, if you want your Google calendar or whatever to be also featured in in the BBS 
+  
 Have a look at the ./essentials_scripts directory. It has some SQL scripts that help you manage content and users.   
-
+  
 If you enable FTP, then users can upload notes to their NOTES directly, or also download them. This way they can edit longer notes and then upload them with FTP. Same wth HTTP. 
-
+  
 From Notes, then users can post a note to Topics. 
 
 Admin Only Panels
