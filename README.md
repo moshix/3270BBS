@@ -13,6 +13,14 @@ All data is stored in an SQLite3 database called tsu.db. You can run it in WAL m
 Code Availability
 -----------------
 
+| Availability                                     | Supported          |
+|--------------------------------------------------|--------------------|
+| Linux 64amd                                      | :white_check_mark: |
+| Linux 64arm                                      | :white_check_mark: |
+| Macos arm                                        | :white_check_mark: |
+| Windoze                                          | :white_check_mark: |
+| Is it awesome?                                   | :white_check_mark: |
+
 Yes, I plan to release the full code, after a period of bug reports and more security audits. Also, I have a bunch of easter eggs that I want found before I release the code. 
 
 Features
