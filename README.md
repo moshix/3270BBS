@@ -81,7 +81,7 @@ which is augemented with mainframe world terms such as JCL, ABEND etc.
 Messages and Topics can be edited with these self-explanatory rendering tags:  
 
 `<<blue>>, <<white>>, <<red>>, <<pink>>, <<green>>, <<yellow>>, <<turquoise>>, and <<reverse>> and <</reverse>>.`  
-These tags work best if put on a line of their own`
+These tags work best if they are put on a line of their own. 
 
 The Editor function keys available are:
 
