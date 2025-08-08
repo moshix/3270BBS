@@ -51,6 +51,7 @@ Features
 | Session mgmt                                     | :white_check_mark: |
 | DB creation script                               | :white_check_mark: |
 | FTP Server for notes access                      | :white_check_mark: |
+| Web Server for notes, topics, sysadmin access    | :white_check_mark: |
 | Console                                          | :white_check_mark: |
 | SDSF activity panel                              | :white_check_mark: |
 | Updating clock with seeing eye and IBM logo      | :white_check_mark: |
