@@ -108,30 +108,31 @@ The following **values are just examples** and you should change them to your ne
 # (c) 2025 by Moshix. All rights reserved. 
 # bbs_name is the name of your BBS, up to 10 characters wide only!
 bbs_name=My3270BBS
+MOTD="Welcome to my 3270 BBS"
 
-port=2300   #port for non-encrypted traffic
-
-tlsport=2023 #port for TSL 1.x traffic
+# 3270 ports
+port=2300                  #port for non-encrypted traffic
+tlsport=2023               #port for TSL 1.x traffic
 
 # your certificate
 tlscert=your.crt
 tlskey=your.key
 
-#port where the web server listens
-httpd_port=9000 # port for the HTTPD listenr
-MOTD="Welcome to my 3270 BBS"
+#web server port
+httpd_port=9000            # port for the HTTPD listenr
+
 
 # FTP server settings
-FTP_port=2100       # Port for FTP server (default: 2100)
-FTP_limit=20        # Maximum file size in KB (default: 20)
+FTP_port=2100             # Port for FTP server (default: 2100)
+FTP_limit=20              # Maximum file size in KB (default: 20)
 
 # MVS (or VM) remote server settings
-mvs_address=localhost # for forwarding MVS connectiong
-mvs_port=1111         # port
+mvs_address=localhost     # for forwarding MVS connectiong
+mvs_port=1111             # port
 
-start_FTPD=no       # start ftpd?
-start_proxy3270=no # start proxy to mvs or VM?
-start_HTTPD=no      # start web server?
+start_FTPD=no             # start ftpd?
+start_proxy3270=no        # start proxy to mvs or VM?
+start_HTTPD=no            # start web server? do not open to public, for admins only
 
 # ssh server settings
 start_SSHD=yes
