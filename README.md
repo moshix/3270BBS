@@ -2,11 +2,11 @@ A 3270 BBS
 ==========
 
 
-This is the same code that runs moshix' Forum3270 3270 terminal BBS. 
+This is the same code that runs my Forum3270 3270 terminal BBS. 
 
 It uses minimum resources. For up to 50 concurrent users, it only uses 25MB (not GB...) of memory. The system has seen upwards of 150 concurrent users with 64MB of memory used. So, you only need a small server to host your own 3270 BBS. A Rapsberry Pi, even an old one, is perfectly fine, as long as it's 64bit. The code is heavily multi-threaded, therefore more cores are better, but not required. The BBS is blazing fast even with just one core. 
 
-All data is stored in an SQLite3 database called *tsu.db*. You can run it in WAL mode or in single user mode. We recommend WAL for performance reasons, but you will need a matching database backup strategy. 
+All data is stored in an SQLite3 database called **tsu.db**. You can run it in WAL mode or in single mode. We recommend WAL for performance reasons.
 
 Pre-Requisites
 --------------
@@ -28,14 +28,12 @@ Code Availability
 | Windoze                                          | :white_check_mark: |
 | Is it awesome?                                   | :white_check_mark: |
 
-Yes, I plan to release the full code, after a period of bug reports and more security audits. Also, I have a bunch of easter eggs that I want found before I release the code. 
+Yes, I plan to release the full code, after a period of bug reports and more security audits.  
+Also, I have a bunch of easter eggs that I want found before I release the code. 
 
+  
 Features
 --------
-
-Features
-========
-
 
 | Feature                                           | Supported          |
 |--------------------------------------------------|--------------------|
