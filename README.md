@@ -75,13 +75,13 @@ Features
 Content Editing
 ---------------
 
-3270BBS contains it's own editor. The editor allows to edit Topics, Posts, Notes, and Messages. The editor has a spelling checker and it is augemented with mainframe world terms such as JCL, ABEND etc.   
+3270BBS contains its own Editor. The Editor allows to edit Topics, Posts, Notes, and Messages. The editor has a spelling checker and it is augemented with mainframe world terms such as JCL, ABEND etc.   
 
 Messages and Topics can be edited with these self-explanatory rendering tags:  
 
 `<<blue>>, <<white>>, <<red>>, <<pink>>, <<green>>, <<yellow>>, <<turquoise>>, and <<reverse>> and <</reverse>>. These tags work best if put on a line of their own`
 
-The editor function keys available are:
+The Editor function keys available are:
 
 
 ```
