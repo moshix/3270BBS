@@ -220,6 +220,12 @@ Same for PROXY, HTTPD, TN3270TLS, TN3270 (which are self-explanatory)
 '$PJES2,TERM  - Terminate the BBS gracefully '  
 'LOG          - View BBS log. Top/BOT F7/F8 will navigate inside the log view'  
 
+Backup Strategy
+---------------
+
+If you have real users, you need a real backup strategy. If you don't run the tsu.db sqlite database in WAL mode, then just make hourly or daily copies of the database.   
+In WAL mode, (which is what I run) I just create an hour dump of the database into an *.sql file which can very easily be restored. So far, I never lost data.   
+  
 Technical Implementation Details
 --------------------------------
 
