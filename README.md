@@ -136,7 +136,7 @@ start_HTTPD=no            # start web server? do not open to public, for admins 
 
 # ssh server settings
 start_SSHD=yes
-sshd_port=3296
+sshd_port=2022
 ```
   
 Installation And Start
