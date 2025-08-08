@@ -111,16 +111,16 @@ bbs_name=My3270BBS
 MOTD="Welcome to my 3270 BBS"
 
 # 3270 ports
-port=2300                  #port for non-encrypted traffic
-tlsport=2023               #port for TSL 1.x traffic
+port=3270                  #port for non-encrypted traffic
+tlsport=3271               #port for TSL 1.x encrypted traffic
 
 # your certificate
 tlscert=your.crt
 tlskey=your.key
 
+
 #web server port
 httpd_port=9000            # port for the HTTPD listenr
-
 
 # FTP server settings
 FTP_port=2100             # Port for FTP server (default: 2100)
