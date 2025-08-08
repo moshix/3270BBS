@@ -225,6 +225,14 @@ Same for PROXY, HTTPD, TN3270TLS, TN3270 (which are self-explanatory)
 '$PJES2,TERM  - Terminate the BBS gracefully '  
 'LOG          - View BBS log. Top/BOT F7/F8 will navigate inside the log view'  
 
+Proxy3270 Server
+---------------
+
+3270BBS includes a proxy server to connect to a remote mainframe, such as MVS, VM, or even a remote 3270BBS. 
+You must configure the remote host in your **tsu.cnf**. 
+
+The way to return to the BBS from a remote host is by pressing the **PA3** attention key in your terminal emulator. 
+
 Backup Strategy
 ---------------
 
