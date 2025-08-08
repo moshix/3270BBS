@@ -1,0 +1,490 @@
+{{define "content"}}
+<div class="topic-container">
+    <!-- Topic Header -->
+    <div class="topic-header">
+        <div class="topic-title-section">
+            <h1 class="topic-title">{{.Topic.Title}}</h1>
+            <div class="topic-actions">
+                <a href="/admin/topics/{{.Topic.ID}}/edit" class="btn btn-edit">Edit Topic</a>
+                <a href="/admin/topics" class="btn btn-back">Back to Topics</a>
+                <form method="POST" action="/admin/topics/{{.Topic.ID}}/delete" style="display: inline;" 
+                      onsubmit="return confirm('Are you sure you want to delete this topic and all its posts?')">
+                    <button type="submit" class="btn btn-delete">Delete Topic</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="topic-stats">
+            <div class="stat-item">
+                <span class="stat-label">Created by:</span>
+                <span class="stat-value author">{{.Topic.Username}}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Created:</span>
+                <span class="stat-value">{{formatTime .Topic.CreatedAt}}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Posts:</span>
+                <span class="stat-value posts">{{.Topic.PostCount}}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Views:</span>
+                <span class="stat-value views">{{.Topic.ViewCount}}</span>
+            </div>
+        </div>
+    </div>
+
+    {{if .Error}}
+        <div class="alert alert-error">{{.Error}}</div>
+    {{end}}
+
+    {{if .Success}}
+        <div class="alert alert-success">{{.Success}}</div>
+    {{end}}
+
+    <!-- Posts Section -->
+    <div class="posts-container">
+        {{if .Posts}}
+            {{range $index, $post := .Posts}}
+            <div class="post-card post-{{add $index 1}}">
+                <div class="post-header">
+                    <div class="post-number">#{{add $index 1}}</div>
+                    <div class="post-author">{{$post.Username}}</div>
+                    <div class="post-timestamp">{{formatTime $post.CreatedAt}}</div>
+                    <div class="post-id">ID: {{$post.ID}}</div>
+                </div>
+                <div class="post-content">
+                    {{range $line := (split $post.Content "\n")}}
+                        <div class="content-line">{{$line}}</div>
+                    {{end}}
+                </div>
+                <div class="post-footer">
+                    <div class="post-actions">
+                        <span class="action-link">Reply</span>
+                        <span class="action-link">Quote</span>
+                        <span class="action-link">Like</span>
+                    </div>
+                </div>
+            </div>
+            {{end}}
+        {{else}}
+            <div class="no-posts">
+                <div class="no-posts-icon">💬</div>
+                <h3>No posts in this topic yet</h3>
+                <p>Be the first to start the conversation!</p>
+            </div>
+        {{end}}
+    </div>
+
+    <!-- Pagination -->
+    {{if gt .TotalPages 1}}
+        <div class="pagination">
+            {{if gt .CurrentPage 1}}
+                <a href="/admin/topics/{{.Topic.ID}}?page={{subtract .CurrentPage 1}}" class="page-btn prev">
+                    ⬅ Previous
+                </a>
+            {{end}}
+            
+            <div class="page-info">
+                <span class="current-page">{{.CurrentPage}}</span>
+                <span class="page-separator">of</span>
+                <span class="total-pages">{{.TotalPages}}</span>
+            </div>
+            
+            {{if lt .CurrentPage .TotalPages}}
+                <a href="/admin/topics/{{.Topic.ID}}?page={{add .CurrentPage 1}}" class="page-btn next">
+                    Next ➡
+                </a>
+            {{end}}
+        </div>
+    {{end}}
+</div>
+
+<style>
+.topic-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Topic Header Styles */
+.topic-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.topic-title-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    gap: 20px;
+}
+
+.topic-title {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    flex: 1;
+    line-height: 1.2;
+}
+
+.topic-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.topic-stats {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+    background: rgba(255,255,255,0.1);
+    padding: 15px;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    opacity: 0.8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-value {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.stat-value.author {
+    color: #ffd700;
+}
+
+.stat-value.posts {
+    color: #98fb98;
+}
+
+.stat-value.views {
+    color: #87ceeb;
+}
+
+/* Button Styles */
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-edit {
+    background: #28a745;
+    color: white;
+}
+
+.btn-edit:hover {
+    background: #218838;
+    transform: translateY(-1px);
+}
+
+.btn-back {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-back:hover {
+    background: #5a6268;
+    transform: translateY(-1px);
+}
+
+.btn-delete {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-delete:hover {
+    background: #c82333;
+    transform: translateY(-1px);
+}
+
+/* Posts Container */
+.posts-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+/* Individual Post Cards */
+.post-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-left: 4px solid;
+}
+
+.post-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+/* Alternating colors for posts */
+.post-card:nth-child(odd) {
+    border-left-color: #007bff;
+}
+
+.post-card:nth-child(even) {
+    border-left-color: #28a745;
+}
+
+.post-card:nth-child(3n) {
+    border-left-color: #ffc107;
+}
+
+.post-card:nth-child(4n) {
+    border-left-color: #dc3545;
+}
+
+.post-card:nth-child(5n) {
+    border-left-color: #6f42c1;
+}
+
+/* Post Header */
+.post-header {
+    background: linear-gradient(90deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.post-number {
+    background: #007bff;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 0.8rem;
+}
+
+.post-author {
+    font-weight: 700;
+    color: #495057;
+    font-size: 1rem;
+}
+
+.post-timestamp {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-left: auto;
+}
+
+.post-id {
+    color: #adb5bd;
+    font-size: 0.8rem;
+    font-family: 'Courier New', monospace;
+}
+
+/* Post Content */
+.post-content {
+    padding: 20px;
+    background: #fafbfc;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+}
+
+.content-line {
+    margin-bottom: 8px;
+    word-wrap: break-word;
+    color: #212529;
+}
+
+.content-line:empty {
+    height: 16px;
+}
+
+/* Post Footer */
+.post-footer {
+    padding: 10px 20px;
+    background: white;
+    border-top: 1px solid #f1f3f4;
+}
+
+.post-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.action-link {
+    color: #007bff;
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.action-link:hover {
+    background: rgba(0, 123, 255, 0.1);
+}
+
+/* No Posts State */
+.no-posts {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.no-posts-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.no-posts h3 {
+    color: #495057;
+    margin-bottom: 10px;
+}
+
+.no-posts p {
+    color: #6c757d;
+    margin: 0;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 30px;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.page-btn {
+    padding: 10px 20px;
+    background: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.page-btn:hover {
+    background: #0056b3;
+    transform: translateY(-1px);
+    color: white;
+}
+
+.page-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    color: #495057;
+}
+
+.current-page {
+    background: #e9ecef;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: 700;
+    color: #007bff;
+}
+
+.page-separator {
+    color: #6c757d;
+}
+
+.total-pages {
+    font-weight: 600;
+}
+
+/* Alert Styles */
+.alert {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.alert-error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert-success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .topic-container {
+        padding: 15px;
+    }
+    
+    .topic-title-section {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .topic-actions {
+        justify-content: center;
+    }
+    
+    .topic-stats {
+        gap: 15px;
+        justify-content: center;
+    }
+    
+    .topic-title {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+    
+    .post-header {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .post-timestamp {
+        margin-left: 0;
+        order: -1;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .pagination {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+</style>
+{{end}}

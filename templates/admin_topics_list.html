@@ -1,0 +1,197 @@
+{{define "content"}}
+<div class="container">
+    <div class="header">
+        <div class="header-content">
+            <h1>Topics Management (Admin)</h1>
+            <div class="actions">
+                <a href="/admin/topics/new" class="btn btn-primary">New Topic</a>
+                <a href="/admin/system" class="btn btn-secondary">Back to Admin</a>
+            </div>
+        </div>
+    </div>
+
+    {{if .Error}}
+        <div class="alert alert-error">{{.Error}}</div>
+    {{end}}
+
+    {{if .Success}}
+        <div class="alert alert-success">{{.Success}}</div>
+    {{end}}
+
+    <div class="topics-container">
+        {{if .Topics}}
+            <div class="topics-grid">
+                {{range .Topics}}
+                    <div class="topic-card">
+                        <div class="topic-header">
+                            <h3><a href="/admin/topics/{{.ID}}">{{.Title}}</a></h3>
+                            <div class="topic-meta">
+                                <small>by {{.Username}} | {{formatTime .CreatedAt}}</small>
+                            </div>
+                        </div>
+                        <div class="topic-stats">
+                            <span class="post-count">{{.PostCount}} posts</span>
+                            <span class="view-count">{{.ViewCount}} views</span>
+                        </div>
+                        <div class="topic-actions">
+                            <a href="/admin/topics/{{.ID}}" class="btn btn-sm btn-primary">View</a>
+                            <a href="/admin/topics/{{.ID}}/edit" class="btn btn-sm btn-secondary">Edit</a>
+                            <form method="POST" action="/admin/topics/{{.ID}}/delete" style="display: inline;" 
+                                  onsubmit="return confirm('Are you sure you want to delete this topic and all its posts?')">
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                {{end}}
+            </div>
+
+            <!-- Pagination -->
+            {{if gt .TotalPages 1}}
+                <div class="pagination">
+                    {{if gt .CurrentPage 1}}
+                        <a href="/admin/topics?page={{subtract .CurrentPage 1}}" class="btn btn-secondary">&laquo; Previous</a>
+                    {{end}}
+                    
+                    <span class="page-info">Page {{.CurrentPage}} of {{.TotalPages}}</span>
+                    
+                    {{if lt .CurrentPage .TotalPages}}
+                        <a href="/admin/topics?page={{add .CurrentPage 1}}" class="btn btn-secondary">Next &raquo;</a>
+                    {{end}}
+                </div>
+            {{end}}
+        {{else}}
+            <div class="no-topics">
+                <p>No topics found.</p>
+                <a href="/admin/topics/new" class="btn btn-primary">Create the first topic</a>
+            </div>
+        {{end}}
+    </div>
+</div>
+
+<style>
+.topics-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.topics-grid {
+    display: grid;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.topic-card {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    transition: box-shadow 0.3s ease;
+}
+
+.topic-card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.topic-header h3 {
+    margin: 0 0 8px 0;
+    color: #333;
+}
+
+.topic-header h3 a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+.topic-header h3 a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.topic-meta {
+    margin-bottom: 15px;
+}
+
+.topic-meta small {
+    color: #6c757d;
+}
+
+.topic-stats {
+    margin-bottom: 15px;
+}
+
+.topic-stats span {
+    background: #e9ecef;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    margin-right: 10px;
+}
+
+.topic-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.btn-sm {
+    padding: 4px 8px;
+    font-size: 0.875rem;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+    border: 1px solid #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
+.no-topics {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6c757d;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.page-info {
+    font-weight: 500;
+    color: #6c757d;
+}
+
+.header {
+    background: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    margin-bottom: 30px;
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h1 {
+    margin: 0;
+    color: #333;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+</style>
+{{end}} 

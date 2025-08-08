@@ -1,0 +1,76 @@
+{{define "layout"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.BBSName}}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        .admin-link {
+            color: #dc3545;
+            font-weight: 500;
+        }
+        .admin-link:hover {
+            color: #bd2130;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo">
+                <a href="/notes">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 5V19H5V5H19ZM21 3H3V21H21V3ZM17 17H7V16H17V17ZM17 15H7V14H17V15ZM17 12H7V7H17V12Z" fill="currentColor"/>
+                    </svg>
+                    <span>{{.BBSName}}</span>
+                </a>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    {{if .User}}
+                    <li><a href="/notes" class="nav-link">My Notes</a></li>
+                    <li><a href="/notes/new" class="nav-link">New Note</a></li>
+                    {{if .User.IsAdmin}}
+                    <li><a href="/admin/system" class="nav-link admin-link">System Admin</a></li>
+                    <li><a href="/admin/topics" class="nav-link admin-link">Topics Admin</a></li>
+                    {{end}}
+                    <li><a href="/logout" class="nav-link">Logout</a></li>
+                    {{else}}
+                    <li><a href="/login" class="nav-link">Login</a></li>
+                    {{end}}
+                </ul>
+            </nav>
+        </header>
+        
+        <main class="app-main">
+            {{if .Error}}
+            <div class="alert alert-danger">
+                {{.Error}}
+            </div>
+            {{end}}
+            
+            {{if .Success}}
+            <div class="alert alert-success">
+                {{.Success}}
+            </div>
+            {{end}}
+            
+            {{template "content" .}}
+        </main>
+        
+        <footer class="app-footer">
+            <div class="footer-content">
+                <p>&copy; {{.CurrentYear}} {{.BBSName}}</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
+{{end}}
+
+{{define "content"}}{{end}} 

@@ -1,0 +1,98 @@
+# Copyright 2025 by moshix
+# This is a BBS for 3270 terminals
+# All rights reserved by moshix
+
+# Database files
+**/*.db
+*.db
+
+
+# Configuration files
+**/*.cnf
+*.cnf
+tsu.cnf
+
+# Executables
+tsu
+**/tsu
+*.exe
+
+# Score and stats files
+**/*.score
+**/*.scores
+*.score
+*.scores
+**/tsu.balloon.scores
+**/tsu.blackjack.score
+**/tsu.world.stats
+tsu.balloon.scores
+tsu.blackjack.score
+tsu.world.stats
+
+# Wordle stats and related files
+**/wordle.stats
+**/wordle.scores
+wordle.stats
+wordle.scores
+searchwordle.bash
+
+# MVS account files
+**/tsu.mvs*
+**/mvs*
+tsu.mvs*
+mvs*
+**/tsu.mvs_done
+**/tsu.mvs.accounts
+tsu.mvs_done
+tsu.mvs.accounts
+
+# Certificate files
+**/*.cert
+**/*.key
+**/*.crt
+**/*.pem
+*.cert
+*.key
+*.crt
+*.pem
+
+# SSH host keys (sensitive)
+ssh_host_key.pem
+
+# Log files
+**/*.log
+*.log
+
+# Database backups
+**/*.sql
+*.sql
+
+# Calendar files
+**/*.ics
+*.ics
+
+# Temporary files
+**/*.tmp
+**/*.temp
+*.tmp
+*.temp
+
+# Backup files
+**/*.bak
+**/*.backup
+*.bak
+*.backup
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Binary directories
+bin/
+**/bin/
+

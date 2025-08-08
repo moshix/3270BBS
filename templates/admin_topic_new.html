@@ -1,0 +1,206 @@
+{{define "content"}}
+<div class="container">
+    <div class="header">
+        <h1>Create New Topic (Admin)</h1>
+        <div class="breadcrumb">
+            <a href="/admin/topics">Topics</a> &gt; New Topic
+        </div>
+    </div>
+
+    {{if .Error}}
+        <div class="alert alert-error">{{.Error}}</div>
+    {{end}}
+
+    <div class="form-container">
+        <form method="POST" action="/admin/topics/new">
+            <div class="form-group">
+                <label for="title">Topic Title:</label>
+                <input type="text" id="title" name="title" required 
+                       placeholder="Enter the topic title..." 
+                       value="{{if .Topic}}{{.Topic.Title}}{{end}}"
+                       maxlength="200">
+                <div class="help-text">Choose a clear, descriptive title for your topic</div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Create Topic</button>
+                <a href="/admin/topics" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="info-box">
+        <h3>About Topics</h3>
+        <p>Topics are discussion threads where users can post messages. When you create a topic, it will appear in the topics list and users can start posting replies to it.</p>
+        <p>After creating the topic, users will be able to add posts to continue the discussion.</p>
+    </div>
+</div>
+
+<style>
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.header h1 {
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.breadcrumb {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.breadcrumb a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.form-container {
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 30px;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.help-text {
+    margin-top: 6px;
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    padding-top: 20px;
+    border-top: 1px solid #dee2e6;
+}
+
+.btn {
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    border-color: #6c757d;
+}
+
+.btn-secondary:hover {
+    background-color: #545b62;
+    border-color: #4e555b;
+    color: white;
+    text-decoration: none;
+}
+
+.info-box {
+    background: #e7f3ff;
+    border: 1px solid #b3d9ff;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.info-box h3 {
+    margin: 0 0 15px 0;
+    color: #0056b3;
+}
+
+.info-box p {
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.info-box p:last-child {
+    margin-bottom: 0;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .form-container {
+        padding: 20px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn {
+        text-align: center;
+    }
+}
+</style>
+{{end}} 

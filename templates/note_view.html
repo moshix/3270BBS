@@ -1,0 +1,38 @@
+{{define "content"}}
+<div class="page-header">
+    <div class="page-actions">
+        <a href="/notes" class="btn btn-sm">&laquo; Back</a>
+    </div>
+    <h2>{{.Note.Subject}}</h2>
+    <div class="page-actions">
+        <a href="/notes/{{.Note.ID}}/edit" class="btn btn-sm btn-warning">Edit</a>
+        <form method="POST" action="/notes/{{.Note.ID}}/delete" class="delete-form">
+            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this note?')">Delete</button>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="note-info">
+        <span>Updated: {{formatTime .Note.UpdatedAt}}</span>
+    </div>
+    
+    <div class="note-content">
+        <pre class="note-text">{{.Note.Content}}</pre>
+    </div>
+</div>
+
+<style>
+    .note-text {
+        white-space: pre-wrap;
+        font-family: inherit;
+        font-size: inherit;
+        line-height: 1.5;
+        background: none;
+        border: none;
+        padding: 0;
+        margin: 0;
+        overflow-wrap: break-word;
+    }
+</style>
+{{end}} 

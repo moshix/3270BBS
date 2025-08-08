@@ -1,0 +1,284 @@
+{{define "content"}}
+<div class="container mt-4">
+    <h1>System Administration</h1>
+    
+    {{with .AdminData}}
+        {{if .Message}}
+        <div class="alert alert-success" role="alert">
+            {{.Message}}
+        </div>
+        {{end}}
+    {{end}}
+    
+    <!-- System Metrics Header -->
+    {{with .AdminData.SystemMetrics}}
+    <div class="system-header mb-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="h4">ACTIVITY DISPLAY</h2>
+            <div class="system-stats">
+                <span class="metrics text-success">TCB {{.Goroutines}} MEM {{.Memory}} CPU {{.CPU}} TX/H {{.ActivityPer}}</span>
+                <span class="uptime text-primary ml-3">{{.Uptime}} since IPL</span>
+            </div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mt-2">
+            <div class="auto-refresh">
+                <button id="toggleRefresh" class="btn btn-sm btn-primary">Enable Auto-Refresh</button>
+                <span id="refreshStatus" class="ml-2"></span>
+            </div>
+        </div>
+    </div>
+    {{end}}
+    
+    <!-- Server Control Card -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h2 class="h5 mb-0">Server Control</h2>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Server</th>
+                        <th>Status</th>
+                        <th>Last Activity</th>
+                        <th>Success</th>
+                        <th>Failures</th>
+                        <th>Connected</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{with .AdminData}}
+                        {{range $name, $status := .Servers}}
+                        <tr>
+                            <td><strong>{{$name}}</strong></td>
+                            <td>
+                                {{if eq $status "STARTED"}}
+                                <span class="badge bg-success">STARTED</span>
+                                {{else}}
+                                <span class="badge bg-danger">STOPPED</span>
+                                {{end}}
+                            </td>
+                            <td>{{(index $.AdminData.ServerMetrics $name).LastAct}}</td>
+                            <td>{{(index $.AdminData.ServerMetrics $name).Success}}</td>
+                            <td>{{(index $.AdminData.ServerMetrics $name).Failures}}</td>
+                            <td>{{(index $.AdminData.ServerMetrics $name).Connected}}</td>
+                            <td>
+                                <form method="POST" action="/admin/system/control" class="d-inline">
+                                    <input type="hidden" name="csrf_token" value="{{$.CSRFToken}}">
+                                    <input type="hidden" name="server" value="{{$name}}">
+                                    
+                                    {{if eq $status "STARTED"}}
+                                    <button type="submit" name="action" value="stop" class="btn btn-sm btn-danger">
+                                        Stop Server
+                                    </button>
+                                    {{else}}
+                                    <button type="submit" name="action" value="start" class="btn btn-sm btn-success">
+                                        Start Server
+                                    </button>
+                                    {{end}}
+                                </form>
+                            </td>
+                        </tr>
+                        {{end}}
+                    {{end}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+
+    
+    <!-- Active Users Card -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h2 class="h5 mb-0">Active Users</h2>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-sm mb-0">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Activity</th>
+                        <th>Last Act</th>
+                        <th>Logon</th>
+                        <th>Posts</th>
+                        <th>Topics</th>
+                        <th>Logins</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{with .AdminData}}
+                        {{range .ActiveUsers}}
+                        <tr class="{{if eq .ActivityType "ActivityCommandLogoff"}}
+                            {{if le (timeSince .LastActivity) "120m"}}user-tso-recent
+                            {{else}}user-tso-inactive{{end}}
+                            {{else}}user-active{{end}}">
+                            <td>{{.Username}}</td>
+                            <td>
+                                {{if eq .ActivityType "ActivityCommandLogoff"}}
+                                TSO-L
+                                {{else if eq .ActivityType "ActivityLogin"}}
+                                LOGIN
+                                {{else if eq .ActivityType "ActivityMainMenu"}}
+                                MENU
+                                {{else if eq .ActivityType "ActivityChat"}}
+                                CHAT
+                                {{else if eq .ActivityType "ActivityMessages"}}
+                                MESSAGES
+                                {{else if eq .ActivityType "ActivityTopics"}}
+                                TOPICS
+                                {{else if eq .ActivityType "ActivityMarketplace"}}
+                                MARKET
+                                {{else if eq .ActivityType "ActivityProfile"}}
+                                PROFILE
+                                {{else if eq .ActivityType "ActivityCommandLine"}}
+                                TSO
+                                {{else if eq .ActivityType "ActivitySystemSpool"}}
+                                SPOOL
+                                {{else if eq .ActivityType "ActivitySystemSpoolR"}}
+                                SPOOL-R
+                                {{else if eq .ActivityType "ActivityNotes"}}
+                                NOTES
+                                {{else}}
+                                {{.ActivityType}}
+                                {{end}}
+                            </td>
+                            <td>
+                                {{if .LastActivity.IsZero}}
+                                -
+                                {{else}}
+                                {{.LastActivity.Format "15:04:05"}}
+                                {{end}}
+                            </td>
+                            <td>
+                                {{if .LastLogin.Valid}}
+                                {{.LastLogin.Time.Format "15:04:05"}}
+                                {{else}}
+                                -
+                                {{end}}
+                            </td>
+                            <td>{{.PostsCount}}</td>
+                            <td>{{.TopicsCount}}</td>
+                            <td>{{.LoginsCount}}</td>
+                        </tr>
+                        {{end}}
+                    {{end}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="alert alert-warning">
+        <h4 class="alert-heading">Warning!</h4>
+        <p>Starting or stopping services can impact users currently connected to the system. 
+        Make sure you understand the implications before performing these actions.</p>
+    </div>
+    
+    <a href="/" class="btn btn-secondary">Return to Home</a>
+</div>
+
+<style>
+    .system-header {
+        background-color: #f8f9fa;
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #dee2e6;
+    }
+    
+    .system-stats {
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+    }
+    
+    .metrics, .uptime {
+        display: inline-block;
+    }
+    
+    .user-active {
+        color: #212529;
+    }
+    
+    .user-tso-recent {
+        color: #17a2b8; /* Turquoise */
+    }
+    
+    .user-tso-inactive {
+        color: #007bff; /* Blue */
+    }
+    
+    .management-item {
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+        height: 100%;
+    }
+    
+    .management-item h6 {
+        margin-bottom: 10px;
+        color: #333;
+        font-weight: 600;
+    }
+    
+    .management-item p {
+        margin-bottom: 15px;
+        font-size: 0.9rem;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleButton = document.getElementById('toggleRefresh');
+        const statusSpan = document.getElementById('refreshStatus');
+        let refreshTimer = null;
+        const refreshInterval = 3000; // 3 seconds
+        const refreshKey = 'adminSystemAutoRefresh';
+        
+        // Function to refresh the page
+        function refreshPage() {
+            window.location.reload();
+        }
+        
+        // Function to enable auto-refresh
+        function enableAutoRefresh() {
+            refreshTimer = setInterval(refreshPage, refreshInterval);
+            toggleButton.textContent = 'Disable Auto-Refresh';
+            toggleButton.classList.remove('btn-primary');
+            toggleButton.classList.add('btn-danger');
+            statusSpan.textContent = 'AUTO-REFRESH ACTIVE';
+            statusSpan.classList.add('text-danger', 'font-weight-bold');
+            localStorage.setItem(refreshKey, 'enabled');
+        }
+        
+        // Function to disable auto-refresh
+        function disableAutoRefresh() {
+            if (refreshTimer) {
+                clearInterval(refreshTimer);
+                refreshTimer = null;
+            }
+            toggleButton.textContent = 'Enable Auto-Refresh';
+            toggleButton.classList.remove('btn-danger');
+            toggleButton.classList.add('btn-primary');
+            statusSpan.textContent = '';
+            statusSpan.classList.remove('text-danger', 'font-weight-bold');
+            localStorage.removeItem(refreshKey);
+        }
+        
+        // Toggle auto-refresh
+        toggleButton.addEventListener('click', function() {
+            if (localStorage.getItem(refreshKey) === 'enabled') {
+                disableAutoRefresh();
+            } else {
+                enableAutoRefresh();
+            }
+        });
+        
+        // Check if auto-refresh was previously enabled
+        if (localStorage.getItem(refreshKey) === 'enabled') {
+            enableAutoRefresh();
+        }
+    });
+</script>
+{{end}} 

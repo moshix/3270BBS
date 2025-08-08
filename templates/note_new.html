@@ -1,0 +1,100 @@
+{{define "content"}}
+<div class="page-header">
+    <div class="page-actions">
+        <a href="/notes" class="btn btn-sm">&laquo; Back</a>
+    </div>
+    <h2>Create New Note</h2>
+    <div></div>
+</div>
+
+<div class="card">
+    <form action="/notes/new" method="POST">
+        <div class="card-body">
+            <div class="form-group">
+                <label for="subject">Subject:</label>
+                <input type="text" id="subject" name="subject" value="{{if .Note}}{{.Note.Subject}}{{end}}" required maxlength="79">
+            </div>
+            
+            <div class="form-group">
+                <label for="content">Content (79 chars/line):</label>
+                <textarea id="content" name="content" rows="10">{{if .Note}}{{.Note.Content}}{{end}}</textarea>
+                <div class="char-counter">Line length: <span id="current-length">0</span>/79</div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const textarea = document.getElementById('content');
+        const charCounter = document.getElementById('current-length');
+        const maxLength = 79;
+        
+        // Function to check line length
+        function checkLineLength() {
+            const cursorPosition = textarea.selectionStart;
+            const text = textarea.value;
+            
+            // Find the line the cursor is on
+            const textBeforeCursor = text.substring(0, cursorPosition);
+            const lines = textBeforeCursor.split('\n');
+            const currentLine = lines[lines.length - 1];
+            
+            // Update character counter
+            charCounter.textContent = currentLine.length;
+            
+            // Change color based on length
+            const counterElement = document.querySelector('.char-counter');
+            if (currentLine.length > maxLength) {
+                counterElement.className = 'char-counter danger';
+            } else if (currentLine.length > maxLength * 0.8) {
+                counterElement.className = 'char-counter warning';
+            } else {
+                counterElement.className = 'char-counter';
+            }
+        }
+        
+        // Enforce line max length when typing or pasting
+        textarea.addEventListener('input', function() {
+            const text = this.value;
+            const lines = text.split('\n');
+            
+            // Truncate any lines that are too long
+            let modified = false;
+            for (let i = 0; i < lines.length; i++) {
+                if (lines[i].length > maxLength) {
+                    lines[i] = lines[i].substring(0, maxLength);
+                    modified = true;
+                }
+            }
+            
+            // Update textarea if changes were made
+            if (modified) {
+                const cursorPos = this.selectionStart;
+                this.value = lines.join('\n');
+                this.setSelectionRange(cursorPos, cursorPos);
+            }
+            
+            checkLineLength();
+        });
+        
+        // Update counter when cursor moves
+        textarea.addEventListener('click', checkLineLength);
+        textarea.addEventListener('keyup', function(e) {
+            // Only update on cursor movement keys, not on text input
+            if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || 
+                e.key === 'ArrowLeft' || e.key === 'ArrowRight' ||
+                e.key === 'Home' || e.key === 'End') {
+                checkLineLength();
+            }
+        });
+        
+        // Initial check
+        checkLineLength();
+    });
+</script>
+{{end}} 

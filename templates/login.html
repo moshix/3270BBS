@@ -1,0 +1,90 @@
+{{define "content"}}
+<div class="login-container">
+    <div class="card">
+        <div class="card-header">
+            <h2>Login to Your Account</h2>
+        </div>
+        <div class="card-body">
+            <form action="/login" method="POST">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required autofocus>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="card info-card">
+        <div class="card-body">
+            <h3>Forum3270 Application</h3>
+            <p>This interface allows you to access and edit your personal notes. Each note can contain multiple lines, with a maximum width of 79 characters per line.</p>
+            <p>Note: You must already have an account to use this feature.</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .login-container {
+        max-width: 500px;
+        margin: 2rem auto;
+    }
+    
+    .card {
+        background-color: var(--card-bg);
+        border-radius: 0.25rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+    }
+    
+    .card-header {
+        padding: 1rem;
+        background-color: rgba(0, 0, 0, 0.02);
+        border-bottom: 1px solid var(--border);
+    }
+    
+    .card-header h2 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 500;
+    }
+    
+    .card-body {
+        padding: 1.5rem;
+    }
+    
+    .form-actions {
+        margin-top: 1.5rem;
+    }
+    
+    .info-card {
+        background-color: rgba(74, 111, 165, 0.05);
+    }
+    
+    .info-card h3 {
+        margin-top: 0;
+        font-weight: 500;
+        font-size: 1.25rem;
+        color: var(--primary);
+        margin-bottom: 1rem;
+    }
+    
+    .info-card p {
+        color: var(--text-light);
+        margin-bottom: 0.75rem;
+    }
+    
+    .info-card p:last-child {
+        margin-bottom: 0;
+    }
+</style>
+{{end}} 
