@@ -2,7 +2,7 @@ A 3270 BBS
 ==========
 
 
-This is the same code that runs my Forum3270 3270 terminal BBS. 
+This is the same code that runs my Forum3270 BBS for 3270 terminals, [real](https://youtube.com/shorts/deyGhLtKzp8?si=_f4SYaz37xLR54Zj) and emulated. 
 
 It uses minimum resources. For up to 50 concurrent users, it only uses 25MB (not GB...) of memory. The system has seen upwards of 150 concurrent users with 64MB of memory used. So, you only need a small server to host your own 3270 BBS. A simple VPS server instance is perfectly fine. The code is heavily multi-threaded, therefore more cores are better, but not required. The BBS is blazing fast even with just one core. 
 
