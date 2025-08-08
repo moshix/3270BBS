@@ -97,10 +97,12 @@ The editor function keys available are:
 
 Configuration of the BBS
 ------------------------
-Add the following parameters to your **tsu.cnf** file to configure your 3270BBS.The 3270BBS application **needs*
-tsu.cnf to start up properly. So, you must create teh tsu.cnf, even if you just take the example below to get started fast. 
+Add the following parameters to your **tsu.cnf** file to configure your 3270BBS. The 3270BBS application **needs**
+tsu.cnf to start up properly!  
+
+So, you must create tsu.cnf, even if you just take the example below to get started fast. 
   
-The following **values are just examples** and you should change them to your needs: 
+The following **values are just examples** and you should change them to your needs:   
 ```
 # Server settings
 # (c) 2025 by Moshix. All rights reserved. 
@@ -135,7 +137,7 @@ start_HTTPD=no      # start web server?
 start_SSHD=yes
 sshd_port=3296
 ```
-
+  
 Installation And Start
 ----------------------
 
