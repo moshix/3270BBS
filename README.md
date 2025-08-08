@@ -155,7 +155,7 @@ Installation And Start
 The first one allows you to log in and control your BBS and set other users to admin thru the admin_users, admin_topics, admin_posts panels. Admin users can also start and stop the various servers (tn3270, tn3270tls, FTPD, HTTPD, PROXY3270) from SDSF and from the console. 
   
 
-4. Create and edit tsu.greet which will be sent to all new users. Remember to keep it 80 characters wide, max,for easey reading on 3270 terminals.   
+4. Edit the sample tsu.greet from this repo. It's the greeting for all new users. Remember to keep it 80 characters wide, max,for easey reading on 3270 terminals.   
   
 5. Start the BBS with the provided script start_tsu.sh, you should probably tee the log into a log file.  
 
