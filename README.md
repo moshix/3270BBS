@@ -24,8 +24,7 @@ Code Availability
 | Linux 64arm                                      | :white_check_mark: |
 | Linux s390x                                      | :white_check_mark: |
 | FreeBSD                                          | :white_check_mark: |
-| NetBSD  64amd                                    | :white_check_mark: |
-| Macos arm                                        | :white_check_mark: |
+| Macos Universal                                  | :white_check_mark: |
 | Windoze                                          | :white_check_mark: |
 | Is it awesome?                                   | :white_check_mark: |
 
