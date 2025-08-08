@@ -38,6 +38,7 @@
                             <a href="/admin/topics/{{.ID}}/edit" class="btn btn-sm btn-secondary">Edit</a>
                             <form method="POST" action="/admin/topics/{{.ID}}/delete" style="display: inline;" 
                                   onsubmit="return confirm('Are you sure you want to delete this topic and all its posts?')">
+                                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
                                 <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                             </form>
                         </div>

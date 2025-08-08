@@ -15,6 +15,7 @@
 
     <div class="form-container">
         <form method="POST" action="/admin/topics/{{.Topic.ID}}/edit">
+            <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
             <div class="form-group">
                 <label for="title">Topic Title:</label>
                 <input type="text" id="title" name="title" required 

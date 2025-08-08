@@ -9,6 +9,7 @@
 
 <div class="card">
     <form action="/notes/new" method="POST">
+        <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
         <div class="card-body">
             <div class="form-group">
                 <label for="subject">Subject:</label>
