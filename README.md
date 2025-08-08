@@ -187,13 +187,13 @@ A dictionary is provided for the spell checker in the Editor and in the chat app
   
 Finally there is a script import_calendar.sh to import .ics files into an individual calendar, if you want your Google calendar or whatever to be also featured in in the BBS 
   
-Have a look at the ./essentials_scripts directory. It has some SQL scripts that help you manage content and users.   
+I am providing some eseential scripts to manage your BBS in this repo.
   
 If you enable FTP, then users can upload notes to their NOTES directly, or also download them. This way they can edit longer notes and then upload them with FTP. Same wth HTTP. 
   
 From Notes, then users can post a note to Topics. This is useful to first edit the Note until  you are happy with it and then turn into a post with one function key.   
 
-Generally, the **httpd should not be opened to the public**, it's meant more for the admin.
+The web interface can be opened to the public, but what's the point for a 3270 BBS system?
 
 Admin Only Panels
 -----------------
@@ -205,40 +205,39 @@ Proxying to another mainframe
 -----------------------------
 3270 BBS can proxy users to another mainframe if you added it to the tsu.cnf file and if you enable the PROXY server from the tsu.cnf file or from SDSF. This other mainframe can of course also be just another instance of 3270BBS. 
 
+The way to return to the BBS from a remote host is by pressing the **PA3** attention key in your terminal emulator.
+
 TLS terminal access
 --------------------
 For secure TLS access, you will need certificates and you will have to point to the certificate from tsu.cnf
 
 SSH access
 ----------
-Configure the port at which the SSHD internal server will listen for users. Users must already be registered to be able to use ssh access. The same password is used for both 3270 and ssh access. 
+Configure the port at which the SSHD internal server will listen for users. Users must already be registered to be able to use ssh access. The same password is used for both 3270 and ssh access. I don not intend to other other features in ssh mode other than chat and topics, as this is a 3270 BBS after all. 
 
 SDSF Commands
 ------------
 In the SDSF Activity screen, admins can issue the following commands:
 
-'P FTPD       - Stop the FTPD server'  
-'S FTPD       - Start the FTPD server'  
+`P FTPD            - Stop the FTPD server`  
+`S FTPD            - Start the FTPD server` 
 Same for PROXY, HTTPD, TN3270TLS, TN3270 (which are self-explanatory)
     
-'C U=MOSHIX   - Terminate the session of user MOSHIX' (sometimes people just leave their terminals open on the BBS and go on vacation (really happened). 
+`C U=MOSHIX         - Terminate the session of user MOSHIX`
+(sometimes people just leave their terminals open on the BBS and go on vacation (really happened).   
   
-'$PJES2,TERM  - Terminate the BBS gracefully '  
-'LOG          - View BBS log. Top/BOT F7/F8 will navigate inside the log view'  
+`$PJES2,TERM        - Terminate the BBS gracefully ` 
+`LOG                - View BBS log. Top/BOT F7/F8 will navigate inside the log view`
+`Admin Users Panel`
+`Admin Topics Panel`
+`Admin Posts Panel`
 
-Proxy3270 Server
----------------
-
-3270BBS includes a proxy server to connect to a remote mainframe, such as MVS, VM, or even a remote 3270BBS. 
-You must configure the remote host in your **tsu.cnf**. 
-
-The way to return to the BBS from a remote host is by pressing the **PA3** attention key in your terminal emulator. 
 
 Backup Strategy
 ---------------
 
-If you have real users, you need a real backup strategy. If you don't run the tsu.db sqlite database in WAL mode, then just make hourly or daily copies of the database.   
-In WAL mode, (which is what I run) I just create an hour dump of the database into an *.sql file which can very easily be restored. So far, I never lost data.   
+If you have real users, you need a real backup strategy. If you don't run the tsu.db sqlite database in WAL mode, then just make hourly or daily copies of the database.     
+In WAL mode, (which is what I run) I just create an hourly dump of the database into an *.sql file which can very easily be restored. So far, I never lost data.   
   
 Technical Implementation Details
 --------------------------------
