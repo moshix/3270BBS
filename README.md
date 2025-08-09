@@ -146,6 +146,9 @@ start_SSHD=yes
 sshd_port=2022
 
 # remote mainframe settings
+# Up to 15 can be configured.
+# The remote hosts are being read in dynamically at runtine
+# So you can make changes to the tsu.cnf file for remote hosts without needign to restart the BBS
 remote1=MVS3.8
 remote1_description="MVS 3.8 TK5 community mainframe"
 remote1_addr=localhost
