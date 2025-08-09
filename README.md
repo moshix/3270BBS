@@ -27,7 +27,7 @@ Code Availability
 | Linux s390x                                      | :white_check_mark: |
 | FreeBSD                                          | :white_check_mark: |
 | Macos Universal                                  | :white_check_mark: |
-| Windoze                                          | :white_check_mark: |
+| Windoze                                          |  :x:               |
 | Is it awesome?                                   | :white_check_mark: |
 
 Yes, I plan to release the full code, after a period of bug reports and more security audits.  
@@ -37,7 +37,7 @@ Also, I have a bunch of easter eggs that I want found before I release the code.
 Features
 --------
 
-| Feature                                           | Supported          |
+| Feature                                           | Included          |
 |--------------------------------------------------|--------------------|
 | Topics Mgmt                                      | :white_check_mark: |
 | Messages                                         | :white_check_mark: |
