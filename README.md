@@ -71,6 +71,7 @@ Features
 | SSH access to chat and topics                    | :white_check_mark: |
 | Screensaver to protect from burn-in              | :white_check_mark: |
 | DELTAMON performance monitor                     | :white_check_mark: |
+| Doors to other 3270BBS communities               | :white_check_mark: |
 | No root privileges required                      | :white_check_mark: |
 
 
@@ -136,10 +137,6 @@ httpd_port=9000            # port for the HTTPD listenr
 FTP_port=2100             # Port for FTP server (default: 2100)
 FTP_limit=20              # Maximum file size in KB (default: 20)
 
-# MVS (or VM) remote server settings
-mvs_address=localhost     # for forwarding MVS connectiong
-mvs_port=1111             # port
-
 start_FTPD=no             # start ftpd?
 start_proxy3270=no        # start proxy to mvs or VM?
 start_HTTPD=no            # start web server? do not open to public, for admins only
@@ -147,6 +144,22 @@ start_HTTPD=no            # start web server? do not open to public, for admins 
 # ssh server settings
 start_SSHD=yes
 sshd_port=2022
+
+# remote mainframe settings
+remote1=MVS3.8
+remote1_description="MVS 3.8 TK5 community mainframe"
+remote1_addr=localhost
+remote1_port=1111
+
+remote2=SDFVM
+remote2_description="VM/SP rel5 with PROFS at SDF"
+remote2_addr=sdfvm.sdf.org
+remote2_port=24
+
+remote3=Secureproxy3270
+remote3_description="Some other mainframe"
+remote3_addr=9.9.1.1       # IPV6 also works!
+remote3_port=3270
 ```
   
 Installation And Start
