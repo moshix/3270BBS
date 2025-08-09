@@ -145,7 +145,7 @@ start_HTTPD=no            # start web server? do not open to public, for admins 
 start_SSHD=yes
 sshd_port=2022
 
-# remote mainframe settings
+# remote mainframe settings for v27.0 and up
 # Up to 15 can be configured.
 # The remote hosts are being read in dynamically at runtine
 # So you can make changes to the tsu.cnf file for remote hosts without needign to restart the BBS
