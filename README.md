@@ -119,6 +119,12 @@ The following **values are just examples** and you should change them to your ne
 # (c) 2025 by Moshix. All rights reserved. 
 # bbs_name is the name of your BBS, up to 10 characters wide only!
 bbs_name=My3270BBS
+
+# if you define dns_name then this is what will be shown in your logon screen,
+# and DNS reverse lookup will not be used.
+# ths is useful if you are behind NAT such as in cloud service
+dns_name=www.moshix.tech 
+
 MOTD="Welcome to my 3270 BBS"
 
 # 3270 ports
