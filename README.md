@@ -101,7 +101,7 @@ The Editor function keys available are:
 - F9  = Scroll to last line
 – F10 = Center current line
 – F11 = Make centered box
-– F13 = Centered box until next empty row
+– F13 = Make centered box until next empty row
 – Save content with SAVE
 – Exit editor unsaved with CANCEL
 ```
