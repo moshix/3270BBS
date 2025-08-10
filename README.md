@@ -6,7 +6,7 @@ This is the same code that runs my Forum3270 BBS for 3270 terminals, [real](http
 
 It uses minimum resources. For up to 50 concurrent users, it only uses 25MB (not GB...) of memory. The system has seen upwards of 150 concurrent users with 64MB of memory used. So, you only need a small server to host your own 3270 BBS. A simple VPS server instance is perfectly fine. The code is heavily multi-threaded, therefore more cores are better, but not required. The BBS is blazing fast even with just one core. 
 
-All data is stored in an SQLite3 database called **tsu.db**. You can run it in WAL mode or in single mode. We recommend WAL for performance reasons. After six months of service, and hundreds of users, with lots of activity, my tsu.db is still less than 50MB. Disk space is not a concern. 
+All data is stored in an SQLite3 database called **tsu.db**. 3270BBS turns it into WAL mode automatically, for performance reasons. After six months of service, and hundreds of users, with lots of activity, my tsu.db is still less than 50MB. Disk space is not a concern. 
   
 3270BBS, by the way, loves to run on Linux/s390x (especially on AlmaLinux!)  
 
@@ -255,9 +255,9 @@ Same for PROXY, HTTPD, TN3270TLS, TN3270 (which are self-explanatory)
 Backup Strategy
 ---------------
 
-If you have real users, you need a real backup strategy. If you don't run the tsu.db sqlite database in WAL mode, then just make hourly or daily copies of the database.     
-In WAL mode, (which is what I run) I just create an hourly dump of the database into an *.sql file which can very easily be restored. So far, I never lost data.   
-  
+The SQLite3 database runs in WAL mode. This means you can't just make copies of tsu.db. You should instead dump the database daily, or whenever, into an .sql file. 
+
+    
 Technical Implementation Details
 --------------------------------
 
