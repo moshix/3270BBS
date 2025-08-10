@@ -20,7 +20,7 @@ Pre-Requisites
 Code Availability
 -----------------
 
-| Availability                                     | Supported          |
+| Binary                                           | Supported          |
 |--------------------------------------------------|--------------------|
 | Linux 64amd                                      | :white_check_mark: |
 | Linux 64arm                                      | :white_check_mark: |
