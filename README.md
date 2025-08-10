@@ -136,10 +136,11 @@ httpd_port=9000            # port for the HTTPD listenr
 # FTP server settings
 FTP_port=2100             # Port for FTP server (default: 2100)
 FTP_limit=20              # Maximum file size in KB (default: 20)
+start_FTPD=no
 
-start_FTPD=no             # start ftpd?
-start_proxy3270=no        # start proxy to mvs or VM?
-start_HTTPD=no            # start web server? do not open to public, for admins only
+#other servers
+start_proxy3270=yes
+start_HTTPD=no
 
 # ssh server settings
 start_SSHD=yes
