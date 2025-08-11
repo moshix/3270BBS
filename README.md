@@ -4,11 +4,11 @@ A 3270 BBS
 
 This is the same code that runs my Forum3270 BBS for 3270 terminals, [real](https://youtube.com/shorts/deyGhLtKzp8?si=_f4SYaz37xLR54Zj) and emulated. 
 
-It uses minimum resources. For up to 50 concurrent users, it only uses 25MB (not GB...) of memory. The system has seen upwards of 150 concurrent users with 64MB of memory used. So, you only need a small server to host your own 3270 BBS. A simple VPS server instance is perfectly fine. The code is heavily multi-threaded, therefore more cores are better, but not required. The BBS is blazing fast even with just one core. 
+It uses minimum resources. For up to 50 concurrent users, it only uses 25MB (not GB...) of memory. The system has seen upwards of 150 concurrent users with only 64MB of memory used. So, you only need a small server to host your own 3270 BBS. A simple VPS server instance is perfectly fine. The code is heavily multi-threaded, therefore more cores are better, but not required. The BBS is blazing fast even with just one core. 
 
 All data is stored in an SQLite3 database called **tsu.db**. 3270BBS turns it into WAL mode automatically, for performance reasons. After six months of service, and hundreds of users, with lots of activity, my tsu.db is still less than 50MB. Disk space is not a concern. 
   
-3270BBS, by the way, loves to run on Linux/s390x (especially on AlmaLinux!)  
+3270BBS, by the way, loves to run on Linux/s390x. 
 
 Pre-Requisites
 --------------
@@ -72,6 +72,7 @@ Features
 | Screensaver to protect from burn-in              | :white_check_mark: |
 | DELTAMON performance monitor                     | :white_check_mark: |
 | Doors to other 3270BBS communities               | :white_check_mark: |
+| No database server needed                        | :white_check_mark: |
 | No root privileges required                      | :white_check_mark: |
 
 
@@ -268,7 +269,20 @@ Technical Implementation Details
 --------------------------------
 
 By far the most complex screen is the real time chat because of the number of things it does. It's heavily multi-threaded. If you want to read more about it's implemented, [read this](https://github.com/moshix/BITNETServices/blob/master/forum3270_chat.md) 
+
+
+Roadmap
+-------
+
+Depending on how many 3270BBS systems will be set up by the community, I plan on adding a federation service so users can roam betwen our 3270BBS instances without having to
+log in each time. I will probably strat by having one central non-admin user directory on Forum3270 (ie my 3270BBS instance) from where users can authenticate when they teleport to other 3270BBSs systems. 
+
+Another feature, I will be adding soon is users web pages inside 3270BBS. If the web server is turned on, and a user has a Note called **Public** then the content of that note will be shown when users go to http://3270bbswebsite/username
+
+And finally, I plan to add an integration with Slack and Mattermost for real time chat. 
+
   
+
 Final Notes
 -----------
 
