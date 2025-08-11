@@ -15,7 +15,8 @@ Pre-Requisites
 
 -Make sure you have **sqlite3** installed.   
 -And make sure you have a 3270 terminal to connect, obviously. Something like c3270 or x3270, or [Vista3270](https://www.tombrennansoftware.com/) is perfectly fine.
-
+- Go compiler is **not** required. The binary is static and doesn't require any library. 
+  
   
 Code Availability
 -----------------
