@@ -73,6 +73,7 @@ Features
 | Screensaver to protect from burn-in              | :white_check_mark: |
 | DELTAMON performance monitor                     | :white_check_mark: |
 | Doors to other 3270BBS communities               | :white_check_mark: |
+| Time skew detection compared to NTP              | :white_check_mark: |
 | No database server needed                        | :white_check_mark: |
 | No root privileges required                      | :white_check_mark: |
 
