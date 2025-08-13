@@ -47,9 +47,9 @@ Features
 | Private chat                                     | :white_check_mark: |
 | Marketplace                                      | :white_check_mark: |
 | User rolodex                                     | :white_check_mark: |
-| User mgmt                                        | :white_check_mark: |
+| User management                                  | :white_check_mark: |
 | Admin panels                                     | :white_check_mark: |
-| Session mgmt                                     | :white_check_mark: |
+| Session management                               | :white_check_mark: |
 | DB creation script                               | :white_check_mark: |
 | FTP Server for notes access                      | :white_check_mark: |
 | Web Server for notes, topics, sysadmin access    | :white_check_mark: |
