@@ -41,29 +41,6 @@ echo "    TSU BBS Password Migration Script"
 echo "    Copyright 2025 by moshix"
 echo "=========================================="
 echo
-echo -e "${YELLOW} Only run this script if you have a database prior to 3270BBS 27.5!!! ${NC}"
-
-# Ask for confirmation to proceed
-echo
-read -p  "Do you want to proceed with password migration? (yes/no): " -r
-echo -e "${RED}User response: $REPLY${NC}"
-if [[ ! $REPLY =~ ^[Yy][Ee][Ss]$ ]]; then
-    echo -e "${YELLOW}Migration cancelled by user.${NC}"
-    exit 0
-fi
-echo
-
-echo -e "${RED} ok, so I will hash all passwords. Did you make a backup of your database? ${NC}"
-
-echo
-read -p "Backup exists? (yes/no): " -r
-echo -e "${RED}User response: $REPLY${NC}"
-if [[ ! $REPLY =~ ^[Yy][Ee][Ss]$ ]]; then
-    echo -e "${YELLOW}Migration cancelled by user.${NC}"
-    exit 0
-fi
-echo
-
 
 # Check if database exists
 if [ ! -f "$DB_FILE" ]; then
@@ -77,11 +54,58 @@ if ! command -v sqlite3 &> /dev/null; then
     exit 1
 fi
 
-# Create backup directory
+# Analyze current password state
+print_status "Analyzing current password format..."
+
+# Get password format statistics
+TOTAL_USERS=$(sqlite3 "$DB_FILE" "SELECT COUNT(*) FROM users;")
+HASHED_USERS=$(sqlite3 "$DB_FILE" "SELECT COUNT(*) FROM users WHERE LENGTH(password_hash) = 64 AND password_hash REGEXP '^[0-9a-fA-F]+$';")
+PLAIN_USERS=$((TOTAL_USERS - HASHED_USERS))
+
+echo
+echo "Current database status:"
+echo "  Total users: $TOTAL_USERS"
+echo "  Users with hashed passwords: $HASHED_USERS"
+echo "  Users with plain text passwords: $PLAIN_USERS"
+echo
+
+# Display appropriate warning based on analysis
+if [ $PLAIN_USERS -eq 0 ]; then
+    echo -e "${RED}All passwords are already hashed! Migration is not needed.${NC}"
+    echo -e "This database appears to be from 3270BBS 27.5 or later.${NC}"
+    exit 0
+    echo
+    read -p "Do you still want to proceed with migration? (yes/no): " -r
+    if [[ ! $REPLY =~ ^[Yy][Ee][Ss]$ ]]; then
+        print_status "Migration cancelled - no action needed."
+        exit 0
+    fi
+    print_warning "Proceeding with verification only..."
+else
+    echo -e "${YELLOW}This database appears to be from before 3270BBS 27.5${NC}"
+    echo -e "${YELLOW}Password migration is recommended!${NC}"
+    echo
+    read -p "Do you want to proceed with password migration? (yes/no): " -r
+    if [[ ! $REPLY =~ ^[Yy][Ee][Ss]$ ]]; then
+        print_status "Migration cancelled by user."
+        exit 0
+    fi
+fi
+
+echo
+echo -e "${RED}Important: A backup of your database is required before proceeding.${NC}"
+echo
+read -p "Do you have a backup of your database? (yes/no): " -r
+if [[ ! $REPLY =~ ^[Yy][Ee][Ss]$ ]]; then
+    print_warning "Please make a backup first!"
+    exit 0
+fi
+
+# Create additional backup
 mkdir -p "$BACKUP_DIR"
 BACKUP_FILE="$BACKUP_DIR/tsu.db.backup.$TIMESTAMP"
 
-print_status "Creating backup..."
+print_status "Creating additional backup..."
 cp "$DB_FILE" "$BACKUP_FILE"
 if [ $? -eq 0 ]; then
     print_success "Backup created: $BACKUP_FILE"
@@ -107,12 +131,21 @@ echo "$USERS_DATA" | while IFS='|' read -r user_id username password_hash; do
     if [ $hash_length -lt 64 ]; then
         echo "  👤 $username: Plain text password (${hash_length} chars)"
     else
-        echo "  �� $username: Already hashed (${hash_length} chars)"
+        if [[ "$password_hash" =~ ^[0-9a-fA-F]+$ ]]; then
+            echo "  ✅ $username: Valid SHA-256 hash"
+        else
+            echo "  ⚠️  $username: Invalid hash format"
+        fi
     fi
 done
 
-echo
-print_status "Starting password migration..."
+if [ $PLAIN_USERS -eq 0 ]; then
+    echo
+    print_status "Verifying existing hashes..."
+else
+    echo
+    print_status "Starting password migration..."
+fi
 
 # Process each user
 echo "$USERS_DATA" | while IFS='|' read -r user_id username password_hash; do
@@ -133,12 +166,16 @@ echo "$USERS_DATA" | while IFS='|' read -r user_id username password_hash; do
             echo "  ❌ Failed to update password for $username"
         fi
     else
-        echo "⏭️  Skipping $username: already hashed"
+        if [[ "$password_hash" =~ ^[0-9a-fA-F]+$ ]]; then
+            echo "✓ Verified hash for $username: ${password_hash:0:16}..."
+        else
+            print_warning "Invalid hash format for $username"
+        fi
     fi
 done
 
 echo
-print_status "Verifying migration..."
+print_status "Verifying final state..."
 
 # Show final state
 echo "Final password status:"
@@ -152,22 +189,26 @@ done
 
 echo
 print_status "Migration Summary:"
-TOTAL_USERS=$(sqlite3 "$DB_FILE" "SELECT COUNT(*) FROM users;")
-HASHED_USERS=$(sqlite3 "$DB_FILE" "SELECT COUNT(*) FROM users WHERE LENGTH(password_hash) = 64;")
-PLAIN_USERS=$((TOTAL_USERS - HASHED_USERS))
+FINAL_TOTAL=$(sqlite3 "$DB_FILE" "SELECT COUNT(*) FROM users;")
+FINAL_HASHED=$(sqlite3 "$DB_FILE" "SELECT COUNT(*) FROM users WHERE LENGTH(password_hash) = 64;")
+FINAL_PLAIN=$((FINAL_TOTAL - FINAL_HASHED))
 
-echo "  Total users: $TOTAL_USERS"
-echo "  Hashed passwords: $HASHED_USERS"
-echo "  Plain text passwords: $PLAIN_USERS"
+echo "  Total users: $FINAL_TOTAL"
+echo "  Hashed passwords: $FINAL_HASHED"
+echo "  Plain text passwords: $FINAL_PLAIN"
 
-if [ $PLAIN_USERS -eq 0 ]; then
+if [ $FINAL_PLAIN -eq 0 ]; then
     echo
-    print_success "Migration completed successfully!"
-    echo "All passwords are now properly hashed."
+    print_success "All passwords are properly hashed!"
+    if [ $PLAIN_USERS -eq 0 ]; then
+        echo "No migration was needed - all passwords were already in correct format."
+    else
+        echo "Migration completed successfully."
+    fi
     echo "You can now start the TSU application."
 else
     echo
-    print_warning "Warning: Some passwords are still plain text!"
+    print_error "Warning: Some passwords are still in plain text!"
     echo "Please check the output above for details."
 fi
 
