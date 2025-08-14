@@ -134,6 +134,10 @@ MOTD="Welcome to my 3270 BBS"
 port=3270                  #port for non-encrypted traffic
 tlsport=3271               #port for TSL 1.x encrypted traffic
 
+# start TLS port?
+start_TLS=yes
+
+
 # your certificate
 tlscert=your.crt
 tlskey=your.key
