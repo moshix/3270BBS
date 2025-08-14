@@ -11,6 +11,7 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+reset=`tput sgr0`
 NC='\033[0m' # No Color
 
 # Function to print colored output
@@ -40,6 +41,29 @@ echo "    TSU BBS Password Migration Script"
 echo "    Copyright 2025 by moshix"
 echo "=========================================="
 echo
+echo -e "${YELLOW} Only run this script if you have a database prior to 3270BBS 27.5!!! ${NC}"
+
+# Ask for confirmation to proceed
+echo
+read -p  "Do you want to proceed with password migration? (yes/no): " -r
+echo -e "${RED}User response: $REPLY${NC}"
+if [[ ! $REPLY =~ ^[Yy][Ee][Ss]$ ]]; then
+    echo -e "${YELLOW}Migration cancelled by user.${NC}"
+    exit 0
+fi
+echo
+
+echo -e "${RED} ok, so I will hash all passwords. Did you make a backup of your database? ${NC}"
+
+echo
+read -p "Backup exists? (yes/no): " -r
+echo -e "${RED}User response: $REPLY${NC}"
+if [[ ! $REPLY =~ ^[Yy][Ee][Ss]$ ]]; then
+    echo -e "${YELLOW}Migration cancelled by user.${NC}"
+    exit 0
+fi
+echo
+
 
 # Check if database exists
 if [ ! -f "$DB_FILE" ]; then
