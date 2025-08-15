@@ -66,7 +66,7 @@ Features
 | Proxy3270 server to other mainframes             | :white_check_mark: |
 | Console view                                     | :white_check_mark: |
 | Forex updated table                              | :white_check_mark: |
-| Stocks view                                      | :white_check_mark: |
+| Stocks quotron screen                            | :white_check_mark: |
 | All Seeing Eye from clock view                   | :white_check_mark: |
 | TLS and SSL support with certificates            | :white_check_mark: |
 | SSH access to chat and topics                    | :white_check_mark: |
