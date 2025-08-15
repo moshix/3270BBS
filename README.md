@@ -75,6 +75,8 @@ Features
 | Doors to other 3270BBS communities               | :white_check_mark: |
 | Time skew detection compared to NTP              | :white_check_mark: |
 | No database server needed                        | :white_check_mark: |
+| SHA256 password hasing for all accounts          | :white_check_mark: |
+| Regular security audits by outside firm          | :white_check_mark: |
 | No root privileges required                      | :white_check_mark: |
 
 
