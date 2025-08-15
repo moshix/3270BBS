@@ -40,7 +40,7 @@ Features
 
 | Feature                                           | Included          |
 |--------------------------------------------------|--------------------|
-| Topics Mgmt                                      | :white_check_mark: |
+| Discussion groups                                | :white_check_mark: |
 | Messages                                         | :white_check_mark: |
 | Calendar                                         | :white_check_mark: |
 | Live Chat                                        | :white_check_mark: |
