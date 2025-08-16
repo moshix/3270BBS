@@ -150,13 +150,13 @@ CREATE INDEX idx_notes_updated_at ON notes(updated_at);
 CREATE INDEX idx_topic_notification_optouts ON topic_notification_optouts(user_id, topic_id);
 CREATE INDEX idx_calendar_events_user_time ON calendar_events(user_id, start_time);
 
--- Insert initial admin user (admin/admin)
+-- Insert initial admin user (admin/admin) - password hashed with SHA-256
 INSERT INTO users (username, password_hash, email, is_admin)
-VALUES ('admin', 'admin', 'admin@example.com', 1);
+VALUES ('admin', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'admin@example.com', 1);
 
--- Insert noreply user (noreply/noreply)
+-- Insert noreply user (noreply/noreply) - password hashed with SHA-256
 INSERT INTO users (username, password_hash, email, is_admin)
-VALUES ('noreply', 'noreply', 'noreply@example.com', 0);
+VALUES ('noreply', 'c032f1b2c07148d5c19afa6c6dcaef998abf76f863089c04eab52133c0ee0815', 'noreply@example.com', 0);
 EOF
 
 # Create the database and apply schema
@@ -172,6 +172,7 @@ if [ $? -ne 0 ]; then
     exit 1
 else
     echo "Database created successfully with initial users (admin, noreply)."
+    echo "admin has password admin. noreply has password noreply". 
     exit 0
 fi
 
