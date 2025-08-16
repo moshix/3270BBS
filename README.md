@@ -297,7 +297,7 @@ Final Notes
 
 The code consits of roughly 40,000 lines of Go language. I wrote it all myself, and if you don't like this app, I am the only one to blame, no one else. 
 
-The library I use is [go3270](https://github.com/racingmars/go3270) by the **genial #racingmars.** 
+The library I use is [go3270](https://github.com/racingmars/go3270) by the **genial #racingmars ** with thanks. 
 
 This BBS application is made available in binary form only, strictly as is. It is provided without warranties of any kind, either express or implied, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose.
 
@@ -309,4 +309,4 @@ By using this software, you agree to abide by any applicable local, national, or
 
 <img src="3270BBS.jpg">
     
-Moshix, August 15, 2025 - Ketura Ranch, Vermont
+Moshix, August 16, 2025 - Ketura Ranch, Vermont
