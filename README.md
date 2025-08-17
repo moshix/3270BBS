@@ -194,9 +194,8 @@ Installation And Start
 
 3. **Run the create_tsudb.sh script**. This will create tsu.db with 2 users admin/admin and noreply/noreply.  You must change these passwords when you log in as admin the first time. 
 
-The admin account allows you to log in and control your BBS and set other users to admin thru the admin_users, admin_topics, admin_posts panels. Admin users can also start and stop the various servers (tn3270, tn3270tls, FTPD, HTTPD, PROXY3270) from SDSF and from the console.  The reply account is only used for internal system messages to users, but you need to change the password for user noreply once you log in as admin from the panel ADMIN USERS (option 7).   
+The admin account allows you to log in and control your BBS and set other users to admin thru the admin_users, admin_topics, admin_posts panels. The reply account is only used for internal system messages to users. Passwords can be changed from the ADMIN USERS panel (option 7).   
   
-
 4. Edit the sample tsu.greet from this repo. It's the greeting for all new users. Remember to keep it 80 characters wide, max,for easey reading on 3270 terminals.   
   
 5. Start the BBS with the provided script start_tsu.sh, you should probably tee the log into a log file.  
