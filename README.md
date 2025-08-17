@@ -10,6 +10,8 @@ All data is stored in an SQLite3 database called **tsu.db**. 3270BBS turns it in
   
 3270BBS, by the way, loves to run on Linux/s390x. 
 
+To access my own 3270BBS instanced, called Forum3270, connect your 3270 emulator to www.moshix.tech port 2300, or [simply click to connect with your browser](https://www.moshix.tech:3270)
+
 What you need
 -------------
 
