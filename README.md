@@ -310,4 +310,4 @@ By using this software, you agree to abide by any applicable local, national, or
 
 <img src="3270BBS.jpg">
     
-Moshix, August 16, 2025 - Ketura Ranch, Vermont
+Moshix, August 17, 2025 - Munich
