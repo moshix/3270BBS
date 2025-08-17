@@ -158,7 +158,7 @@ start_FTPD=no
 
 #other servers
 start_proxy3270=yes
-start_HTTPD=no
+start_HTTPD=yes
 
 # ssh server settings
 start_SSHD=yes
