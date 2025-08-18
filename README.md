@@ -168,10 +168,10 @@ sshd_port=2022
 # Up to 15 can be configured.
 # The remote hosts are being read in dynamically at runtine
 # So you can make changes to the tsu.cnf file for remote hosts without needign to restart the BBS
-remote1=MVS3.8
-remote1_description="MVS 3.8 TK5 community mainframe"
-remote1_addr=localhost
-remote1_port=1111
+remote1=Forum3270
+remote1_description="moshix Forum3270"
+remote1_addr=www.moshix.tech
+remote1_port=2300
 
 remote2=SDFVM
 remote2_description="VM/SP rel5 with PROFS at SDF"
