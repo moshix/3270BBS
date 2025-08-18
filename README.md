@@ -261,12 +261,12 @@ Same for PROXY, HTTPD, TN3270TLS, TN3270 (which are self-explanatory)
     
 `C U=MOSHIX         - Terminate the session of user MOSHIX`
 (sometimes people just leave their terminals open on the BBS and go on vacation (really happened).   
-  
-`$PJES2,TERM        - Terminate the BBS gracefully ` 
-`LOG                - View BBS log. Top/BOT F7/F8 will navigate inside the log view`
-`Admin Users Panel`
-`Admin Topics Panel`
-`Admin Posts Panel`
+    
+`$PJES2,TERM        - Terminate the BBS gracefully `   
+`LOG                - View BBS log. Top/BOT F7/F8 will navigate inside the log view`  
+`Admin Users Panel`  
+`Admin Topics Panel`  
+`Admin Posts Panel`  
 
 
 Backup Strategy
