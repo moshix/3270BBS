@@ -4,6 +4,8 @@ A 3270 BBS
 
 This is the same code that runs [my Forum3270 BBS](https://www.moshix.tech:3270) for IBM 3270 terminals, [real](https://youtube.com/shorts/deyGhLtKzp8?si=_f4SYaz37xLR54Zj) and emulated. 
 
+Just to make it clear, this BBS needs to be accessed with an **IBM 3270 terminal emulator**, not Putty, or telnet. 
+
 It uses minimum resources. For up to 50 concurrent users, it only uses 25MB (not GB...) of memory. The system has seen upwards of 150 concurrent users with only 64MB of memory used. You only need a small server to host your own 3270BBS! A simple VPS server instance is perfectly fine. The code is heavily multi-threaded, therefore more cores are better, but not required. The BBS is blazing fast even with just one core. 
 
 All data is stored in an SQLite3 database called **tsu.db**. 3270BBS turns it into WAL mode automatically, for performance reasons. After six months of service, and hundreds of users, with lots of activity, my tsu.db is still less than 50MB. Disk space is not a concern. 
