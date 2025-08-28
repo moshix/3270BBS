@@ -310,4 +310,4 @@ By using this software, you agree to abide by any applicable local, national, or
 
 <img src="3270BBS.jpg">
     
-Moshix, August 20, 2025 - St. Moritz
+Moshix, August 28, 2025 - Lugano
