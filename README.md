@@ -189,7 +189,7 @@ remote3_port=3270
 Installation And Start
 ----------------------
 
-1. Download the [binary for Macos, Linux 64amd and 64arm and s390x, FreeBSD](https://github.com/moshix/3270BBS/releases/tag/26.7).
+1. Download the [binary for Macos, Linux 64amd and 64arm and s390x, FreeBSD](https://github.com/moshix/3270BBS/releases/tag/26.7) and **rename the binary to 3270bbs**. 
 
 2. **Run the create_tsudb.sh script**. This will create tsu.db with 2 users admin/admin and noreply/noreply.  You must change these passwords when you log in as admin the first time. 
 
