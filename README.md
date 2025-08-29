@@ -197,7 +197,7 @@ The admin account allows you to log in and control your BBS and set other users 
   
 3. Edit the sample tsu.greet from this repo. It's the greeting for all new users. Remember to keep it 80 characters wide, max,for easey reading on 3270 terminals.   
   
-4. Start the BBS with the provided script start_3270bbs.bash, you should probably tee the log into a log file.  
+4. Start the BBS with the provided script start_bbs.bash, you should probably tee the log into a log file.  
 
 5. Announce your new BBS, and Bob is your uncle. **Make sure to report your BBS here because I will link to all known 3270 BBS instances out there from this page.**  
 
