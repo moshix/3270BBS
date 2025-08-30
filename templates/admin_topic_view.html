@@ -9,7 +9,7 @@
                 <a href="/admin/topics" class="btn btn-back">Back to Topics</a>
                 <form method="POST" action="/admin/topics/{{.Topic.ID}}/delete" style="display: inline;" 
                       onsubmit="return confirm('Are you sure you want to delete this topic and all its posts?')">
-                    <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+
                     <button type="submit" class="btn btn-delete">Delete Topic</button>
                 </form>
             </div>

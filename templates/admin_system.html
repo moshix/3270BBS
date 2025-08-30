@@ -65,7 +65,7 @@
                             <td>{{(index $.AdminData.ServerMetrics $name).Connected}}</td>
                             <td>
                                 <form method="POST" action="/admin/system/control" class="d-inline">
-                                    <input type="hidden" name="csrf_token" value="{{$.CSRFToken}}">
+
                                     <input type="hidden" name="server" value="{{$name}}">
                                     
                                     {{if eq $status "STARTED"}}
