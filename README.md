@@ -89,7 +89,7 @@ Features
 Content Editing
 ---------------
 
-3270BBS contains its own Editor. The Editor allows to edit Topics, Posts, Notes, marketplace items, and Messages. The editor has a spelling checker
+3270BBS contains an Editor. The Editor allows to edit Topics, Posts, Notes, marketplace items, and Messages. The editor has a spelling checker
 which is augemented with mainframe world terms such as JCL, ABEND etc.   
 
 Messages and Topics can be edited with these self-explanatory rendering tags:  
