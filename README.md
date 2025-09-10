@@ -28,6 +28,7 @@ Code Availability
 | Binary                                           | Supported          |
 |--------------------------------------------------|--------------------|
 | Linux 64amd                                      | :white_check_mark: |
+| Linux Intel32bit                                 | :white_check_mark: |
 | Linux 64arm                                      | :white_check_mark: |
 | Linux s390x                                      | :white_check_mark: |
 | FreeBSD                                          | :white_check_mark: |
