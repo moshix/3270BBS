@@ -33,7 +33,7 @@ Code Availability
 | Linux s390x                                      | :white_check_mark: |
 | FreeBSD                                          | :white_check_mark: |
 | Macos Universal                                  | :white_check_mark: |
-| Windoze                                          |  :x:               |
+| Windows                                          |  :x:               |
 | Is it awesome?                                   | :white_check_mark: |
 
 Yes, I plan to release the full code, after a period of bug reports and more security audits.  
