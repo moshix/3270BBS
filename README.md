@@ -12,7 +12,18 @@ All data is stored in an SQLite3 database called **tsu.db**. 3270BBS turns it in
   
 3270BBS, by the way, loves to run on Linux/s390x. 
 
-To access my own 3270BBS instanced, called Forum3270, connect your 3270 emulator to **www.moshix.tech** port 2300, or [simply click here to connect with your browser](https://www.moshix.tech:3270)
+Public 3270BBS Servers
+  
+| BBS Name            | SysOp      | URL                        | Port |
+|----------------------|-----------|----------------------------|------|
+| Forum3270           | moshix | www.moshix.tech            | 2300 |
+| Ernietech's 3270BBS | Ernietech | ernietech.net             | 3270 |
+| SpanishBBS          | ??        | jauriarts.org              | 3270 |
+| RevertPulse         | kurisu | bbs.revertivepulse.net     | 3270 |
+| ClearinHouz         | dege   | 3270.bbs.dege.au           | 3270 |
+
+
+
 
 What you need
 -------------
@@ -287,20 +298,7 @@ log in each time. I will probably strat by having one central non-admin user dir
 
 Another feature, I will be adding soon is users web pages inside 3270BBS. If the web server is turned on, and a user has a Note called **Public** then the content of that note will be shown when users go to http://3270bbswebsite/username
 
-And finally, I plan to add an integration with Slack and Mattermost for real time chat. 
-
-Public 3270BBS Servers
-----------------------
-| BBS Name            | SysOp      | URL                        | Port |
-|----------------------|-----------|----------------------------|------|
-| Forum3270           | moshix | www.moshix.tech            | 2300 |
-| Ernietech's 3270BBS | Ernietech | ernietech.net             | 3270 |
-| SpanishBBS          | ??        | jauriarts.org              | 3270 |
-| RevertPulse         | kurisu | bbs.revertivepulse.net     | 3270 |
-| ClearinHouz         | dege   | 3270.bbs.dege.au           | 3270 |
-
-
-
+And finally, I plan to add an integration with Slack and Mattermost for real time chat.   
 
 Final Notes
 -----------
