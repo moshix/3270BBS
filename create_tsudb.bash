@@ -188,6 +188,7 @@ if sqlite3 "$DB_FILE" < "$SQL_FILE" 2> "$LOG_FILE"; then
     if [ -f "$DB_FILE" ] && [ -s "$DB_FILE" ]; then
         echo "Database created successfully with initial users (admin, noreply)."
         echo "admin has password admin. noreply has password noreply."
+        echo "***** CHANGE THE PASSWORDS FOR USERS ADMIN AND NOREPLY UPON FIRST LOGON!! *****"
         
         # Show database info
         echo ""
