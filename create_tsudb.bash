@@ -8,6 +8,28 @@ DB_FILE="tsu.db"
 LOG_FILE="schema_creation.log"
 SQL_FILE="$(mktemp)"
 
+# Check if sqlite3 is installed
+if ! command -v sqlite3 >/dev/null 2>&1; then
+    echo "Error: sqlite3 is not installed or not in PATH." >&2
+    echo "Please install sqlite3 before running this script." >&2
+    echo "" >&2
+    echo "Installation instructions:" >&2
+    echo "  Ubuntu/Debian: sudo apt-get install sqlite3" >&2
+    echo "  macOS:         brew install sqlite3" >&2
+    echo "  CentOS/RHEL:   sudo yum install sqlite" >&2
+    echo "  Fedora:        sudo dnf install sqlite" >&2
+    exit 1
+fi
+
+# Check sqlite3 version and functionality
+SQLITE_VERSION=$(sqlite3 -version 2>/dev/null | cut -d' ' -f1)
+if [ -z "$SQLITE_VERSION" ]; then
+    echo "Error: sqlite3 is installed but not functioning properly." >&2
+    exit 1
+fi
+
+echo "Found sqlite3 version: $SQLITE_VERSION"
+
 # Check if database already exists
 if [ -f "$DB_FILE" ]; then
     echo "Database $DB_FILE already exists. Remove it first if you want to recreate." >&2
@@ -161,18 +183,38 @@ EOF
 
 # Create the database and apply schema
 echo "Creating SQLite database $DB_FILE..."
-sqlite3 "$DB_FILE" < "$SQL_FILE" 2> "$LOG_FILE"
-
-# Clean up SQL file
-rm -f "$SQL_FILE"
-
-# Check for errors
-if [ $? -ne 0 ]; then
-    echo "Error creating schema or inserting users. Check $LOG_FILE for details." >&2
-    exit 1
+if sqlite3 "$DB_FILE" < "$SQL_FILE" 2> "$LOG_FILE"; then
+    # Success - check if database file was actually created
+    if [ -f "$DB_FILE" ] && [ -s "$DB_FILE" ]; then
+        echo "Database created successfully with initial users (admin, noreply)."
+        echo "admin has password admin. noreply has password noreply."
+        
+        # Show database info
+        echo ""
+        echo "Database info:"
+        echo "  File: $DB_FILE"
+        echo "  Size: $(du -h "$DB_FILE" | cut -f1)"
+        echo "  Tables created: $(sqlite3 "$DB_FILE" ".tables" | wc -w)"
+        
+        # Clean up SQL file and log file on success
+        rm -f "$SQL_FILE"
+        rm -f "$LOG_FILE"
+        exit 0
+    else
+        echo "Error: Database file was not created properly." >&2
+        exit 1
+    fi
 else
-    echo "Database created successfully with initial users (admin, noreply)."
-    echo "admin has password admin. noreply has password noreply". 
-    exit 0
+    # Failure
+    echo "Error creating schema or inserting users." >&2
+    if [ -s "$LOG_FILE" ]; then
+        echo "Error details:" >&2
+        cat "$LOG_FILE" >&2
+    fi
+    echo "Check $LOG_FILE for more details." >&2
+    
+    # Clean up SQL file but keep log file for debugging
+    rm -f "$SQL_FILE"
+    exit 1
 fi
 
