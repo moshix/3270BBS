@@ -293,11 +293,11 @@ Public 3270BBS Servers
 ----------------------
 | BBS Name            | SysOp      | URL                        | Port |
 |----------------------|-----------|----------------------------|------|
-| Forum3270           | by moshix | www.moshix.tech            | 2300 |
-| Ernietech's 3270BBS | by Ernietech | ernietech.net             | 3270 |
+| Forum3270           | moshix | www.moshix.tech            | 2300 |
+| Ernietech's 3270BBS | Ernietech | ernietech.net             | 3270 |
 | SpanishBBS          | ??        | jauriarts.org              | 3270 |
-| RevertPulse         | by kurisu | bbs.revertivepulse.net     | 3270 |
-| ClearinHouz         | by dege   | 3270.bbs.dege.au           | 3270 |
+| RevertPulse         | kurisu | bbs.revertivepulse.net     | 3270 |
+| ClearinHouz         | dege   | 3270.bbs.dege.au           | 3270 |
 
 
 
