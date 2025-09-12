@@ -201,9 +201,9 @@ remote3_port=3270
 Installation And Start
 ----------------------
 
-Either go the docker way with Harding's [dockerized 3270BBS](https://github.com/MortenHarding/docker-3270BBS),  
+Either go the fast, easy, docker way with Harding's [dockerized 3270BBS](https://github.com/MortenHarding/docker-3270BBS),  
 
-or  
+or DIY like this:  
 
 1. Download the [binary for Macos, Linux 64amd and 64arm and s390x, FreeBSD](https://github.com/moshix/3270BBS/releases/tag/26.7) and **rename the binary to 3270bbs**. 
 
