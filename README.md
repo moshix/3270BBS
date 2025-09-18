@@ -198,7 +198,10 @@ remote3_description="Some other mainframe"
 remote3_addr=9.9.1.1       # IPV6 also works!
 remote3_port=3270
 ```
-  
+
+You should also customeize tsu.logo to a logo you like. It will be rendered on the logon screen. **Only the first 8 lines of tsu.logo will be used!**  
+
+
 Installation And Start
 ----------------------
 
