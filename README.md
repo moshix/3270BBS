@@ -306,12 +306,10 @@ By far the most complex screen is the real time chat because of the number of th
 Roadmap
 -------
 
-Depending on how many 3270BBS systems will be set up by the community, I plan on adding a federation service so users can roam betwen our 3270BBS instances without having to
-log in each time. I will probably strat by having one central non-admin user directory on Forum3270 (ie my 3270BBS instance) from where users can authenticate when they teleport to other 3270BBSs systems. 
 
-Another feature, I will be adding soon is users web pages inside 3270BBS. If the web server is turned on, and a user has a Note called **Public** then the content of that note will be shown when users go to http://3270bbswebsite/username
+Users web pages inside 3270BBS: If the web server is turned on, and a user has a Note called **Public** then the content of that note will be shown when users go to http://3270bbswebsite/username
 
-And finally, I plan to add an integration with Slack and Mattermost for real time chat.   
+
 
 Final Notes
 -----------
