@@ -128,6 +128,8 @@ The Editor function keys available are:
 – F10 = Center current line
 – F11 = Make centered box
 – F13 = Make centered box until next empty row
+- F14 = Abandon edit session
+- F15 = Save and exit
 – Save content with SAVE
 – Exit editor unsaved with CANCEL
 ```
