@@ -58,6 +58,7 @@ Features
 | Feature                                           | Included          |
 |--------------------------------------------------|--------------------|
 | Discussion groups                                | :white_check_mark: |
+| I Like for topics                                | :white_check_mark: |
 | Messages                                         | :white_check_mark: |
 | Calendar                                         | :white_check_mark: |
 | Live Chat                                        | :white_check_mark: |
@@ -80,7 +81,6 @@ Features
 | Log viewer                                       | :white_check_mark: |
 | TLS and TN3270 listeners                         | :white_check_mark: |
 | FTPD server and HTTPD server                     | :white_check_mark: |
-| Proxy3270 server to other mainframes             | :white_check_mark: |
 | Console view                                     | :white_check_mark: |
 | Forex updated table                              | :white_check_mark: |
 | Stocks quotron screen                            | :white_check_mark: |
@@ -90,12 +90,15 @@ Features
 | Screensaver to protect from burn-in              | :white_check_mark: |
 | DELTAMON performance monitor                     | :white_check_mark: |
 | Doors to other 3270BBS communities               | :white_check_mark: |
+| Discord access to Mainframe Enthusiasts Channel  | :white_check_mark: |
+| The Matrix in the raw                            | :white_check_mark: |
 | Time skew detection compared to NTP              | :white_check_mark: |
 | No database server needed                        | :white_check_mark: |
 | SHA256 password hasing for all accounts          | :white_check_mark: |
 | Account enumeration protection                   | :white_check_mark: |
 | Regular security audits by outside firm          | :white_check_mark: |
 | No root privileges required                      | :white_check_mark: |
+| SysOp-definable, dynamic logon screen logo       | :white_check_mark: |
 
 
 
