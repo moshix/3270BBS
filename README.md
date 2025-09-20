@@ -65,6 +65,7 @@ Features
 | Private chat                                     | :white_check_mark: |
 | Marketplace                                      | :white_check_mark: |
 | User rolodex                                     | :white_check_mark: |
+| About me page thru PUBLIC note                   | :white_check_mark: |
 | User management                                  | :white_check_mark: |
 | Admin panels                                     | :white_check_mark: |
 | Session management                               | :white_check_mark: |
