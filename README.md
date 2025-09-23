@@ -57,6 +57,7 @@ Features
 
 | Feature                                           | Included          |
 |--------------------------------------------------|--------------------|
+| Virtual sessions mgmt with F23/F24               | :white_check_mark: |
 | Discussion groups                                | :white_check_mark: |
 | I Like for topics                                | :white_check_mark: |
 | Messages                                         | :white_check_mark: |
@@ -234,6 +235,8 @@ When in doubt how to install or operate your BBS, reach out to moshix on the For
 Operation of the BBS, User and Content Management
 -------------------------------------------------
 
+Function key F1 will give you the help. F23 will create a new virtual session, while F24 will switch between the maximum two virtual sessions. 
+
 The application is very stable and stays up for months on end. However, any BBS requires constant care and content maintenance. Trolls naturally form where online communities exist, and their many dropppings need to be cleaned. A BBS without some kind of moderator activity will either wither and die, or degenerate into a reputational problem for you. 
   
 Daily pruning and removing of bad content is much easier than doing it once a month or once a  year. Stay in touch with your users and advertise your BBS in the communities where you want to attract users from. 
@@ -251,8 +254,8 @@ Finally there is a script import_calendar.sh to import .ics files into an indivi
 If you enable FTP, then users can upload notes to their NOTES directly, or also download them. This way they can edit longer notes and then upload them with FTP. Same wth HTTP. 
   
 From Notes, then users can post a note to Topics. This is useful to first edit the Note until  you are happy with it and then turn into a post with one function key.   
+The web interface can be opened to the public, but what's the point for a 3270 BBS system?  
 
-The web interface can be opened to the public, but what's the point for a 3270 BBS system?
 
 Admin Only Panels
 -----------------
