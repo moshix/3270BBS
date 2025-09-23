@@ -332,4 +332,4 @@ By using this software, you agree to abide by any applicable local, national, or
 
 <img src="3270BBS.jpg">
     
-Moshix, Sept 18, 2025 - Lucerne
+Moshix, Sept 23, 2025 - Cutchogue
