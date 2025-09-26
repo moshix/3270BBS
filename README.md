@@ -1,4 +1,4 @@
-<h3 style="color:red;">Users upgrading to 3.2.x ATTENTION</h3>
+<h3 style="color:red;">SYSOPS upgrading to 3.2.x ATTENTION</h3>
 
 
 Before running the new 3270BBS version 3.2 and up, you must first migrate your database with the included migrate_v3_conferences.bash script. Otherwise you won't be able to see your Topics. 
