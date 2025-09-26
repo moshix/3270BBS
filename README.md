@@ -1,11 +1,11 @@
 <h3 style="color:red;">Users upgrading to 3.2.x ATTENTION</h3>
 
 
-Before runnign the new versions 3.2 and up, you must first migrate your database with the included migrate_v3_conferences.bash script. Otherwise you won't be able to see your Topics. 
+Before running the new 3270BBS version 3.2 and up, you must first migrate your database with the included migrate_v3_conferences.bash script. Otherwise you won't be able to see your Topics. 
 
 After running the migration script everyhing will be fine. 
 
-Users installing 3270BBS for the first time do not need to migrate. 
+**Users installing 3270BBS for the first time do not need to migrate**
 
 
 
