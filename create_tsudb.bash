@@ -46,6 +46,7 @@ CREATE TABLE users (
     password_hash TEXT NOT NULL,
     email TEXT NOT NULL,
     is_admin INTEGER DEFAULT 0,
+    is_moderator INTEGER DEFAULT 0,
     karma INTEGER DEFAULT 0,
     last_login TIMESTAMP NULL,
     city TEXT,
@@ -55,6 +56,17 @@ CREATE TABLE users (
     calendar_preferences TEXT DEFAULT '{}'
 );
 
+CREATE TABLE conferences (
+    conference_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    conference_name TEXT NOT NULL UNIQUE,
+    description TEXT DEFAULT '',
+    admin_only INTEGER DEFAULT 0,
+    moderator_only INTEGER DEFAULT 0,
+    banned TEXT DEFAULT '',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE topics (
     topic_id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
@@ -62,7 +74,9 @@ CREATE TABLE topics (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     view_count INTEGER DEFAULT 0,
     color TEXT DEFAULT '',
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
+    conference_id INTEGER,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (conference_id) REFERENCES conferences(conference_id)
 );
 
 CREATE TABLE posts (
@@ -104,6 +118,7 @@ CREATE TABLE activity (
     activity_type TEXT NOT NULL,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     ip_address TEXT,
+    virtual_session INTEGER DEFAULT 1,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
@@ -131,6 +146,7 @@ CREATE TABLE user_activity (
     user_id INTEGER PRIMARY KEY,
     last_activity TIMESTAMP NOT NULL,
     activity_type TEXT NOT NULL,
+    virtual_session INTEGER DEFAULT 1,
     FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
 );
 
@@ -171,6 +187,10 @@ CREATE INDEX idx_notes_user_id ON notes(user_id);
 CREATE INDEX idx_notes_updated_at ON notes(updated_at);
 CREATE INDEX idx_topic_notification_optouts ON topic_notification_optouts(user_id, topic_id);
 CREATE INDEX idx_calendar_events_user_time ON calendar_events(user_id, start_time);
+CREATE INDEX idx_conferences_name ON conferences(conference_name);
+CREATE INDEX idx_topics_conference_id ON topics(conference_id);
+CREATE INDEX idx_topics_user_id ON topics(user_id);
+CREATE INDEX idx_topics_created_at ON topics(created_at);
 
 -- Insert initial admin user (admin/admin) - password hashed with SHA-256
 INSERT INTO users (username, password_hash, email, is_admin)
@@ -179,6 +199,10 @@ VALUES ('admin', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a9
 -- Insert noreply user (noreply/noreply) - password hashed with SHA-256
 INSERT INTO users (username, password_hash, email, is_admin)
 VALUES ('noreply', 'c032f1b2c07148d5c19afa6c6dcaef998abf76f863089c04eab52133c0ee0815', 'noreply@example.com', 0);
+
+-- Insert default General conference
+INSERT INTO conferences (conference_name, description)
+VALUES ('General', 'Default conference for general discussions');
 EOF
 
 # Create the database and apply schema
