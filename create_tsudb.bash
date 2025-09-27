@@ -200,6 +200,21 @@ VALUES ('admin', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a9
 INSERT INTO users (username, password_hash, email, is_admin)
 VALUES ('noreply', 'c032f1b2c07148d5c19afa6c6dcaef998abf76f863089c04eab52133c0ee0815', 'noreply@example.com', 0);
 
+CREATE TABLE conference_subscriptions (
+    subscription_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    conference_id INTEGER NOT NULL,
+    subscribed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    notification_enabled INTEGER DEFAULT 1,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (conference_id) REFERENCES conferences(conference_id) ON DELETE CASCADE,
+    UNIQUE(user_id, conference_id)
+);
+
+CREATE INDEX idx_conference_subscriptions_user ON conference_subscriptions(user_id);
+CREATE INDEX idx_conference_subscriptions_conference ON conference_subscriptions(conference_id);
+CREATE INDEX idx_conference_subscriptions_notifications ON conference_subscriptions(conference_id, notification_enabled);
+
 -- Insert default General conference
 INSERT INTO conferences (conference_name, description)
 VALUES ('General', 'Default conference for general discussions');
