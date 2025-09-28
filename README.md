@@ -72,6 +72,7 @@ Features
 | Virtual sessions mgmt with F23/F24               | :white_check_mark: |
 | Discussion groups                                | :white_check_mark: |
 | Conferences and conference mgmt by moderators    | :white_check_mark: |
+| Moderators can ban users from conferences        | :white_check_mark: |
 | I Like for topics                                | :white_check_mark: |
 | Messages                                         | :white_check_mark: |
 | Calendar                                         | :white_check_mark: |
