@@ -212,11 +212,12 @@ remote3_port=3270
 You should also customeize tsu.logo to a logo you like. It will be rendered on the logon screen. **Only the first 8 lines of tsu.logo will be used!**  
 
 If you specify a line like this in your tsu.cnf:
-```
-required_conferences="General","3270BBS","User content"```
+
+**required_conferences="General","3270BBS","User content"**
+
 then users won't be able to unsubscribe from the listed Conferences. This is useful to have general announcement Conferences etc.
 
-
+  
 
 Installation And Start
 ----------------------
