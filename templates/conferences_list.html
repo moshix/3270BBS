@@ -1,6 +1,41 @@
 {{define "content"}}
 <div class="page-header">
     <h2>Forum Conferences</h2>
+    
+    <!-- Sorting Controls -->
+    <div class="sorting-controls">
+        <span class="sort-label">Sort by:</span>
+        <div class="sort-buttons">
+            <a href="/conferences?sort=latest_topic&order={{if and (eq .SortBy "latest_topic") (eq .SortOrder "desc")}}asc{{else}}desc{{end}}" 
+               class="sort-btn {{if eq .SortBy "latest_topic"}}active{{end}}">
+                Latest Topic
+                {{if eq .SortBy "latest_topic"}}
+                    {{if eq .SortOrder "desc"}}↓{{else}}↑{{end}}
+                {{end}}
+            </a>
+            <a href="/conferences?sort=latest_post&order={{if and (eq .SortBy "latest_post") (eq .SortOrder "desc")}}asc{{else}}desc{{end}}" 
+               class="sort-btn {{if eq .SortBy "latest_post"}}active{{end}}">
+                Latest Post
+                {{if eq .SortBy "latest_post"}}
+                    {{if eq .SortOrder "desc"}}↓{{else}}↑{{end}}
+                {{end}}
+            </a>
+            <a href="/conferences?sort=topics_count&order={{if and (eq .SortBy "topics_count") (eq .SortOrder "desc")}}asc{{else}}desc{{end}}" 
+               class="sort-btn {{if eq .SortBy "topics_count"}}active{{end}}">
+                Most Topics
+                {{if eq .SortBy "topics_count"}}
+                    {{if eq .SortOrder "desc"}}↓{{else}}↑{{end}}
+                {{end}}
+            </a>
+            <a href="/conferences?sort=name&order={{if and (eq .SortBy "name") (eq .SortOrder "asc")}}desc{{else}}asc{{end}}" 
+               class="sort-btn {{if eq .SortBy "name"}}active{{end}}">
+                Name
+                {{if eq .SortBy "name"}}
+                    {{if eq .SortOrder "asc"}}↑{{else}}↓{{end}}
+                {{end}}
+            </a>
+        </div>
+    </div>
 </div>
 
 {{if .Conferences}}
@@ -218,6 +253,84 @@
     
     .latest-activity {
         text-align: center;
+    }
+}
+
+/* Sorting Controls */
+.sorting-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0 2rem 0;
+    padding: 1rem;
+    background: var(--bg-light);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+}
+
+.sort-label {
+    font-weight: 600;
+    color: var(--text);
+    font-size: 0.875rem;
+}
+
+.sort-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.sort-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--bg-dark);
+    color: var(--text-light);
+    text-decoration: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all var(--duration-normal) ease;
+}
+
+.sort-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    transform: translateY(-1px);
+}
+
+.sort-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    box-shadow: var(--shadow-sm);
+}
+
+.sort-btn.active:hover {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+/* Responsive sorting controls */
+@media (max-width: 768px) {
+    .sorting-controls {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+    
+    .sort-buttons {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    
+    .sort-btn {
+        flex: 1;
+        justify-content: center;
+        min-width: 0;
     }
 }
 </style>
