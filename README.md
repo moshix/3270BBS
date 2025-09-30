@@ -1,64 +1,75 @@
-
-A 3270 BBS 
-==========
+# A 3270 BBS
 
 <img src="mac3270.jpeg" width="300">
 
-This is the same code that runs [my Forum3270 BBS](https://www.moshix.tech:3270) for IBM 3270 terminals, [real](https://youtube.com/shorts/deyGhLtKzp8?si=_f4SYaz37xLR54Zj) and emulated. 
+This is the same code that runs [my Forum3270 BBS](https://www.moshix.tech:3270) for IBM 3270 terminals, [real](https://youtube.com/shorts/deyGhLtKzp8?si=_f4SYaz37xLR54Zj) and emulated.
 
-Just to make it clear, this BBS needs to be accessed with an **IBM 3270 terminal emulator**, not Putty, or telnet. 
+Just to make it clear, this BBS needs to be accessed with an **IBM 3270 terminal emulator**, not Putty, or telnet.
 
-It uses minimum resources. For up to 50 concurrent users, it only uses 25MB (not GB...) of memory. The system has seen upwards of 150 concurrent users with only 64MB of memory used. You only need a small server to host your own 3270BBS! A rapsberry pi, or a simple VPS server instance is perfectly fine. The code is heavily multi-threaded, therefore more cores are better, but not required. The BBS is blazing fast even with just one core. 
+## Table of Contents
 
-All data is stored in an SQLite3 database called **tsu.db**. 3270BBS turns it into WAL mode automatically, for performance reasons. After six months of service, and hundreds of users, with lots of activity, my tsu.db is still less than 50MB. Disk space is not a concern. 
-  
-3270BBS, by the way, loves to run on Linux/s390x. 
+- [Overview](#overview)
+- [Public 3270BBS Servers](#public-3270bbs-servers)
+- [Requirements](#requirements)
+- [Platform Support](#platform-support)
+- [Features](#features)
+- [Installation](#installation)
+- [Configuration](#configuration)
+  - [Basic Configuration](#basic-configuration)
+  - [TLS Terminal Access](#tls-terminal-access)
+  - [SSH Access](#ssh-access)
+  - [Federated Chat](#federated-chat)
+- [Operation](#operation)
+  - [Content Editing](#content-editing)
+  - [User and Content Management](#user-and-content-management)
+  - [Admin Panels](#admin-only-panels)
+  - [SDSF Commands](#sdsf-commands)
+- [Proxying to Another Mainframe](#proxying-to-another-mainframe)
+- [Backup Strategy](#backup-strategy)
+- [Technical Details](#technical-implementation-details)
+- [Roadmap](#roadmap)
+- [License and Disclaimer](#final-notes)
 
-Public 3270BBS Servers
-  
-| BBS Name            | SysOp      | URL                        | Port |
-|----------------------|-----------|----------------------------|------|
-| Forum3270           | moshix | www.moshix.tech            | 2300 |
-| Ernietech's 3270BBS | Ernietech | ernietech.net             | 3270 |
+## Overview
+
+3270BBS is an extremely efficient bulletin board system designed for IBM 3270 terminals. It uses minimal resources - supporting up to 50 concurrent users with only 25MB of memory, and has handled 150+ concurrent users with just 64MB. All data is stored in an SQLite3 database (automatically converted to WAL mode), and after six months of heavy activity with hundreds of users, the database remains under 50MB.
+
+The system is heavily multi-threaded, making it blazing fast even on single-core systems, though more cores improve performance. It runs perfectly on small servers like Raspberry Pi or basic VPS instances, and particularly loves Linux/s390x.
+
+## Public 3270BBS Servers
+
+| BBS Name            | SysOp     | URL                        | Port |
+|---------------------|-----------|----------------------------|------|
+| Forum3270           | moshix    | www.moshix.tech            | 2300 |
+| Ernietech's 3270BBS | Ernietech | ernietech.net              | 3270 |
 | SpanishBBS          | ??        | jauriarts.org              | 3270 |
-| RevertPulse         | kurisu | bbs.revertivepulse.net     | 3270 |
-| ClearinHouz         | dege   | 3270.bbs.dege.au           | 3270 |
+| RevertPulse         | kurisu    | bbs.revertivepulse.net     | 3270 |
+| ClearinHouz         | dege      | 3270.bbs.dege.au           | 3270 |
 
+## Requirements
 
+- **sqlite3** installed on your system
+- An IBM 3270 terminal emulator (c3270, x3270, or [Vista3270](https://www.tombrennansoftware.com/))
+- **No Go compiler required** - the binary is static and self-contained
 
+## Platform Support
 
-What you need
--------------
+| Binary              | Supported          |
+|---------------------|--------------------|
+| Linux 64amd         | :white_check_mark: |
+| Linux i386 (32bit)  | :white_check_mark: |
+| Linux 64arm         | :white_check_mark: |
+| Linux s390x         | :white_check_mark: |
+| FreeBSD             | :white_check_mark: |
+| macOS Universal     | :white_check_mark: |
+| Windows             | :x:                |
+| Is it awesome?      | :white_check_mark: |
 
--Make sure you have **sqlite3** installed.   
--And make sure you have a 3270 terminal to connect, obviously. Something like c3270 or x3270, or [Vista3270](https://www.tombrennansoftware.com/) is perfectly fine.  
--A Go compiler is **not** required. The binary is static and doesn't require any library. 
-  
-  
-Code Availability
------------------
+## Features
 
-| Binary                                           | Supported          |
+| Feature                                          | Included           |
 |--------------------------------------------------|--------------------|
-| Linux 64amd                                      | :white_check_mark: |
-| Linux i386 (32bit)                               | :white_check_mark: |
-| Linux 64arm                                      | :white_check_mark: |
-| Linux s390x                                      | :white_check_mark: |
-| FreeBSD                                          | :white_check_mark: |
-| Macos Universal                                  | :white_check_mark: |
-| Windows                                          |  :x:               |
-| Is it awesome?                                   | :white_check_mark: |
-
-Yes, I plan to release the full code, after a period of bug reports and more security audits.  
-Also, I have a bunch of easter eggs that I want found before I release the code. 
-
-  
-Features
---------
-
-| Feature                                           | Included          |
-|--------------------------------------------------|--------------------|
-| Virtual sessions mgmt with F23/F24               | :white_check_mark: |
+| Virtual sessions mgmt with F23/F24              | :white_check_mark: |
 | Discussion groups                                | :white_check_mark: |
 | Conferences and conference mgmt by moderators    | :white_check_mark: |
 | Moderators can ban users from conferences        | :white_check_mark: |
@@ -99,89 +110,75 @@ Features
 | The Matrix in the raw                            | :white_check_mark: |
 | Time skew detection compared to NTP              | :white_check_mark: |
 | No database server needed                        | :white_check_mark: |
-| SHA256 password hasing for all accounts          | :white_check_mark: |
+| SHA256 password hashing for all accounts         | :white_check_mark: |
 | Account enumeration protection                   | :white_check_mark: |
 | Regular security audits by outside firm          | :white_check_mark: |
 | No root privileges required                      | :white_check_mark: |
 | SysOp-definable, dynamic logon screen logo       | :white_check_mark: |
 
+## Installation
 
+Choose either the fast Docker method or DIY installation:
 
-Content Editing
----------------
+### Docker Installation
 
-3270BBS contains an Editor. The Editor allows to edit Topics, Posts, Notes, marketplace items, and Messages. The editor has a spelling checker
-which is augemented with mainframe world terms such as JCL, ABEND etc.   
+Use Harding's [dockerized 3270BBS](https://github.com/MortenHarding/docker-3270BBS)
 
-Messages and Topics can be edited with these self-explanatory rendering tags:  
+### Manual Installation
 
-`<<blue>>, <<white>>, <<red>>, <<pink>>, <<green>>, <<yellow>>, <<turquoise>>, and <<reverse>> and <</reverse>>.`  
-These tags work best if they are put on a line of their own. 
+1. Download the [binary for your platform](https://github.com/moshix/3270BBS/releases/tag/26.7) and **rename it to 3270bbs**
 
-The Editor function keys available are:
+2. **Run the create_tsudb.sh script** to create tsu.db with default users:
+   - `admin/admin` - Administrative account (change password immediately)
+   - `noreply/noreply` - Internal system messages account
 
+3. Edit the sample `tsu.greet` file (greeting for new users, max 80 characters wide)
 
-```
-- F1  = Scroll to first line
-– F2  = Spell checker
-– F4  = Delete current line
-– F5  = Insert line below
-– F6  = Insert line above
-– F7  = Scroll up
-– F8  = Scroll down
-- F9  = Scroll to last line
-– F10 = Center current line
-– F11 = Make centered box
-– F13 = Make centered box until next empty row
-- F14 = Abandon edit session
-- F15 = Save and exit
-– Save content with SAVE
-– Exit editor unsaved with CANCEL
-```
+4. Start the BBS using the provided `start_bbs.bash` script (recommend logging output to a file)
 
-Configuration of the BBS
-------------------------
-Add the following parameters to your **tsu.cnf** file to configure your 3270BBS. The 3270BBS application **needs**
-tsu.cnf to start up properly!  
+5. Announce your new BBS and consider submitting it to be listed in the Public Servers section
 
-So, you must create tsu.cnf, even if you just take the example below to get started fast. 
-  
-The following **values are just examples** and you should change them to your needs:   
+For installation questions, reach out to moshix on Forum3270.
+
+## Configuration
+
+### Basic Configuration
+
+Create a `tsu.cnf` file (required for startup). Here's an example configuration:
+
 ```
 # Server settings
-# (c) 2025 by Moshix. All rights reserved. 
+# (c) 2025 by Moshix. All rights reserved.
 # bbs_name is the name of your BBS, up to 10 characters wide only!
 bbs_name=My3270BBS
 
 # if you define dns_name then this is what will be shown in your logon screen,
 # and DNS reverse lookup will not be used.
-# ths is useful if you are behind NAT such as in cloud service
+# this is useful if you are behind NAT such as in cloud service
 dns_name=www.moshix.tech 
 
 MOTD="Welcome to my 3270 BBS"
 
 # 3270 ports
-port=3270                  #port for non-encrypted traffic
-tlsport=3271               #port for TSL 1.x encrypted traffic
+port=3270                  # port for non-encrypted traffic
+tlsport=3271               # port for TLS 1.x encrypted traffic
 
 # start TLS port?
 start_TLS=yes
-
 
 # your certificate
 tlscert=your.crt
 tlskey=your.key
 
-
-#web server port
-httpd_port=9000            # port for the HTTPD listenr
+# web server port
+httpd_port=9000            # port for the HTTPD listener
 
 # FTP server settings
-FTP_port=2100             # Port for FTP server (default: 2100)
-FTP_limit=20              # Maximum file size in KB (default: 20)
+FTP_port=2100              # Port for FTP server (default: 2100)
+FTP_limit=20               # Maximum file size in KB (default: 20)
 start_FTPD=no
 
-#other servers
+# other servers
 start_proxy3270=yes
 start_HTTPD=yes
 
@@ -191,8 +188,8 @@ sshd_port=2022
 
 # remote mainframe settings for v27.0 and up
 # Up to 15 can be configured.
-# The remote hosts are being read in dynamically at runtine
-# So you can make changes to the tsu.cnf file for remote hosts without needign to restart the BBS
+# The remote hosts are being read in dynamically at runtime
+# So you can make changes to the tsu.cnf file for remote hosts without needing to restart the BBS
 remote1=Forum3270
 remote1_description="moshix Forum3270"
 remote1_addr=www.moshix.tech
@@ -205,132 +202,137 @@ remote2_port=24
 
 remote3=Secureproxy3270
 remote3_description="Some other mainframe"
-remote3_addr=9.9.1.1       # IPV6 also works!
+remote3_addr=9.9.1.1       # IPv6 also works!
 remote3_port=3270
 ```
 
-You should also customeize tsu.logo to a logo you like. It will be rendered on the logon screen. **Only the first 8 lines of tsu.logo will be used!**  
+**Custom Logo:** Customize `tsu.logo` for your logon screen (only first 8 lines used)
 
-If you specify a line like this in your tsu.cnf:
+**Required Conferences:** To prevent users from unsubscribing from certain conferences, add to tsu.cnf:
+```
+required_conferences="General","3270BBS","User content"
+```
 
-**required_conferences="General","3270BBS","User content"**
+### TLS Terminal Access
 
-then users won't be able to unsubscribe from the listed Conferences. This is useful to have general announcement Conferences etc.
+For secure TLS access, you'll need certificates specified in tsu.cnf with the `tlscert` and `tlskey` parameters.
 
-  
+### SSH Access
 
-Installation And Start
-----------------------
+Configure the SSHD port in tsu.cnf. Users must be registered to use SSH access, using the same password as 3270 access. SSH mode provides limited features (chat and topics) as this is primarily a 3270 BBS.
 
-Either go the fast, easy, docker way with Harding's [dockerized 3270BBS](https://github.com/MortenHarding/docker-3270BBS),  
+### Federated Chat
 
-or DIY like this:  
+3270BBS instances can participate in federated worldwide chat. Operators must contact moshix for credentials and configuration. Good standing in Forum3270 is required.
 
-1. Download the [binary for Macos, Linux 64amd and 64arm and s390x, FreeBSD](https://github.com/moshix/3270BBS/releases/tag/26.7) and **rename the binary to 3270bbs**. 
+## Operation
 
-2. **Run the create_tsudb.sh script**. This will create tsu.db with 2 users admin/admin and noreply/noreply.  You must change these passwords when you log in as admin the first time. 
+### Content Editing
 
-The admin account allows you to log in and control your BBS and set other users to admin thru the admin_users, admin_topics, admin_posts panels. The reply account is only used for internal system messages to users. Passwords can be changed from the ADMIN USERS panel (option 7).   
-  
-3. Edit the sample tsu.greet from this repo. It's the greeting for all new users. Remember to keep it 80 characters wide, max,for easey reading on 3270 terminals.   
-  
-4. Start the BBS with the provided script start_bbs.bash, you should probably tee the log into a log file.  
+3270BBS includes a built-in editor for Topics, Posts, Notes, marketplace items, and Messages. The editor features a spell checker enhanced with mainframe terminology (JCL, ABEND, etc.).
 
-5. Announce your new BBS, and Bob is your uncle. **Make sure to report your BBS here because I will link to all known 3270 BBS instances out there from this page.**  
+**Rendering Tags:**
+Messages and topics support color tags (best placed on their own lines):
+- `<<blue>>`, `<<white>>`, `<<red>>`, `<<pink>>`, `<<green>>`, `<<yellow>>`, `<<turquoise>>`
+- `<<reverse>>` and `<</reverse>>`
 
+**Editor Function Keys:**
+```
+F1  = Scroll to first line
+F2  = Spell checker
+F4  = Delete current line
+F5  = Insert line below
+F6  = Insert line above
+F7  = Scroll up
+F8  = Scroll down
+F9  = Scroll to last line
+F10 = Center current line
+F11 = Make centered box
+F13 = Make centered box until next empty row
+F14 = Abandon edit session
+F15 = Save and exit
+SAVE   = Save content
+CANCEL = Exit editor unsaved
+```
 
-When in doubt how to install or operate your BBS, reach out to moshix on the Forum3270 with your 3270 terminal. 
+### User and Content Management
 
+**Key Functions:**
+- **F1** - Help screen
+- **F23** - Create new virtual session
+- **F24** - Switch between virtual sessions (max 2)
 
-Operation of the BBS, User and Content Management
--------------------------------------------------
+**Daily Maintenance:**
+The BBS is very stable and can run for months, but requires regular content moderation. Daily pruning is easier than periodic mass cleanup. Use `remove_old_users.bash` to prune inactive users (removes users but preserves their posts/topics).
 
-Function key F1 will give you the help. F23 will create a new virtual session, while F24 will switch between the maximum two virtual sessions. 
+**User Tools:**
+- Users can delete their own accounts from the Edit Profile option (0) in main menu
+- Password recovery available via PF9 from logon panel
+- `insert_to_dictionary.bash` - Add words to spell checker dictionary
+- `import_calendar.sh` - Import .ics files to individual calendars
 
-The application is very stable and stays up for months on end. However, any BBS requires constant care and content maintenance. Trolls naturally form where online communities exist, and their many dropppings need to be cleaned. A BBS without some kind of moderator activity will either wither and die, or degenerate into a reputational problem for you. 
-  
-Daily pruning and removing of bad content is much easier than doing it once a month or once a  year. Stay in touch with your users and advertise your BBS in the communities where you want to attract users from. 
-  
-There is a script to prune users who have not logged in for more than X days. Pruning does not remove their posts or topics, but does remove their messages from the database. The script is called remove_old_users.bash. 
-  
-Even though the BBS has a password retrieval process with PF9 from the logon panel, some users will forget the city they live in, and their email so recovery in those cases is impossible and they have to register a new user and you will have to delete the old one from admin_users. 
-  
-Users can also delete their own account fromt the 0 Edit Profile option in the main menu. 
-  
-A dictionary is provided for the spell checker in the Editor and in the chat applets. If you need to insert more words into the dictionary, use the script insert_to_dictionary.bash.
-  
-Finally there is a script import_calendar.sh to import .ics files into an individual calendar, if you want your Google calendar or whatever to be also featured in in the BBS.   
-  
-If you enable FTP, then users can upload notes to their NOTES directly, or also download them. This way they can edit longer notes and then upload them with FTP. Same wth HTTP. 
-  
-From Notes, then users can post a note to Topics. This is useful to first edit the Note until  you are happy with it and then turn into a post with one function key.   
-The web interface can be opened to the public, but what's the point for a 3270 BBS system?  
+**FTP/HTTP Access:**
+If enabled, users can upload/download notes directly, allowing external editing of longer content. Notes can be converted to posts with a single function key.
 
+### Admin Only Panels
 
-Admin Only Panels
------------------
 - LOG command from main menu
 - F4 from SDSF
-- start and stop components from the MVS Console in Extended Menu
+- Start/stop components from MVS Console in Extended Menu
 
-Proxying to another mainframe
------------------------------
-3270 BBS can proxy users to another mainframe if you added it to the tsu.cnf file and if you enable the PROXY server from the tsu.cnf file or from SDSF. This other mainframe can of course also be just another instance of 3270BBS. 
+### SDSF Commands
 
-The way to return to the BBS from a remote host is by pressing the **PA3** attention key in your terminal emulator.
+Admins can issue these commands from the SDSF Activity screen:
 
-TLS terminal access
---------------------
-For secure TLS access, you will need certificates and you will have to point to the certificate from tsu.cnf
+```
+P FTPD              - Stop the FTPD server
+S FTPD              - Start the FTPD server
+P PROXY             - Stop the PROXY server
+S PROXY             - Start the PROXY server
+P HTTPD             - Stop the HTTPD server
+S HTTPD             - Start the HTTPD server
+P TN3270TLS         - Stop the TLS listener
+S TN3270TLS         - Start the TLS listener
+P TN3270            - Stop the TN3270 listener
+S TN3270            - Start the TN3270 listener
 
-SSH access
-----------
-Configure the port at which the SSHD internal server will listen for users. Users must already be registered to be able to use ssh access. The same password is used for both 3270 and ssh access. I don not intend to other other features in ssh mode other than chat and topics, as this is a 3270 BBS after all. 
+C U=MOSHIX          - Terminate session of user MOSHIX
+$PJES2,TERM         - Terminate the BBS gracefully
+LOG                 - View BBS log (F7/F8 navigate, TOP/BOT for extremes)
+```
 
-SDSF Commands
-------------
-In the SDSF Activity screen, admins can issue the following commands:
+Additional admin panels for Users, Topics, and Posts management are also available.
 
-`P FTPD            - Stop the FTPD server`  
-`S FTPD            - Start the FTPD server` 
-Same for PROXY, HTTPD, TN3270TLS, TN3270 (which are self-explanatory)
-    
-`C U=MOSHIX         - Terminate the session of user MOSHIX`
-(sometimes people just leave their terminals open on the BBS and go on vacation (really happened).   
-    
-`$PJES2,TERM        - Terminate the BBS gracefully `   
-`LOG                - View BBS log. Top/BOT F7/F8 will navigate inside the log view`  
-`Admin Users Panel`  
-`Admin Topics Panel`  
-`Admin Posts Panel`  
+## Proxying to Another Mainframe
 
+3270BBS can proxy users to other mainframes configured in tsu.cnf (enable PROXY server in config or from SDSF). The remote system can be another 3270BBS instance or any mainframe.
 
-Backup Strategy
----------------
+**Return to BBS:** Press **PA3** attention key in your terminal emulator.
 
-The SQLite3 database runs in WAL mode. This means you can't just make copies of tsu.db. You should instead dump the database daily, or whenever, into an .sql file. 
+## Backup Strategy
 
-    
-Technical Implementation Details
---------------------------------
+Since the SQLite3 database runs in WAL mode, you cannot simply copy tsu.db. Instead, dump the database regularly to .sql files:
 
-By far the most complex screen is the real time chat because of the number of things it does. It's heavily multi-threaded. If you want to read more about it's implemented, [read this](https://github.com/moshix/BITNETServices/blob/master/forum3270_chat.md) 
+```bash
+# Example backup command
+sqlite3 tsu.db .dump > backup_$(date +%Y%m%d).sql
+```
 
+## Technical Implementation Details
 
-Roadmap
--------
+The application consists of roughly 40,000 lines of Go code. The most complex component is the real-time chat system, which is heavily multi-threaded. For implementation details, see [this documentation](https://github.com/moshix/BITNETServices/blob/master/forum3270_chat.md).
 
+Built using the [go3270](https://github.com/racingmars/go3270) library by **racingmars**.
 
-Users web pages inside 3270BBS: If the web server is turned on, and a user has a Note called **Public** then the content of that note will be shown when users go to http://3270bbswebsite/username
+## Roadmap
 
+**User Web Pages:** If the web server is enabled and a user has a Note called **Public**, its content will be displayed at `http://3270bbswebsite/username`
 
+**Future Plans:**
+- Full source code release after bug reports and security audits
+- Easter eggs to be discovered by the community
 
-Final Notes
------------
-
-The code consits of roughly 40,000 lines of Go language. I wrote it all myself, and if you don't like this app, I am the only one to blame, no one else. 
-
-The library I use is [go3270](https://github.com/racingmars/go3270) by the **genial #racingmars** with thanks. 
+## Final Notes
 
 This BBS application is made available in binary form only, strictly as is. It is provided without warranties of any kind, either express or implied, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose.
 
@@ -341,5 +343,7 @@ No technical support, updates, or maintenance releases are guaranteed. However, 
 By using this software, you agree to abide by any applicable local, national, or international laws regarding software usage and telecommunications. Unauthorized modification, reverse engineering, or redistribution is strictly prohibited unless explicitly permitted by the license or author.
 
 <img src="3270BBS.jpg">
-    
-Moshix, Sept 23, 2025 - Cutchogue
+
+---
+
+**Moshix, Sept 30, 2025 - NY**
