@@ -32,6 +32,7 @@
                         <div class="topic-stats">
                             <span class="post-count">{{.PostCount}} posts</span>
                             <span class="view-count">{{.ViewCount}} views</span>
+                            <span class="likes-count">{{.Likes}} likes</span>
                         </div>
                         <div class="topic-actions">
                             <a href="/admin/topics/{{.ID}}" class="btn btn-sm btn-primary">View</a>
@@ -127,6 +128,24 @@
     border-radius: 4px;
     font-size: 0.875rem;
     margin-right: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.likes-count {
+    background: #fef3c7 !important;
+    color: #92400e;
+}
+
+.post-count {
+    background: #dbeafe !important;
+    color: #1e40af;
+}
+
+.view-count {
+    background: #f3e8ff !important;
+    color: #7c3aed;
 }
 
 .topic-actions {

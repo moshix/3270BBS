@@ -1,0 +1,224 @@
+{{define "content"}}
+<div class="page-header">
+    <h2>Forum Conferences</h2>
+</div>
+
+{{if .Conferences}}
+<div class="conferences-grid">
+    {{range .Conferences}}
+        <div class="conference-card">
+            <div class="conference-header">
+                <h3><a href="/conferences/{{.Name}}/topics">{{.Name}}</a></h3>
+                <div class="conference-meta">
+                    <p class="conference-description">{{.Description}}</p>
+                </div>
+            </div>
+            <div class="conference-stats">
+                <div class="stat-item">
+                    <span class="stat-number">{{.TopicsCount}}</span>
+                    <span class="stat-label">Topics</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="latest-activity">
+                    {{if ne .LatestTopicTitle "No topics"}}
+                        <div class="latest-topic">
+                            <span class="latest-label">Latest:</span>
+                            <span class="latest-title">{{.LatestTopicTitle}}</span>
+                        </div>
+                        <div class="latest-date">{{.LatestTopicDate}}</div>
+                    {{else}}
+                        <div class="no-activity">No topics yet</div>
+                    {{end}}
+                </div>
+            </div>
+            <div class="conference-badges">
+                {{if .AdminOnly}}
+                    <span class="badge badge-admin">Admin Only</span>
+                {{end}}
+                {{if .ModeratorOnly}}
+                    <span class="badge badge-moderator">Moderator Only</span>
+                {{end}}
+            </div>
+        </div>
+    {{end}}
+</div>
+{{else}}
+<div class="empty-state">
+    <div class="empty-state-icon">🏛️</div>
+    <h3>No conferences available</h3>
+    <p>There are no conferences to display at this time.</p>
+</div>
+{{end}}
+
+<style>
+.conferences-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.conference-card {
+    background: var(--bg-light);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    transition: all var(--duration-normal) ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.conference-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.conference-header h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.conference-header h3 a {
+    text-decoration: none;
+    color: var(--primary);
+    transition: color var(--duration-normal) ease;
+}
+
+.conference-header h3 a:hover {
+    color: var(--primary-dark);
+}
+
+.conference-description {
+    color: var(--text-light);
+    font-size: 0.875rem;
+    margin: 0 0 1rem 0;
+    line-height: 1.4;
+}
+
+.conference-stats {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: var(--bg-dark);
+    border-radius: var(--radius-sm);
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 60px;
+}
+
+.stat-number {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.stat-divider {
+    width: 1px;
+    height: 40px;
+    background: var(--border);
+}
+
+.latest-activity {
+    flex: 1;
+    min-width: 0;
+}
+
+.latest-topic {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.latest-label {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+.latest-title {
+    font-size: 0.875rem;
+    color: var(--text);
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.latest-date {
+    font-size: 0.75rem;
+    color: var(--text-lighter);
+}
+
+.no-activity {
+    font-size: 0.875rem;
+    color: var(--text-lighter);
+    font-style: italic;
+}
+
+.conference-badges {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.badge-admin {
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+    border: 1px solid rgba(220, 53, 69, 0.2);
+}
+
+.badge-moderator {
+    background: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+    border: 1px solid rgba(255, 193, 7, 0.2);
+}
+
+@media (max-width: 768px) {
+    .conferences-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .conference-card {
+        padding: 1rem;
+    }
+    
+    .conference-stats {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: stretch;
+    }
+    
+    .stat-divider {
+        display: none;
+    }
+    
+    .latest-activity {
+        text-align: center;
+    }
+}
+</style>
+{{end}}

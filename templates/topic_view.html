@@ -1,0 +1,331 @@
+{{define "content"}}
+<div class="page-header">
+    <div class="breadcrumb">
+        <a href="/conferences" class="breadcrumb-link">Conferences</a>
+        <span class="breadcrumb-separator">›</span>
+        <a href="/conferences/{{.Topic.ConferenceName}}/topics" class="breadcrumb-link">{{.Topic.ConferenceName}}</a>
+        <span class="breadcrumb-separator">›</span>
+        <span class="breadcrumb-current">{{.Topic.Title}}</span>
+    </div>
+</div>
+
+<div class="topic-header">
+    <h1 class="topic-title">{{.Topic.Title}}</h1>
+    <div class="topic-meta">
+        <div class="topic-info">
+            <span class="author">Started by <strong>{{.Topic.Username}}</strong></span>
+            <span class="date">on {{formatTime .Topic.CreatedAt}}</span>
+            <span class="conference">in <strong>{{.Topic.ConferenceName}}</strong></span>
+        </div>
+        <div class="topic-stats">
+            <div class="stat-item">
+                <span class="stat-icon">💬</span>
+                <span class="stat-value">{{.Topic.PostCount}}</span>
+                <span class="stat-label">Posts</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-icon">👁️</span>
+                <span class="stat-value">{{.Topic.ViewCount}}</span>
+                <span class="stat-label">Views</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-icon">👍</span>
+                <span class="stat-value">{{.Topic.Likes}}</span>
+                <span class="stat-label">Likes</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{if .Posts}}
+<div class="posts-container">
+    {{range .Posts}}
+        <div class="post-card">
+            <div class="post-header">
+                <div class="post-author">
+                    <strong>{{.Username}}</strong>
+                </div>
+                <div class="post-meta">
+                    <span class="post-date">{{formatTime .CreatedAt}}</span>
+                    <div class="post-actions">
+                        <div class="post-likes">
+                            <span class="like-count">{{.Likes}} 👍</span>
+                            {{if .Dislikes}}
+                                <span class="dislike-count">{{.Dislikes}} 👎</span>
+                            {{end}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="post-content">
+                <div class="post-text">{{.Content}}</div>
+            </div>
+        </div>
+    {{end}}
+</div>
+
+{{if gt .TotalPages 1}}
+<div class="pagination-wrapper">
+    <div class="pagination">
+        {{if gt .CurrentPage 1}}
+            <a href="/topics/{{.Topic.ID}}?page={{subtract .CurrentPage 1}}" class="btn btn-sm">← Previous</a>
+        {{end}}
+        
+        <span class="page-info">Page {{.CurrentPage}} of {{.TotalPages}}</span>
+        
+        {{if lt .CurrentPage .TotalPages}}
+            <a href="/topics/{{.Topic.ID}}?page={{add .CurrentPage 1}}" class="btn btn-sm">Next →</a>
+        {{end}}
+    </div>
+</div>
+{{end}}
+
+{{else}}
+<div class="empty-state">
+    <div class="empty-state-icon">💬</div>
+    <h3>No posts in this topic yet</h3>
+    <p>Be the first to reply to this topic!</p>
+</div>
+{{end}}
+
+<style>
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.breadcrumb-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: color var(--duration-normal) ease;
+}
+
+.breadcrumb-link:hover {
+    color: var(--primary-dark);
+}
+
+.breadcrumb-separator {
+    color: var(--text-lighter);
+    font-size: 0.875rem;
+}
+
+.breadcrumb-current {
+    color: var(--text);
+    font-weight: 500;
+    font-size: 0.875rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 200px;
+}
+
+.topic-header {
+    background: var(--bg-light);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.topic-title {
+    margin: 0 0 1rem 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+}
+
+.topic-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.topic-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--text-light);
+    flex-wrap: wrap;
+}
+
+.topic-info strong {
+    color: var(--text);
+}
+
+.topic-stats {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    min-width: 60px;
+}
+
+.stat-icon {
+    font-size: 1.125rem;
+}
+
+.stat-value {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.posts-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.post-card {
+    background: var(--bg-light);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: box-shadow var(--duration-normal) ease;
+}
+
+.post-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: var(--bg-dark);
+    border-bottom: 1px solid var(--border);
+}
+
+.post-author {
+    font-size: 0.875rem;
+    color: var(--text);
+}
+
+.post-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.75rem;
+    color: var(--text-light);
+}
+
+.post-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.post-likes {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.like-count, .dislike-count {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.like-count {
+    color: #059669;
+}
+
+.dislike-count {
+    color: #dc2626;
+}
+
+.post-content {
+    padding: 1.5rem;
+}
+
+.post-text {
+    line-height: 1.6;
+    color: var(--text);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.page-info {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .topic-header {
+        padding: 1.5rem;
+    }
+    
+    .topic-title {
+        font-size: 1.5rem;
+    }
+    
+    .topic-meta {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+    
+    .topic-info {
+        justify-content: center;
+        text-align: center;
+    }
+    
+    .topic-stats {
+        justify-content: space-around;
+    }
+    
+    .post-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+    
+    .post-meta {
+        justify-content: space-between;
+    }
+    
+    .breadcrumb-current {
+        max-width: 150px;
+    }
+}
+</style>
+{{end}}

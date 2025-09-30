@@ -23,7 +23,7 @@
     <div class="app-container">
         <header class="app-header">
             <div class="logo">
-                <a href="/notes">
+                <a href="/conferences">
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M19 5V19H5V5H19ZM21 3H3V21H21V3ZM17 17H7V16H17V17ZM17 15H7V14H17V15ZM17 12H7V7H17V12Z" fill="currentColor"/>
                     </svg>
@@ -33,6 +33,7 @@
             <nav class="main-nav">
                 <ul>
                     {{if .User}}
+                    <li><a href="/conferences" class="nav-link">Conferences</a></li>
                     <li><a href="/notes" class="nav-link">My Notes</a></li>
                     <li><a href="/notes/new" class="nav-link">New Note</a></li>
                     {{if .User.IsAdmin}}

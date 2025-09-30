@@ -1,0 +1,261 @@
+{{define "content"}}
+<div class="page-header">
+    <div class="breadcrumb">
+        <a href="/conferences" class="breadcrumb-link">Conferences</a>
+        <span class="breadcrumb-separator">›</span>
+        <span class="breadcrumb-current">{{.ConferenceName}}</span>
+    </div>
+</div>
+
+<div class="conference-info">
+    <h2>{{.ConferenceName}} Topics</h2>
+    {{if .ConferenceDescription}}
+        <p class="conference-description">{{.ConferenceDescription}}</p>
+    {{end}}
+</div>
+
+{{if .Topics}}
+<div class="topics-list">
+    {{range .Topics}}
+        <div class="topic-row">
+            <div class="topic-main">
+                <h3 class="topic-title">
+                    <a href="/topics/{{.ID}}">{{.Title}}</a>
+                </h3>
+                <div class="topic-meta">
+                    <span class="author">by {{.Username}}</span>
+                    <span class="date">{{formatTime .CreatedAt}}</span>
+                </div>
+            </div>
+            <div class="topic-stats-row">
+                <div class="stat-badge posts">
+                    <span class="stat-icon">💬</span>
+                    <span class="stat-value">{{.PostCount}}</span>
+                </div>
+                <div class="stat-badge views">
+                    <span class="stat-icon">👁️</span>
+                    <span class="stat-value">{{.ViewCount}}</span>
+                </div>
+                <div class="stat-badge likes">
+                    <span class="stat-icon">👍</span>
+                    <span class="stat-value">{{.Likes}}</span>
+                </div>
+            </div>
+        </div>
+    {{end}}
+</div>
+
+{{if gt .TotalPages 1}}
+<div class="pagination-wrapper">
+    <div class="pagination">
+        {{if gt .CurrentPage 1}}
+            <a href="/conferences/{{.ConferenceName}}/topics?page={{subtract .CurrentPage 1}}" class="btn btn-sm">← Previous</a>
+        {{end}}
+        
+        <span class="page-info">Page {{.CurrentPage}} of {{.TotalPages}}</span>
+        
+        {{if lt .CurrentPage .TotalPages}}
+            <a href="/conferences/{{.ConferenceName}}/topics?page={{add .CurrentPage 1}}" class="btn btn-sm">Next →</a>
+        {{end}}
+    </div>
+</div>
+{{end}}
+
+{{else}}
+<div class="empty-state">
+    <div class="empty-state-icon">📝</div>
+    <h3>No topics in this conference yet</h3>
+    <p>Be the first to start a discussion in {{.ConferenceName}}!</p>
+</div>
+{{end}}
+
+<style>
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.breadcrumb-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: color var(--duration-normal) ease;
+}
+
+.breadcrumb-link:hover {
+    color: var(--primary-dark);
+}
+
+.breadcrumb-separator {
+    color: var(--text-lighter);
+    font-size: 0.875rem;
+}
+
+.breadcrumb-current {
+    color: var(--text);
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.conference-info {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--bg-light);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+}
+
+.conference-info h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.conference-info .conference-description {
+    color: var(--text-light);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.topics-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.topic-row {
+    background: var(--bg-light);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    transition: all var(--duration-normal) ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.topic-row:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-light);
+}
+
+.topic-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.topic-title {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.topic-title a {
+    text-decoration: none;
+    color: var(--text);
+    transition: color var(--duration-normal) ease;
+}
+
+.topic-title a:hover {
+    color: var(--primary);
+}
+
+.topic-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--text-light);
+}
+
+.author {
+    font-weight: 500;
+}
+
+.topic-stats-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.stat-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 500;
+    min-width: 60px;
+    justify-content: center;
+}
+
+.stat-badge.posts {
+    background: rgba(59, 130, 246, 0.1);
+    color: #1e40af;
+}
+
+.stat-badge.views {
+    background: rgba(139, 92, 246, 0.1);
+    color: #7c3aed;
+}
+
+.stat-badge.likes {
+    background: rgba(245, 158, 11, 0.1);
+    color: #92400e;
+}
+
+.stat-icon {
+    font-size: 0.875rem;
+}
+
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.page-info {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .topic-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+    
+    .topic-stats-row {
+        justify-content: space-between;
+    }
+    
+    .stat-badge {
+        flex: 1;
+        min-width: auto;
+    }
+    
+    .conference-info {
+        padding: 1rem;
+    }
+    
+    .breadcrumb {
+        flex-wrap: wrap;
+    }
+}
+</style>
+{{end}}
