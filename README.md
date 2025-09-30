@@ -44,7 +44,6 @@ The system is heavily multi-threaded, making it blazing fast even on single-core
 | Ernietech's 3270BBS | Ernietech | ernietech.net              | 3270 |
 | SpanishBBS          | ??        | jauriarts.org              | 3270 |
 | RevertPulse         | kurisu    | bbs.revertivepulse.net     | 3270 |
-| ClearinHouz         | dege      | 3270.bbs.dege.au           | 3270 |
 
 ## Requirements
 
