@@ -44,6 +44,7 @@ The system is heavily multi-threaded, making it blazing fast even on single-core
 | Ernietech's 3270BBS | Ernietech | ernietech.net              | 3270 |
 | SpanishBBS          | turboss   | jauriarts.org              | 3270 |
 | RevertPulse         | kurisu    | bbs.revertivepulse.net     | 3270 |
+| tqw3270 BBS         | MeaTLoT   | bbs.erb.pw                 | 3270 |
 
 ## Requirements
 
