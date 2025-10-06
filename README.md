@@ -1,6 +1,6 @@
 # A 3270 BBS
 
-<img src="mac3270.jpeg" width="400">
+<img src="mac3270.jpeg" width="500">
 
 This is the same code that runs [my Forum3270 BBS](https://www.moshix.tech:3270) for IBM 3270 terminals, [real](https://youtube.com/shorts/deyGhLtKzp8?si=_f4SYaz37xLR54Zj) and emulated.
 
