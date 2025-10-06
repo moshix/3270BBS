@@ -146,7 +146,8 @@ For installation questions, reach out to moshix on Forum3270.
 
 ### Basic Configuration
 
-Create a `tsu.cnf` file (required for startup). Here's an example configuration:
+Create a `tsu.cnf` file (required for startup). Here's an example configuration, which by default
+assumes a sqlite3 database:
 
 ```
 # Server settings
