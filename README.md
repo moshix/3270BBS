@@ -349,4 +349,4 @@ By using this software, you agree to abide by any applicable local, national, or
 
 ---
 
-**Moshix, October 6, 2025 - Frankfurt**
+**Moshix, October 13, 2025 - Milan**
