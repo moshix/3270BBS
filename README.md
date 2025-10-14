@@ -177,7 +177,11 @@ tlskey=your.key
 # add your sendgrid API key if you have one to allow your users to print by PDF to their email address
 # configured in their profile
 SENDGRID_API_KEY="123"
+# notify admin user of new accounts?
+notify_admin_new_accounts=yes
 
+# these conferences cannot be unsubscirbed
+required_conferences="General","3270BBS","User content"
 
 # web server port
 httpd_port=9000            # port for the HTTPD listener
