@@ -173,6 +173,12 @@ start_TLS=yes
 tlscert=your.crt
 tlskey=your.key
 
+#sendgrid API key
+# add your sendgrid API key if you have one to allow your users to print by PDF to their email address
+# configured in their profile
+SENDGRID_API_KEY="123"
+
+
 # web server port
 httpd_port=9000            # port for the HTTPD listener
 
