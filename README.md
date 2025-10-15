@@ -86,6 +86,7 @@ The system is heavily multi-threaded, making it blazing fast even on single-core
 | Admin panels                                     | :white_check_mark: |
 | Session management                               | :white_check_mark: |
 | DB creation script                               | :white_check_mark: |
+| Sqlite3 and PostgreSQL support                   | :white_check_mark: |
 | FTP Server for notes access                      | :white_check_mark: |
 | Web Server for notes, topics, sysadmin access    | :white_check_mark: |
 | Console                                          | :white_check_mark: |
@@ -117,6 +118,7 @@ The system is heavily multi-threaded, making it blazing fast even on single-core
 | No root privileges required                      | :white_check_mark: |
 | SysOp-definable, dynamic logon screen logo       | :white_check_mark: |
 | Support Sqlite3 and Postgres                     | :white_check_mark: |
+| Print by PDF to email                            | :white_check_mark: |
 
 ## Installation
 
