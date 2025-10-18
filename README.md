@@ -175,6 +175,12 @@ start_TLS=yes
 tlscert=your.crt
 tlskey=your.key
 
+
+# finger daemon 
+fingerd_port=1079
+start_fingerd=yes
+
+
 #sendgrid API key
 # add your sendgrid API key if you have one to allow your users to print by PDF to their email address
 # configured in their profile
