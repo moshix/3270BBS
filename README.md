@@ -120,6 +120,7 @@ The system is heavily multi-threaded, making it blazing fast even on single-core
 | Support Sqlite3 and Postgres                     | :white_check_mark: |
 | Print by PDF to email                            | :white_check_mark: |
 | internal finger daemon                           | :white_check_mark: |
+| Pre-defined signature for editor use             | :white_check_mark: |
 
 ## Installation
 
