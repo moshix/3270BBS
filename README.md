@@ -352,7 +352,7 @@ Built using the [go3270](https://github.com/racingmars/go3270) library by **raci
 **User Web Pages:** If the web server is enabled and a user has a Note called **Public**, its content will be displayed at `http://3270bbswebsite/username`
 
 **Future Plans:**
-- Full source code release after bug reports and security audits
+- Export Conferences content as RSS Feed
 - Easter eggs to be discovered by the community
 
 ## Final Notes
