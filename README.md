@@ -187,8 +187,12 @@ start_fingerd=yes
 # add your sendgrid API key if you have one to allow your users to print by PDF to their email address
 # configured in their profile
 SENDGRID_API_KEY="123"
+
 # notify admin user of new accounts?
 notify_admin_new_accounts=yes
+
+# how many emails per day can a non-admin user send max?
+max_emails_per_day=5
 
 # these conferences cannot be unsubscirbed
 required_conferences="General","3270BBS","User content"
