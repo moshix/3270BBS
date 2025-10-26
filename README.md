@@ -256,7 +256,9 @@ Configure the SSHD port in tsu.cnf. Users must be registered to use SSH access, 
 
 ### Content Editing
 
-3270BBS includes a built-in editor for Topics, Posts, Notes, marketplace items, and Messages. The editor features a spell checker enhanced with mainframe terminology (JCL, ABEND, etc.).
+3270BBS includes a built-in editor for Topics, Posts, Notes, marketplace items, and Messages. The editor features a spell checker enhanced with mainframe terminology (JCL, ABEND, etc.). 
+
+**We use ANSI code page 1047 as the standard code page in 3270BBS** This means we don't support foreign language character sets. 
 
 **Rendering Tags:**
 Messages and topics support color tags (best placed on their own lines):
