@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 # Copyright 2025 by moshix
-# This script creates the required PostgreSQL database schema for 3270BBS
-# It requires tsu.cnf to have all parameters set for Postgres database instead of sqlite3 database
-#
-# It is HIGHLY recommended you work with sqlite3, and therefore THIS SCRIPT IS MOST LIKELY NOT NEEDED
-#
+# This script creates the required PostgreSQL database schema for tsu BBS
 # Usage: ./create_postgres_db.bash [config_file]
 # Default config file: tsu.cnf
 
@@ -123,8 +119,7 @@ CREATE TABLE users (
     city TEXT,
     country TEXT,
     units TEXT DEFAULT 'imperial' CHECK (units IN ('metric', 'imperial')),
-    stocks TEXT DEFAULT '',
-    calendar_preferences TEXT DEFAULT '{}' CHECK (calendar_preferences IS NULL OR calendar_preferences != '')
+    stocks TEXT DEFAULT ''
 );
 
 CREATE TABLE conferences (
@@ -241,17 +236,6 @@ CREATE TABLE topic_notification_optouts (
     UNIQUE(user_id, topic_id)
 );
 
-CREATE TABLE calendar_events (
-    event_id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL,
-    title TEXT NOT NULL,
-    description TEXT NOT NULL,
-    start_time TIMESTAMP NOT NULL,
-    duration INTEGER NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
-);
-
 CREATE TABLE conference_subscriptions (
     subscription_id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
@@ -269,7 +253,6 @@ CREATE INDEX idx_chat_room_id ON chat(room_id);
 CREATE INDEX idx_notes_user_id ON notes(user_id);
 CREATE INDEX idx_notes_updated_at ON notes(updated_at);
 CREATE INDEX idx_topic_notification_optouts ON topic_notification_optouts(user_id, topic_id);
-CREATE INDEX idx_calendar_events_user_time ON calendar_events(user_id, start_time);
 CREATE INDEX idx_conferences_name ON conferences(conference_name);
 CREATE INDEX idx_topics_conference_id ON topics(conference_id);
 CREATE INDEX idx_topics_user_id ON topics(user_id);
@@ -279,12 +262,12 @@ CREATE INDEX idx_conference_subscriptions_conference ON conference_subscriptions
 CREATE INDEX idx_conference_subscriptions_notifications ON conference_subscriptions(conference_id, notification_enabled);
 
 -- Insert initial admin user (admin/admin) - password hashed with SHA-256
-INSERT INTO users (username, password_hash, email, is_admin, is_moderator, karma, city, country, units, stocks, calendar_preferences)
-VALUES ('admin', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'admin@example.com', 1, 1, 0, 'System', 'System', 'imperial', '', '{}');
+INSERT INTO users (username, password_hash, email, is_admin, is_moderator, karma, city, country, units, stocks)
+VALUES ('admin', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'admin@example.com', 1, 1, 0, 'System', 'System', 'imperial', '');
 
 -- Insert noreply user (noreply/noreply) - password hashed with SHA-256
-INSERT INTO users (username, password_hash, email, is_admin, is_moderator, karma, city, country, units, stocks, calendar_preferences)
-VALUES ('noreply', 'c032f1b2c07148d5c19afa6c6dcaef998abf76f863089c04eab52133c0ee0815', 'noreply@example.com', 0, 0, 0, 'System', 'System', 'imperial', '', '{}');
+INSERT INTO users (username, password_hash, email, is_admin, is_moderator, karma, city, country, units, stocks)
+VALUES ('noreply', 'c032f1b2c07148d5c19afa6c6dcaef998abf76f863089c04eab52133c0ee0815', 'noreply@example.com', 0, 0, 0, 'System', 'System', 'imperial', '');
 
 -- Insert default conferences
 INSERT INTO conferences (conference_name, description) VALUES
