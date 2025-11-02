@@ -76,7 +76,6 @@ The system is heavily multi-threaded, making it blazing fast even on single-core
 | Moderators can ban users from conferences        | :white_check_mark: |
 | I Like for topics                                | :white_check_mark: |
 | Messages                                         | :white_check_mark: |
-| Calendar                                         | :white_check_mark: |
 | Live Chat                                        | :white_check_mark: |
 | Private chat                                     | :white_check_mark: |
 | Marketplace                                      | :white_check_mark: |
