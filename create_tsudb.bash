@@ -52,8 +52,7 @@ CREATE TABLE users (
     city TEXT,
     country TEXT,
     units TEXT DEFAULT 'imperial' CHECK (units IN ('metric', 'imperial')),
-    stocks TEXT DEFAULT '',
-    calendar_preferences TEXT DEFAULT '{}'
+    stocks TEXT DEFAULT ''
 );
 
 CREATE TABLE conferences (
@@ -170,23 +169,11 @@ CREATE TABLE topic_notification_optouts (
     UNIQUE(user_id, topic_id) -- One opt-out per user per topic
 );
 
-CREATE TABLE calendar_events (
-    event_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    title TEXT NOT NULL,
-    description TEXT NOT NULL,
-    start_time TIMESTAMP NOT NULL,
-    duration INTEGER NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
-);
-
 CREATE INDEX idx_chat_created_at ON chat(created_at);
 CREATE INDEX idx_chat_room_id ON chat(room_id);
 CREATE INDEX idx_notes_user_id ON notes(user_id);
 CREATE INDEX idx_notes_updated_at ON notes(updated_at);
 CREATE INDEX idx_topic_notification_optouts ON topic_notification_optouts(user_id, topic_id);
-CREATE INDEX idx_calendar_events_user_time ON calendar_events(user_id, start_time);
 CREATE INDEX idx_conferences_name ON conferences(conference_name);
 CREATE INDEX idx_topics_conference_id ON topics(conference_id);
 CREATE INDEX idx_topics_user_id ON topics(user_id);
