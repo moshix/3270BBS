@@ -62,7 +62,7 @@ The system is heavily multi-threaded, making it blazing fast even on single-core
 | Linux s390x         | :white_check_mark: |
 | FreeBSD             | :white_check_mark: |
 | macOS Universal     | :white_check_mark: |
-| Windows             | :x:                |
+| Windows             |:white_check_mark:  |
 | Is it awesome?      | :white_check_mark: |
 
 ## Features
