@@ -52,7 +52,8 @@ CREATE TABLE users (
     city TEXT,
     country TEXT,
     units TEXT DEFAULT 'imperial' CHECK (units IN ('metric', 'imperial')),
-    stocks TEXT DEFAULT ''
+    stocks TEXT DEFAULT '',
+    codepage TEXT DEFAULT 'CP437' CHECK (codepage IN ('CP437', 'CP310', ''))
 );
 
 CREATE TABLE conferences (
