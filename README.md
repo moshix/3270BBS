@@ -374,4 +374,4 @@ By using this software, you agree to abide by any applicable local, national, or
 
 ---
 
-**Moshix, October 13, 2025 - Milan**
+**Moshix, November 10, 2025 - Munich**
