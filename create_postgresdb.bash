@@ -242,6 +242,8 @@ CREATE TABLE blocked_senders (
     user_id INTEGER NOT NULL,
     sender_email TEXT NOT NULL CHECK (sender_email ~ '^[^@]+@[^@]+\.[^@]+$'),
     blocked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    blocked_count INTEGER DEFAULT 0 NOT NULL,
+    last_blocked_at TIMESTAMP NULL,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     UNIQUE(user_id, sender_email)
 );
