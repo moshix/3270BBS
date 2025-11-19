@@ -98,6 +98,7 @@ The system is heavily multi-threaded, making it blazing fast even on single-core
 | Log viewer                                       | :white_check_mark: |
 | TLS and TN3270 listeners                         | :white_check_mark: |
 | FTPD server and HTTPD server                     | :white_check_mark: |
+| SMTP server to receive emails,spam filter        | :white_check_mark: |
 | Console view                                     | :white_check_mark: |
 | Forex updated table                              | :white_check_mark: |
 | Stocks quotron screen                            | :white_check_mark: |
@@ -195,6 +196,11 @@ max_emails_per_day=5
 
 # these conferences cannot be unsubscirbed
 required_conferences="General","3270BBS","User content"
+
+# SMTP server configruation, requires MX DNS entry
+start_SMTPD=yes
+smtp_port=25
+smtp_domain=mail.moshix.tech
 
 # web server port
 httpd_port=9000            # port for the HTTPD listener
