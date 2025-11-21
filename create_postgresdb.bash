@@ -120,7 +120,8 @@ CREATE TABLE users (
     country TEXT,
     units TEXT DEFAULT 'imperial' CHECK (units IN ('metric', 'imperial')),
     stocks TEXT DEFAULT '',
-    codepage TEXT DEFAULT 'CP437' CHECK (codepage IN ('CP437', 'CP310', ''))
+    codepage TEXT DEFAULT 'CP437' CHECK (codepage IN ('CP437', 'CP310', '')),
+    confirm_delete INTEGER DEFAULT 1 CHECK (confirm_delete IN (0, 1))
 );
 
 CREATE TABLE conferences (
