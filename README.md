@@ -356,6 +356,11 @@ The application consists of roughly 60,000 lines of Go code. The most complex co
 
 Built using the [go3270](https://github.com/racingmars/go3270) library by **racingmars**.
 
+## Code Page Support
+
+We support code page 1047 thruout the application. You can enable optional code page 310 with F2 in main menu to have overlay boxes drawn with graphical elements for much better look. 
+Emulators known to support CP310 are: x3270, c3270, Glink3270, Vista3270, pw3270. 
+
 ## Roadmap
 
 **User Web Pages:** If the web server is enabled and a user has a Note called **Public**, its content will be displayed at `http://3270bbswebsite/username`
@@ -378,4 +383,4 @@ By using this software, you agree to abide by any applicable local, national, or
 
 ---
 
-**Moshix, November 10, 2025 - Munich**
+**Moshix, November 23, 2025 - Dallas**
