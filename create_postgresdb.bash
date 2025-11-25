@@ -120,6 +120,7 @@ CREATE TABLE users (
     country TEXT,
     units TEXT DEFAULT 'imperial' CHECK (units IN ('metric', 'imperial')),
     stocks TEXT DEFAULT '',
+    calendar_preferences TEXT DEFAULT '{}',
     codepage TEXT DEFAULT 'CP437' CHECK (codepage IN ('CP437', 'CP310', '')),
     confirm_delete INTEGER DEFAULT 1 CHECK (confirm_delete IN (0, 1))
 );
@@ -277,12 +278,12 @@ CREATE INDEX idx_conference_subscriptions_conference ON conference_subscriptions
 CREATE INDEX idx_conference_subscriptions_notifications ON conference_subscriptions(conference_id, notification_enabled);
 
 -- Insert initial admin user (admin/admin) - password hashed with SHA-256
-INSERT INTO users (username, password_hash, email, is_admin, is_moderator, karma, city, country, units, stocks)
-VALUES ('admin', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'admin@example.com', 1, 1, 0, 'System', 'System', 'imperial', '');
+INSERT INTO users (username, password_hash, email, is_admin, is_moderator, karma, city, country, units, stocks, calendar_preferences)
+VALUES ('admin', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'admin@example.com', 1, 1, 0, 'System', 'System', 'imperial', '', '{}');
 
 -- Insert noreply user (noreply/noreply) - password hashed with SHA-256
-INSERT INTO users (username, password_hash, email, is_admin, is_moderator, karma, city, country, units, stocks)
-VALUES ('noreply', 'c032f1b2c07148d5c19afa6c6dcaef998abf76f863089c04eab52133c0ee0815', 'noreply@example.com', 0, 0, 0, 'System', 'System', 'imperial', '');
+INSERT INTO users (username, password_hash, email, is_admin, is_moderator, karma, city, country, units, stocks, calendar_preferences)
+VALUES ('noreply', 'c032f1b2c07148d5c19afa6c6dcaef998abf76f863089c04eab52133c0ee0815', 'noreply@example.com', 0, 0, 0, 'System', 'System', 'imperial', '', '{}');
 
 -- Insert default conferences
 INSERT INTO conferences (conference_name, description) VALUES
