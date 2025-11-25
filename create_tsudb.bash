@@ -53,6 +53,7 @@ CREATE TABLE users (
     country TEXT,
     units TEXT DEFAULT 'imperial' CHECK (units IN ('metric', 'imperial')),
     stocks TEXT DEFAULT '',
+    calendar_preferences TEXT DEFAULT '{}',
     codepage TEXT DEFAULT 'CP437' CHECK (codepage IN ('CP437', 'CP310', '')),
     confirm_delete INTEGER DEFAULT 1
 );
