@@ -55,7 +55,8 @@ CREATE TABLE users (
     stocks TEXT DEFAULT '',
     calendar_preferences TEXT DEFAULT '{}',
     codepage TEXT DEFAULT 'CP437' CHECK (codepage IN ('CP437', 'CP310', '')),
-    confirm_delete INTEGER DEFAULT 1
+    confirm_delete INTEGER DEFAULT 1,
+    newsgroup_data TEXT DEFAULT '{}'
 );
 
 CREATE TABLE conferences (
