@@ -37,11 +37,88 @@ if [ "$DB_TYPE" != "pg" ]; then
     exit 1
 fi
 
-# Verify all required PostgreSQL settings are present
-if [ -z "$DB_HOST" ] || [ -z "$DB_PORT" ] || [ -z "$DB_USER" ] || [ -z "$DB_PASSWORD" ] || [ -z "$DB_NAME" ]; then
-    echo "Error: Missing PostgreSQL configuration in $CONFIG_FILE" >&2
-    echo "Required settings: db_host, db_port, db_user, db_password, db_name" >&2
-    exit 1
+# Function to prompt for config value
+prompt_for_value() {
+    local key="$1"
+    local prompt_text="$2"
+    local default_value="$3"
+    local value
+
+    if [ -n "$default_value" ]; then
+        read -p "$prompt_text [$default_value]: " value
+        value="${value:-$default_value}"
+    else
+        read -p "$prompt_text: " value
+        while [ -z "$value" ]; do
+            echo "This value is required."
+            read -p "$prompt_text: " value
+        done
+    fi
+    echo "$value"
+}
+
+# Check if all required PostgreSQL settings exist in config
+MISSING_CONFIGS=()
+[ -z "$DB_HOST" ] && MISSING_CONFIGS+=("db_host")
+[ -z "$DB_PORT" ] && MISSING_CONFIGS+=("db_port")
+[ -z "$DB_USER" ] && MISSING_CONFIGS+=("db_user")
+[ -z "$DB_PASSWORD" ] && MISSING_CONFIGS+=("db_password")
+[ -z "$DB_NAME" ] && MISSING_CONFIGS+=("db_name")
+
+# If any configs are missing, enter interactive mode
+if [ ${#MISSING_CONFIGS[@]} -gt 0 ]; then
+    echo "=========================================="
+    echo "PostgreSQL Configuration Setup"
+    echo "=========================================="
+    echo ""
+    echo "Missing configuration values: ${MISSING_CONFIGS[*]}"
+    echo "Please provide the following PostgreSQL connection details:"
+    echo ""
+
+    # Prompt for all values
+    DB_HOST=$(prompt_for_value "db_host" "PostgreSQL host" "localhost")
+    DB_PORT=$(prompt_for_value "db_port" "PostgreSQL port" "5432")
+    DB_USER=$(prompt_for_value "db_user" "PostgreSQL username" "moshix")
+    DB_PASSWORD=$(prompt_for_value "db_password" "PostgreSQL password" "")
+    DB_NAME=$(prompt_for_value "db_name" "Database name" "forum3270")
+
+    echo ""
+    echo "Testing connection to PostgreSQL..."
+    
+    # Test connection
+    export PGPASSWORD="$DB_PASSWORD"
+    if psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d postgres -c "SELECT 1" >/dev/null 2>&1; then
+        echo "✅ Connection successful!"
+    else
+        echo "❌ Connection failed. Please check your credentials."
+        unset PGPASSWORD
+        exit 1
+    fi
+
+    echo ""
+    echo "Updating $CONFIG_FILE with PostgreSQL settings..."
+    
+    # Backup existing config
+    cp "$CONFIG_FILE" "${CONFIG_FILE}.backup.$(date +%Y%m%d_%H%M%S)"
+    
+    # Remove old PostgreSQL settings if they exist
+    sed -i.tmp '/^db=/d; /^db_host=/d; /^db_port=/d; /^db_user=/d; /^db_password=/d; /^db_name=/d' "$CONFIG_FILE"
+    rm -f "${CONFIG_FILE}.tmp"
+    
+    # Append new settings
+    cat >> "$CONFIG_FILE" <<CONFIGEOF
+
+# PostgreSQL Configuration (added by create_postgres_db.bash on $(date))
+db=pg
+db_host=$DB_HOST
+db_port=$DB_PORT
+db_user=$DB_USER
+db_password=$DB_PASSWORD
+db_name=$DB_NAME
+CONFIGEOF
+
+    echo "✅ Configuration updated and backed up"
+    echo ""
 fi
 
 # Check if psql is installed
@@ -319,6 +396,24 @@ echo "Creating database schema..."
 psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" -f "$SQL_FILE" 2>&1 | tee -a "$LOG_FILE"
 
 if [ $? -eq 0 ]; then
+    echo ""
+    echo "Granting full privileges to user $DB_USER..."
+    psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" <<GRANTEOF 2>&1 | tee -a "$LOG_FILE"
+        -- Grant full privileges on all existing tables (including ALTER)
+        GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO $DB_USER;
+        GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO $DB_USER;
+        
+        -- Grant privileges for future objects
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON TABLES TO $DB_USER;
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON SEQUENCES TO $DB_USER;
+GRANTEOF
+    
+    if [ $? -eq 0 ]; then
+        echo "✅ Privileges granted (including ALTER for schema migrations)"
+    else
+        echo "⚠️  Warning: Failed to grant some privileges. Application may not be able to ALTER tables."
+    fi
+    
     echo ""
     echo "✅ PostgreSQL database schema created successfully!"
     echo "Database: $DB_NAME"
