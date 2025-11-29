@@ -383,4 +383,4 @@ By using this software, you agree to abide by any applicable local, national, or
 
 ---
 
-**Moshix, November 23, 2025 - Dallas**
+**Moshix, November 29, 2025 - Krakow**
