@@ -4,7 +4,7 @@
 
 This is the same code that runs [my Forum3270 BBS](https://www.moshix.tech:3270) for IBM 3270 terminals, [real](https://youtube.com/shorts/deyGhLtKzp8?si=_f4SYaz37xLR54Zj) and emulated.
 
-Just to make it clear, this BBS needs for acces with an **IBM 3270 terminal emulator**, not Putty, or telnet.
+Just to make it clear, this BBS need to be accessed with an **IBM 3270 terminal emulator**, not Putty, or telnet.
 
 ## Table of Contents
 
