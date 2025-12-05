@@ -200,7 +200,9 @@ CREATE TABLE users (
     calendar_preferences TEXT DEFAULT '{}',
     codepage TEXT DEFAULT 'CP437' CHECK (codepage IN ('CP437', 'CP310', '')),
     confirm_delete INTEGER DEFAULT 1 CHECK (confirm_delete IN (0, 1)),
-    newsgroup_data TEXT DEFAULT '{}'
+    newsgroup_data TEXT DEFAULT '{}',
+    newsgroup_email_delivery TEXT DEFAULT 'no' CHECK (newsgroup_email_delivery IN ('yes', 'no')),
+    newsgroup_email_mode TEXT DEFAULT 'daily' CHECK (newsgroup_email_mode IN ('all', 'daily'))
 );
 
 CREATE TABLE conferences (
