@@ -111,7 +111,7 @@ The system is heavily multi-threaded, making it blazing fast even on single-core
 | Discord access to Mainframe Enthusiasts Channel  | :white_check_mark: |
 | The Matrix in the raw                            | :white_check_mark: |
 | Time skew detection compared to NTP              | :white_check_mark: |
-| No database server needed                        | :white_check_mark: |
+| User email verification during sign-up           | :white_check_mark: |
 | SHA256 password hashing for all accounts         | :white_check_mark: |
 | Account enumeration protection                   | :white_check_mark: |
 | Regular security audits by outside firm          | :white_check_mark: |
