@@ -177,6 +177,8 @@ start_TLS=yes
 tlscert=your.crt
 tlskey=your.key
 
+# verify email address of new accounts, requires proper sendgrid key?
+verify_newuser_email=no
 
 # finger daemon 
 fingerd_port=1079
@@ -217,6 +219,18 @@ start_HTTPD=yes
 # ssh server settings
 start_SSHD=yes
 sshd_port=2022
+
+
+#federated newsgroup settings (contact moshix at Forum3270, if you want to federate)
+newsgroup_db_address=
+newsgroup_db_port=
+newsgroup_db_user=
+newsgroup_db_password=
+newsgroup_db_name=
+
+
+
+
 
 # remote mainframe settings for v27.0 and up
 # Up to 15 can be configured.
@@ -383,4 +397,4 @@ By using this software, you agree to abide by any applicable local, national, or
 
 ---
 
-**Moshix, Dec 3, 2025 - Krakow**
+**Moshix, Dec 6, 2025 - Frankfurt**
