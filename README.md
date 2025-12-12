@@ -193,15 +193,6 @@ SENDGRID_API_KEY="123"
 # notify admin user of new accounts?
 notify_admin_new_accounts=yes
 
-send_emails_with=postal
-postal_smtp_username="server-1@myorg"
-postal_smtp_password="YOUR_SMTP_PASSWORD"
-postal_address="smtp.xxx.com"
-postal_port=587
-postal_use_tls=true
-postal_from_address="no-reply@xxx.com"
-postal_return_path="rp.xxx.com"
-
 # how many emails per day can a non-admin user send max?
 max_emails_per_day=5
 
