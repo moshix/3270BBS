@@ -69,8 +69,9 @@ The system is heavily multi-threaded, making it blazing fast even on single-core
 
 | Feature                                          | Included           |
 |--------------------------------------------------|--------------------|
-| Virtual sessions mgmt with F23/F24              | :white_check_mark: |
+| Virtual sessions mgmt with F23/F24               | :white_check_mark: |
 | Discussion groups                                | :white_check_mark: |
+| A full BASIC interpreter inside the BBS!         | :white_check_mark: |
 | Federation of chat                               | :white_check_mark: |
 | Conferences and conference mgmt by moderators    | :white_check_mark: |
 | Moderators can ban users from conferences        | :white_check_mark: |
@@ -397,4 +398,4 @@ By using this software, you agree to abide by any applicable local, national, or
 
 ---
 
-**Moshix, Dec 6, 2025 - Frankfurt**
+**Moshix, Dec 16, 2025 - Milan**
