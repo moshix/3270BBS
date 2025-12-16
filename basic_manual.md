@@ -44,9 +44,12 @@ READY
 |---------|-------------|
 | `SAVE "name"` | Save program to file |
 | `LOAD "name"` | Load program from file |
-| `EDIT "name"` | Edit program in full-screen editor |
+| `EDIT "name"` | Edit file in full-screen editor |
+| `EDIT` | Edit program in memory (no filename) |
 | `ERASE "name"` | Delete program file |
 | `FILES` | List your files and community programs |
+
+**EDIT without a filename:** Opens the program currently in memory in the full-screen editor. This is useful when you've loaded a community program and want to modify it. When you save, it creates `UNTITLED.bas` in your directory.
 
 ### Community Programs
 
@@ -213,6 +216,27 @@ Comparision operators: `=`, `<>`, `<`, `>`, `<=`, `>=`
 | `YEAR()` | Current year | `YEAR()` → `2025` |
 | `MONTH()` | Current month (1-12) | `MONTH()` → `12` |
 | `DAY()` | Day of month (1-31) | `DAY()` → `16` |
+| `SLEEP(n)` | Pause execution for n seconds | `SLEEP(1.5)` pauses 1.5 sec |
+
+### SLEEP Function
+
+The `SLEEP(n)` function pauses program execution for the specified number of seconds.
+
+- **Range:** 0.1 to 255 seconds
+- **Fractions:** Supports decimal values (e.g., `SLEEP(0.5)` for half a second)
+- **CPU-friendly:** Does not consume CPU cycles during the wait
+- **Returns:** 0 (can be ignored)
+
+Example:
+```basic
+10 REM Countdown Timer
+20 FOR I = 10 TO 0 STEP -1
+30 PRINT I
+40 X = SLEEP(1)
+50 NEXT I
+60 PRINT "BLAST OFF!"
+70 END
+```
 
 ---
 
@@ -471,7 +495,8 @@ MATH:      ABS INT SGN SQR SIN COS TAN ATAN LOG EXP RND
 
 STRING:    LEN LEFT$ RIGHT$ MID$ CHR$ ASC STR$ VAL SPACE$ UCASE$ LCASE$
 
-TIME:      TIME$() DATE$() TIMER() HOUR() MINUTE() SECOND() YEAR() MONTH() DAY()
+TIME:      TIME$() DATE$() TIMER() HOUR() MINUTE() SECOND()
+           YEAR() MONTH() DAY() SLEEP(n)
 
 BBS DATA:  $ChatMessage(n) $Mail(n) $UserList(n) $UserInfo$ $Conference(n)
 ```
