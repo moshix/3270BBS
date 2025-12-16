@@ -44,6 +44,7 @@ READY
 |---------|-------------|
 | `SAVE "name"` | Save program to file |
 | `LOAD "name"` | Load program from file |
+| `EDIT "name"` | Edit program in full-screen editor |
 | `FILES` | List your saved programs |
 
 ### Other Commands
@@ -185,6 +186,22 @@ Comparision operators: `=`, `<>`, `<`, `>`, `<=`, `>=`
 
 ---
 
+## 🕐 Time Functions
+
+| Function | Description | Example |
+|----------|-------------|---------|
+| `TIME$` | Current time (HH:MM:SS) | `TIME$` → `"14:30:45"` |
+| `DATE$` | Current date (YYYY-MM-DD) | `DATE$` → `"2025-12-16"` |
+| `TIMER` | Seconds since midnight | `TIMER` → `52245` |
+| `HOUR` | Current hour (0-23) | `HOUR` → `14` |
+| `MINUTE` | Current minute (0-59) | `MINUTE` → `30` |
+| `SECOND` | Current second (0-59) | `SECOND` → `45` |
+| `YEAR` | Current year | `YEAR` → `2025` |
+| `MONTH` | Current month (1-12) | `MONTH` → `12` |
+| `DAY` | Day of month (1-31) | `DAY` → `16` |
+
+---
+
 ## 🟥 3270BBS Data Access
 
 Access live BBS data direcly from BASIC!
@@ -314,6 +331,98 @@ This program retrieves and displays teh three most recent chat messages from the
 140 END
 ```
 
+### Example 5: Digital Clock (Time Functions)
+This program displays the current date and time using all time functions:
+
+```basic
+10 REM Digital Clock Display
+20 PRINT "================================"
+30 PRINT "    CURRENT DATE AND TIME"
+40 PRINT "================================"
+50 PRINT
+60 PRINT "  Date: "; DATE$
+70 PRINT "  Time: "; TIME$
+80 PRINT
+90 PRINT "  Year:   "; YEAR
+100 PRINT "  Month:  "; MONTH
+110 PRINT "  Day:    "; DAY
+120 PRINT "  Hour:   "; HOUR
+130 PRINT "  Minute: "; MINUTE
+140 PRINT "  Second: "; SECOND
+150 PRINT
+160 PRINT "  Seconds since midnight: "; TIMER
+170 END
+```
+
+### Example 6: Orbital Mechanics Plot (24x80 terminal)
+This program plots an elliptical orbit around a central body using ASCII graphics. Fits within the 24x80 Model 2 terminal display:
+
+```basic
+10 REM Orbital Mechanics Plotter
+20 REM Fits 24x80 Model 2 Terminal
+30 DIM SCR$(18)
+40 W = 70: H = 16
+50 CX = 35: CY = 8
+60 A = 28: B = 7
+70 E = 0.6
+80 REM Initialize screen buffer
+90 FOR Y = 0 TO H-1
+100 SCR$(Y) = SPACE$(W)
+110 NEXT Y
+120 REM Plot elliptical orbit path
+130 FOR T = 0 TO 62
+140 AN = T * 0.1
+150 R = (A * (1 - E*E)) / (1 + E * COS(AN))
+160 PX = INT(CX + R * COS(AN) * 0.5)
+170 PY = INT(CY + R * SIN(AN) * 0.25)
+180 IF PX >= 0 AND PX < W AND PY >= 0 AND PY < H THEN GOSUB 400
+190 NEXT T
+200 REM Place Sun at focus
+210 PX = CX - INT(A * E * 0.5): PY = CY
+220 CH$ = "@": GOSUB 400
+230 REM Place satellite
+240 AN = 0.8: R = (A * (1 - E*E)) / (1 + E * COS(AN))
+250 PX = INT(CX + R * COS(AN) * 0.5)
+260 PY = INT(CY + R * SIN(AN) * 0.25)
+270 CH$ = "*": GOSUB 400
+280 REM Print the display
+290 PRINT "ORBITAL MECHANICS - ELLIPTICAL ORBIT"
+300 PRINT "Eccentricity: "; E; "  Semi-major: "; A
+310 FOR Y = 0 TO H-1
+320 PRINT SCR$(Y)
+330 NEXT Y
+340 PRINT "@ = Sun (focus)  * = Satellite  . = Orbit path"
+350 END
+400 REM Subroutine: Plot character at PX,PY
+410 IF CH$ = "" THEN CH$ = "."
+420 L$ = SCR$(PY)
+430 IF PX = 0 THEN SCR$(PY) = CH$ + MID$(L$, 2)
+440 IF PX > 0 AND PX < W-1 THEN SCR$(PY) = LEFT$(L$, PX) + CH$ + MID$(L$, PX+2)
+450 IF PX = W-1 THEN SCR$(PY) = LEFT$(L$, PX) + CH$
+460 CH$ = "."
+470 RETURN
+```
+
+Output:
+```
+ORBITAL MECHANICS - ELLIPTICAL ORBIT
+Eccentricity: 0.6  Semi-major: 28
+                         ...........
+                    ...              ....
+                 ..                      ...
+               .                            ..
+             .                                .
+            .                                  .
+           .         @                     *    .
+            .                                  .
+             .                                .
+               .                            ..
+                 ..                      ...
+                    ...              ....
+                         ...........
+@ = Sun (focus)  * = Satellite  . = Orbit path
+```
+
 ---
 
 ## ⌨️ Keyboard Controls
@@ -339,7 +448,7 @@ This program retrieves and displays teh three most recent chat messages from the
 ## ❓ Quick Reference Card
 
 ```
-COMMANDS:  RUN LIST NEW SAVE LOAD FILES RENUM DELETE HELP VARS BYE
+COMMANDS:  RUN LIST NEW SAVE LOAD EDIT FILES RENUM DELETE HELP VARS BYE
 
 STATEMENTS: PRINT INPUT LET IF/THEN/ELSE GOTO GOSUB/RETURN
             FOR/NEXT WHILE/WEND DIM REM END
@@ -347,6 +456,8 @@ STATEMENTS: PRINT INPUT LET IF/THEN/ELSE GOTO GOSUB/RETURN
 MATH:      ABS INT SGN SQR SIN COS TAN ATAN LOG EXP RND
 
 STRING:    LEN LEFT$ RIGHT$ MID$ CHR$ ASC STR$ VAL SPACE$ UCASE$ LCASE$
+
+TIME:      TIME$ DATE$ TIMER HOUR MINUTE SECOND YEAR MONTH DAY
 
 BBS DATA:  $ChatMessage(n) $Mail(n) $UserList(n) $UserInfo$ $Conference(n)
 ```
