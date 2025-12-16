@@ -165,6 +165,11 @@ Comparision operators: `=`, `<>`, `<`, `>`, `<=`, `>=`
 100 END    ' Terminates program execution
 ```
 
+### CLS - Clear Screen
+```basic
+10 CLS    ' Clears the screen
+```
+
 ---
 
 ## 🟧 Math Functions
@@ -216,23 +221,32 @@ Comparision operators: `=`, `<>`, `<`, `>`, `<=`, `>=`
 | `YEAR()` | Current year | `YEAR()` → `2025` |
 | `MONTH()` | Current month (1-12) | `MONTH()` → `12` |
 | `DAY()` | Day of month (1-31) | `DAY()` → `16` |
-| `SLEEP(n)` | Pause execution for n seconds | `SLEEP(1.5)` pauses 1.5 sec |
+| `SLEEP n` | Pause execution for n seconds | `SLEEP 1.5` pauses 1.5 sec |
 
-### SLEEP Function
+### SLEEP - Pause Execution
 
-The `SLEEP(n)` function pauses program execution for the specified number of seconds.
+The `SLEEP` statement pauses program execution for the specified number of seconds.
 
 - **Range:** 0.1 to 255 seconds
-- **Fractions:** Supports decimal values (e.g., `SLEEP(0.5)` for half a second)
+- **Fractions:** Supports decimal values (e.g., `SLEEP 0.5` for half a second)
 - **CPU-friendly:** Does not consume CPU cycles during the wait
-- **Returns:** 0 (can be ignored)
+- **Screen refresh:** Forces screen update before sleeping (so output is visible)
+
+**Two syntax forms:**
+
+```basic
+SLEEP 1           ' Statement form (recommended)
+X = SLEEP(1)      ' Function form (returns 0)
+```
+
+The **statement form** is recommended for display programs because it refreshes the screen before pausing, ensuring all PRINT output is visible.
 
 Example:
 ```basic
 10 REM Countdown Timer
 20 FOR I = 10 TO 0 STEP -1
 30 PRINT I
-40 X = SLEEP(1)
+40 SLEEP 1
 50 NEXT I
 60 PRINT "BLAST OFF!"
 70 END
@@ -489,14 +503,16 @@ Eccentricity: 0.6  Semi-major: 28
 COMMANDS:  RUN LIST NEW SAVE LOAD EDIT ERASE FILES RENUM DELETE HELP VARS BYE
 
 STATEMENTS: PRINT INPUT LET IF/THEN/ELSE GOTO GOSUB/RETURN
-            FOR/NEXT WHILE/WEND DIM REM END
+            FOR/NEXT WHILE/WEND DIM REM END CLS
 
 MATH:      ABS INT SGN SQR SIN COS TAN ATAN LOG EXP RND
 
 STRING:    LEN LEFT$ RIGHT$ MID$ CHR$ ASC STR$ VAL SPACE$ UCASE$ LCASE$
 
 TIME:      TIME$() DATE$() TIMER() HOUR() MINUTE() SECOND()
-           YEAR() MONTH() DAY() SLEEP(n)
+           YEAR() MONTH() DAY()
+
+SLEEP:     SLEEP n (statement) or X = SLEEP(n) (function)
 
 BBS DATA:  $ChatMessage(n) $Mail(n) $UserList(n) $UserInfo$ $Conference(n)
 ```
