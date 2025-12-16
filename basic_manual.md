@@ -1,4 +1,4 @@
-# 🖥️ 3270BBS BASIC Interpreter Manual
+# 🖥️ BASIC/3270BBS Interpreter Manual
 
 **Copyright © 2025-2026 by moshix. All rights reserved.**
 
