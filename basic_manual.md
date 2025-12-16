@@ -45,7 +45,21 @@ READY
 | `SAVE "name"` | Save program to file |
 | `LOAD "name"` | Load program from file |
 | `EDIT "name"` | Edit program in full-screen editor |
-| `FILES` | List your saved programs |
+| `ERASE "name"` | Delete program file |
+| `FILES` | List your files and community programs |
+
+### Community Programs
+
+The system includes a collection of shared example programs that all users can access. These programs are stored in the `basic/community/` directory and have filenames starting with underscore (`_`).
+
+**Using community programs:**
+- `FILES` - Shows both your files and available community programs
+- `LOAD "_example.bas"` - Load a community program
+- Community programs are **read-only** - you cannot EDIT or ERASE them
+
+**User file restrictions:**
+- User filenames cannot contain underscores (`_`)
+- This prevents confusion between user files and community files
 
 ### Other Commands
 
@@ -448,7 +462,7 @@ Eccentricity: 0.6  Semi-major: 28
 ## ❓ Quick Reference Card
 
 ```
-COMMANDS:  RUN LIST NEW SAVE LOAD EDIT FILES RENUM DELETE HELP VARS BYE
+COMMANDS:  RUN LIST NEW SAVE LOAD EDIT ERASE FILES RENUM DELETE HELP VARS BYE
 
 STATEMENTS: PRINT INPUT LET IF/THEN/ELSE GOTO GOSUB/RETURN
             FOR/NEXT WHILE/WEND DIM REM END
