@@ -190,15 +190,15 @@ Comparision operators: `=`, `<>`, `<`, `>`, `<=`, `>=`
 
 | Function | Description | Example |
 |----------|-------------|---------|
-| `TIME$` | Current time (HH:MM:SS) | `TIME$` → `"14:30:45"` |
-| `DATE$` | Current date (YYYY-MM-DD) | `DATE$` → `"2025-12-16"` |
-| `TIMER` | Seconds since midnight | `TIMER` → `52245` |
-| `HOUR` | Current hour (0-23) | `HOUR` → `14` |
-| `MINUTE` | Current minute (0-59) | `MINUTE` → `30` |
-| `SECOND` | Current second (0-59) | `SECOND` → `45` |
-| `YEAR` | Current year | `YEAR` → `2025` |
-| `MONTH` | Current month (1-12) | `MONTH` → `12` |
-| `DAY` | Day of month (1-31) | `DAY` → `16` |
+| `TIME$()` | Current time (HH:MM:SS) | `TIME$()` → `"14:30:45"` |
+| `DATE$()` | Current date (YYYY-MM-DD) | `DATE$()` → `"2025-12-16"` |
+| `TIMER()` | Seconds since midnight | `TIMER()` → `52245` |
+| `HOUR()` | Current hour (0-23) | `HOUR()` → `14` |
+| `MINUTE()` | Current minute (0-59) | `MINUTE()` → `30` |
+| `SECOND()` | Current second (0-59) | `SECOND()` → `45` |
+| `YEAR()` | Current year | `YEAR()` → `2025` |
+| `MONTH()` | Current month (1-12) | `MONTH()` → `12` |
+| `DAY()` | Day of month (1-31) | `DAY()` → `16` |
 
 ---
 
@@ -340,17 +340,17 @@ This program displays the current date and time using all time functions:
 30 PRINT "    CURRENT DATE AND TIME"
 40 PRINT "================================"
 50 PRINT
-60 PRINT "  Date: "; DATE$
-70 PRINT "  Time: "; TIME$
+60 PRINT "  Date: "; DATE$()
+70 PRINT "  Time: "; TIME$()
 80 PRINT
-90 PRINT "  Year:   "; YEAR
-100 PRINT "  Month:  "; MONTH
-110 PRINT "  Day:    "; DAY
-120 PRINT "  Hour:   "; HOUR
-130 PRINT "  Minute: "; MINUTE
-140 PRINT "  Second: "; SECOND
+90 PRINT "  Year:   "; YEAR()
+100 PRINT "  Month:  "; MONTH()
+110 PRINT "  Day:    "; DAY()
+120 PRINT "  Hour:   "; HOUR()
+130 PRINT "  Minute: "; MINUTE()
+140 PRINT "  Second: "; SECOND()
 150 PRINT
-160 PRINT "  Seconds since midnight: "; TIMER
+160 PRINT "  Seconds since midnight: "; TIMER()
 170 END
 ```
 
@@ -457,7 +457,7 @@ MATH:      ABS INT SGN SQR SIN COS TAN ATAN LOG EXP RND
 
 STRING:    LEN LEFT$ RIGHT$ MID$ CHR$ ASC STR$ VAL SPACE$ UCASE$ LCASE$
 
-TIME:      TIME$ DATE$ TIMER HOUR MINUTE SECOND YEAR MONTH DAY
+TIME:      TIME$() DATE$() TIMER() HOUR() MINUTE() SECOND() YEAR() MONTH() DAY()
 
 BBS DATA:  $ChatMessage(n) $Mail(n) $UserList(n) $UserInfo$ $Conference(n)
 ```
