@@ -329,12 +329,23 @@ Examples:
 
 Access live BBS data direcly from BASIC!
 
-### $ChatMessage(n) - Chat Messages
+### $ChatMessage(n) - Chat Messages (Global Room Only)
 ```basic
 10 PRINT $ChatMessage(0)    ' Most recent
 20 PRINT $ChatMessage(-1)   ' Second most recent
 ```
-Returns: `"username: message"`
+Returns: `"YYYY-MM-DD HH:MM:SS username: message"`
+
+The first 19 characters are always the timestamp, making it easy to parse:
+```basic
+10 MSG$ = $ChatMessage(0)
+20 DATETIME$ = LEFT$(MSG$, 19)   ' "2025-12-17 14:30:45"
+30 REST$ = MID$(MSG$, 21)        ' "username: message"
+40 PRINT "Time: "; DATETIME$
+50 PRINT "Message: "; REST$
+```
+
+**Note:** Only returns messages from the public chat room, not private rooms.
 
 ### $Mail(n) - Your Mail Messages
 ```basic
