@@ -292,6 +292,37 @@ Example:
 70 END
 ```
 
+### EVAL Function
+
+The `EVAL(expr$)` function evaluates a string as a BASIC expression at runtime and returns the result.
+
+- **Input:** A string containing a valid BASIC expression
+- **Returns:** The evaluated result (number or string)
+- **Variables:** Can reference current program variables
+
+Examples:
+```basic
+10 REM Simple calculator
+20 INPUT "Enter expression: ", E$
+30 PRINT "Result: "; EVAL(E$)
+
+10 REM Using variables in EVAL
+20 A = 10
+30 B = 5
+40 PRINT EVAL("A + B")           ' Prints 15
+50 PRINT EVAL("A * B + 2")       ' Prints 52
+
+10 REM Dynamic math
+20 FORMULA$ = "SIN(X) * 2"
+30 FOR X = 0 TO 3
+40 PRINT "X="; X; " Result="; EVAL(FORMULA$)
+50 NEXT X
+
+10 REM String functions in EVAL
+20 NAME$ = "HELLO WORLD"
+30 PRINT EVAL("LEFT$(NAME$, 5)")  ' Prints HELLO
+```
+
 ---
 
 ## 🟥 3270BBS Data Access
@@ -581,9 +612,11 @@ STRING:    LEN LEFT$ RIGHT$ MID$ CHR$ ASC STR$ VAL SPACE$ UCASE$ LCASE$
 TIME:      TIME$() DATE$() TIMER() HOUR() MINUTE() SECOND()
            YEAR() MONTH() DAY() SLEEP(n)
 
+UTILITY:   EVAL(expr$) - Evaluate string as expression at runtime
+
 BBS DATA:  $ChatMessage(n) $Mail(n) $UserList(n) $UserInfo$ $Conference(n)
 ```
 
 ---
 
-*3270BBS BASIC Interpreter v1.7 - Happy coding!* 🚀
+*3270BBS BASIC Interpreter v1.6 - Happy coding!* 🚀
