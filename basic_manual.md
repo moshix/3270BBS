@@ -214,7 +214,7 @@ Comparision operators: `=`, `<>`, `<`, `>`, `<=`, `>=`
 |----------|-------------|---------|
 | `TIME$()` | Current time (HH:MM:SS) | `TIME$()` → `"14:30:45"` |
 | `DATE$()` | Current date (YYYY-MM-DD) | `DATE$()` → `"2025-12-16"` |
-| `TIMER()` | Seconds since midnight | `TIMER()` → `52245` |
+| `TIMER()` | Milliseconds since midnight | `TIMER()` → `52245` |
 | `HOUR()` | Current hour (0-23) | `HOUR()` → `14` |
 | `MINUTE()` | Current minute (0-59) | `MINUTE()` → `30` |
 | `SECOND()` | Current second (0-59) | `SECOND()` → `45` |
@@ -519,4 +519,4 @@ BBS DATA:  $ChatMessage(n) $Mail(n) $UserList(n) $UserInfo$ $Conference(n)
 
 ---
 
-*3270BBS BASIC Interpreter v1.5 - Happy coding!* 🚀
+*3270BBS BASIC Interpreter v1.6 - Happy coding!* 🚀
