@@ -329,50 +329,128 @@ Examples:
 
 Access live BBS data direcly from BASIC!
 
-### $ChatMessage(n) - Chat Messages (Global Room Only)
-```basic
-10 PRINT $ChatMessage(0)    ' Most recent
-20 PRINT $ChatMessage(-1)   ' Second most recent
-```
-Returns: `"YYYY-MM-DD HH:MM:SS username: message"`
+### $ChatMessage(n) - Chat Messages (Associative Array)
+`$ChatMessage(n)` returns an associative array with structured chat data from the global (public) chat room.
 
-The first 19 characters are always the timestamp, making it easy to parse:
 ```basic
-10 MSG$ = $ChatMessage(0)
-20 DATETIME$ = LEFT$(MSG$, 19)   ' "2025-12-17 14:30:45"
-30 REST$ = MID$(MSG$, 21)        ' "username: message"
-40 PRINT "Time: "; DATETIME$
-50 PRINT "Message: "; REST$
+10 DIM C{}                  ' Declare associative array
+20 C{} = $ChatMessage(0)    ' Get most recent message
+30 PRINT C{"username"}; ": "; C{"message"}
+40 PRINT "Time: "; C{"datetime"}
 ```
 
-**Note:** Only returns messages from the public chat room, not private rooms.
+**Available Keys:**
+| Key | Description |
+|-----|-------------|
+| `datetime` | ISO 8601 format: `YYYY-MM-DDTHH:MM:SS` |
+| `username` | Who posted the message |
+| `message` | Message content |
 
-### $Mail(n) - Your Mail Messages
-```basic
-10 PRINT $Mail(0)           ' Most recent mail
-20 PRINT $Mail(-1)          ' Second most recent
-```
-Returns: `"From: sender - subject"`
+**Index:**
+- `n=0`: Most recent message
+- `n=1` or `n=-1`: Second most recent
+- Empty values returned if no messages
 
-### $UserList(n) - Online Users
-```basic
-10 PRINT $UserList(0)       ' First online user
-20 PRINT $UserList(1)       ' Second online user
-```
-Returns: username string
+**Note:** Only returns messages from the public global chat room, not private rooms.
 
-### $UserInfo$ - Your Username
-```basic
-10 PRINT "You are: "; $UserInfo$
-```
-Returns: your username
+### $Mail(n) - Your Mail Messages (Associative Array)
+`$Mail(n)` returns an associative array with structured mail data:
 
-### $Conference(n) - Conference Posts
 ```basic
-10 PRINT $Conference(0)     ' Most recent post
-20 PRINT $Conference(-1)    ' Second most recent
+10 DIM MAIL{}               ' Declare associative array
+20 MAIL{} = $Mail(0)        ' Get most recent mail
+30 PRINT MAIL{"from"}       ' Sender name
+40 PRINT MAIL{"datetime"}   ' ISO 8601: 2025-12-17T14:30:45
+50 PRINT MAIL{"body"}       ' Full message body
 ```
-Returns: `"title by author"`
+
+**Available Keys:**
+| Key | Description |
+|-----|-------------|
+| `datetime` | ISO 8601 format: `YYYY-MM-DDTHH:MM:SS` |
+| `from` | Sender username |
+| `body` | Complete message content |
+| `read` | `"1"` if read, `"0"` if unread |
+| `replied` | `"1"` if replied, `"0"` if not |
+| `id` | Message ID number |
+
+**Index:**
+- `n=0`: Most recent message
+- `n=-1` or `n=1`: Second most recent
+- Empty values returned if no mail exists
+
+### $UserInfo - Your User Information (Associative Array)
+`$UserInfo` returns an associative array with your user profile data. Only non-sensitive fields are exposed.
+
+```basic
+10 DIM U{}                  ' Declare associative array
+20 U{} = $UserInfo          ' Get user info
+30 PRINT "Hello, "; U{"username"}
+40 IF U{"country"} <> "" THEN PRINT "Country: "; U{"country"}
+```
+
+**Available Keys:**
+| Key | Description |
+|-----|-------------|
+| `username` | Your username |
+| `country` | Your country (may be empty) |
+
+**Note:** Admin-only fields like email, IP address, role, and ban status are intentionally not exposed to any user, including admins and moderators.
+
+### $Topic(n) - Topics You Can Access (Associative Array)
+`$Topic(n)` returns an associative array with topic metadata. Only returns topics the user has permission to access (respects admin-only, moderator-only, and banned user restrictions).
+
+```basic
+10 DIM T{}                  ' Declare associative array
+20 T{} = $Topic(0)          ' Get most recent accessible topic
+30 PRINT T{"title"}         ' Topic title
+40 PRINT T{"author"}        ' Author username
+50 PRINT T{"conference"}    ' Conference name
+```
+
+**Available Keys:**
+| Key | Description |
+|-----|-------------|
+| `id` | Topic ID (use with `$Post`) |
+| `title` | Topic title |
+| `author` | Username who created it |
+| `conference` | Conference name |
+| `datetime` | ISO 8601: `YYYY-MM-DDTHH:MM:SS` |
+| `posts` | Number of posts/replies |
+| `views` | View count |
+| `likes` | Total likes |
+
+**Index:**
+- `n=0`: Most recent topic
+- `n=1`: Second most recent
+- Empty values returned if no topics or access denied
+
+### $Post(topic_id, n) - Posts from a Topic (Associative Array)
+`$Post(topic_id, n)` returns an associative array with post data from a specific topic. Verifies user has permission to access the topic's conference.
+
+```basic
+10 DIM T{}
+20 T{} = $Topic(0)                    ' Get topic
+30 TOPIC_ID = VAL(T{"id"})            ' Get topic ID
+40 DIM P{}
+50 P{} = $Post(TOPIC_ID, 0)           ' Get first post
+60 PRINT P{"author"}; ": "; P{"body"}
+```
+
+**Available Keys:**
+| Key | Description |
+|-----|-------------|
+| `id` | Post ID |
+| `author` | Username who wrote it |
+| `body` | Post content |
+| `datetime` | ISO 8601: `YYYY-MM-DDTHH:MM:SS` |
+| `likes` | Like count |
+| `dislikes` | Dislike count |
+
+**Arguments:**
+- `topic_id`: The topic ID (from `T{"id"}` after `$Topic()`)
+- `n=0`: First post (oldest), `n=1`: Second post, etc.
+- Empty values returned if topic not found or access denied
 
 ---
 
@@ -418,54 +496,115 @@ Output:
 ```
 
 ### Example 2: Display Last 3 Chat Messages
-This program retrieves and displays teh three most recent chat messages from the BBS:
+This program retrieves and displays the three most recent chat messages from the BBS:
 
 ```basic
 10 REM Display Last 3 Chat Messages
-20 PRINT "=============================="
-30 PRINT "   RECENT CHAT MESSAGES"
-40 PRINT "=============================="
-50 PRINT
-60 FOR I = 0 TO -2 STEP -1
-70 MSG$ = $ChatMessage(I)
-80 IF MSG$ <> "" THEN PRINT MSG$
-90 NEXT I
-100 PRINT
-110 PRINT "=============================="
-120 END
+20 DIM C{}
+30 PRINT "=============================="
+40 PRINT "   RECENT CHAT MESSAGES"
+50 PRINT "=============================="
+60 PRINT
+70 FOR I = 0 TO 2
+80   C{} = $ChatMessage(I)
+90   IF C{"message"} = "" THEN GOTO 120
+100   PRINT C{"datetime"}; " "; C{"username"}; ": "; C{"message"}
+110 NEXT I
+120 PRINT
+130 PRINT "=============================="
+140 END
 ```
 
-### Example 3: Who's Online
+### Example 3: User Greeting
 ```basic
-10 REM List Online Users
-20 PRINT "Online Users:"
-30 PRINT "-------------"
-40 FOR I = 0 TO 9
-50 U$ = $UserList(I)
-60 IF U$ <> "" THEN PRINT I+1; ". "; U$
-70 NEXT I
-80 END
+10 REM User Greeting
+20 DIM U{}
+30 U{} = $UserInfo
+40 PRINT "Welcome, "; U{"username"}; "!"
+50 IF U{"country"} <> "" THEN PRINT "Connecting from: "; U{"country"}
+60 END
 ```
 
 ### Example 4: Personal Dashboard
 ```basic
 10 REM Personal Dashboard
-20 PRINT "==============================="
-30 PRINT "  WELCOME, "; $UserInfo$
+20 DIM U{} : DIM M{} : DIM C{} : DIM T{}
+30 U{} = $UserInfo
 40 PRINT "==============================="
-50 PRINT
-60 PRINT "Your latest mail:"
-70 PRINT "  "; $Mail(0)
-80 PRINT
-90 PRINT "Latest chat:"
-100 PRINT "  "; $ChatMessage(0)
-110 PRINT
-120 PRINT "Latest conference post:"
-130 PRINT "  "; $Conference(0)
-140 END
+50 PRINT "  WELCOME, "; U{"username"}
+60 PRINT "==============================="
+70 PRINT
+80 PRINT "Your latest mail:"
+90 M{} = $Mail(0)
+100 IF M{"datetime"} <> "" THEN PRINT "  From: "; M{"from"}; " - "; LEFT$(M{"body"}, 40)
+110 IF M{"datetime"} = "" THEN PRINT "  No mail"
+120 PRINT
+130 PRINT "Latest chat:"
+140 C{} = $ChatMessage(0)
+150 IF C{"message"} <> "" THEN PRINT "  "; C{"username"}; ": "; C{"message"}
+160 IF C{"message"} = "" THEN PRINT "  No messages"
+170 PRINT
+180 PRINT "Latest topic:"
+190 T{} = $Topic(0)
+200 IF T{"title"} <> "" THEN PRINT "  "; T{"title"}; " by "; T{"author"}
+210 IF T{"title"} = "" THEN PRINT "  No topics"
+220 END
 ```
 
-### Example 5: Digital Clock (Time Functions)
+### Example 5: Mail Reader
+This program reads and displays your most recent email with full details:
+
+```basic
+10 REM Mail Reader Example
+20 DIM MAIL{}
+30 MAIL{} = $Mail(0)
+40 IF MAIL{"datetime"} = "" THEN PRINT "No mail": END
+50 PRINT "From: "; MAIL{"from"}
+60 PRINT "Date: "; MAIL{"datetime"}
+70 PRINT "Status: ";
+80 IF MAIL{"read"} = "1" THEN PRINT "Read"; ELSE PRINT "Unread";
+90 PRINT
+100 PRINT "---Message---"
+110 PRINT MAIL{"body"}
+120 END
+```
+
+### Example 6: Topic and Posts Reader
+This program reads a topic and displays all its posts:
+
+```basic
+10 REM Topic and Posts Reader
+20 DIM T{}
+30 DIM P{}
+40 
+50 REM Get the most recent topic
+60 T{} = $Topic(0)
+70 IF T{"title"} = "" THEN PRINT "No topics available": END
+80 
+90 PRINT "================================"
+100 PRINT T{"title"}
+110 PRINT "by "; T{"author"}; " in "; T{"conference"}
+120 PRINT "Posted: "; T{"datetime"}
+130 PRINT "================================"
+140 PRINT
+150 
+160 REM Get the topic ID for fetching posts
+170 TOPIC_ID = VAL(T{"id"})
+180 NUM_POSTS = VAL(T{"posts"})
+190 
+200 REM Display all posts in this topic
+210 FOR I = 0 TO NUM_POSTS - 1
+220   P{} = $Post(TOPIC_ID, I)
+230   IF P{"body"} = "" THEN GOTO 280
+240   PRINT "--- "; P{"author"}; " ("; P{"datetime"}; ") ---"
+250   PRINT P{"body"}
+260   PRINT "Likes: "; P{"likes"}; "  Dislikes: "; P{"dislikes"}
+270   PRINT
+280 NEXT I
+290 END
+```
+
+### Example 7: Digital Clock (Time Functions)
 This program displays the current date and time using all time functions:
 
 ```basic
@@ -488,7 +627,7 @@ This program displays the current date and time using all time functions:
 170 END
 ```
 
-### Example 6: Orbital Mechanics Plot (24x80 terminal)
+### Example 8: Orbital Mechanics Plot (24x80 terminal)
 This program plots an elliptical orbit around a central body using ASCII graphics. Fits within the 24x80 Model 2 terminal display:
 
 ```basic
@@ -557,7 +696,7 @@ Eccentricity: 0.6  Semi-major: 28
 @ = Sun (focus)  * = Satellite  . = Orbit path
 ```
 
-### Example 7: Phone Book (Associative Arrays)
+### Example 9: Phone Book (Associative Arrays)
 This program demonstrates associative arrays to create a simple phone book:
 
 ```basic
@@ -625,9 +764,9 @@ TIME:      TIME$() DATE$() TIMER() HOUR() MINUTE() SECOND()
 
 UTILITY:   EVAL(expr$) - Evaluate string as expression at runtime
 
-BBS DATA:  $ChatMessage(n) $Mail(n) $UserList(n) $UserInfo$ $Conference(n)
+BBS DATA:  $ChatMessage(n) $Mail(n) $UserInfo $Topic(n) $Post(topic_id,n)
 ```
 
 ---
 
-*3270BBS BASIC Interpreter v1.6 - Happy coding!* 🚀
+*3270BBS BASIC Interpreter v1.8 - Happy coding!* 🚀
