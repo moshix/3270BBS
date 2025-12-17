@@ -1,4 +1,4 @@
-# 🖥️ BASIC/3270BBS Interpreter Manual
+# 🖥️ BASIC/3270BBS Manual
 
 **Copyright © 2025-2026 by moshix. All rights reserved.**
 
@@ -183,10 +183,30 @@ Comparision operators: `=`, `<>`, `<`, `>`, `<=`, `>=`
 | `SIN(x)` | Sine (radians) | `SIN(3.14159/2)` → `1` |
 | `COS(x)` | Cosine (radians) | `COS(0)` → `1` |
 | `TAN(x)` | Tangent (radians) | `TAN(0)` → `0` |
-| `ATAN(x)` | Arctangent | `ATAN(1)` → `0.785...` |
+| `ATAN(x)` | Arctangent (radians) | `ATAN(1)` → `0.785...` |
+| `ASIN(x)` | Arcsine (radians), x must be -1 to 1 | `ASIN(1)` → `1.5707...` |
+| `ACOS(x)` | Arccosine (radians), x must be -1 to 1 | `ACOS(0)` → `1.5707...` |
 | `LOG(x)` | Natural logarithm | `LOG(2.718)` → `1` |
 | `EXP(x)` | e raised to power | `EXP(1)` → `2.718...` |
 | `RND(x)` | Random nubmer 0-1 | `RND(1)` → `0.xxxxx` |
+
+### Trigonometric Conversion Functions
+
+| Function | Description | Example |
+|----------|-------------|---------|
+| `PI()` | Returns the value of π | `PI()` → `3.14159...` |
+| `RADIANS(deg)` | Convert degrees to radians | `RADIANS(180)` → `3.14159...` |
+| `DEGREES(rad)` | Convert radians to degrees | `DEGREES(PI())` → `180` |
+
+Example:
+```basic
+10 REM Trigonometry with degree/radian conversion
+20 ANGLE = 45
+30 RAD = RADIANS(ANGLE)
+40 PRINT "Sin(45 degrees) = "; SIN(RAD)
+50 PRINT "Asin result in degrees: "; DEGREES(ASIN(0.707))
+60 END
+```
 
 ---
 
@@ -214,39 +234,30 @@ Comparision operators: `=`, `<>`, `<`, `>`, `<=`, `>=`
 |----------|-------------|---------|
 | `TIME$()` | Current time (HH:MM:SS) | `TIME$()` → `"14:30:45"` |
 | `DATE$()` | Current date (YYYY-MM-DD) | `DATE$()` → `"2025-12-16"` |
-| `TIMER()` | Milliseconds since midnight | `TIMER()` → `52245` |
+| `TIMER()` | Seconds since midnight (with millisecond precision) | `TIMER()` → `52245.123` |
 | `HOUR()` | Current hour (0-23) | `HOUR()` → `14` |
 | `MINUTE()` | Current minute (0-59) | `MINUTE()` → `30` |
 | `SECOND()` | Current second (0-59) | `SECOND()` → `45` |
 | `YEAR()` | Current year | `YEAR()` → `2025` |
 | `MONTH()` | Current month (1-12) | `MONTH()` → `12` |
 | `DAY()` | Day of month (1-31) | `DAY()` → `16` |
-| `SLEEP n` | Pause execution for n seconds | `SLEEP 1.5` pauses 1.5 sec |
+| `SLEEP(n)` | Pause execution for n seconds | `SLEEP(1.5)` pauses 1.5 sec |
 
-### SLEEP - Pause Execution
+### SLEEP Function
 
-The `SLEEP` statement pauses program execution for the specified number of seconds.
+The `SLEEP(n)` function pauses program execution for the specified number of seconds.
 
 - **Range:** 0.1 to 255 seconds
-- **Fractions:** Supports decimal values (e.g., `SLEEP 0.5` for half a second)
+- **Fractions:** Supports decimal values (e.g., `SLEEP(0.5)` for half a second)
 - **CPU-friendly:** Does not consume CPU cycles during the wait
-- **Screen refresh:** Forces screen update before sleeping (so output is visible)
-
-**Two syntax forms:**
-
-```basic
-SLEEP 1           ' Statement form (recommended)
-X = SLEEP(1)      ' Function form (returns 0)
-```
-
-The **statement form** is recommended for display programs because it refreshes the screen before pausing, ensuring all PRINT output is visible.
+- **Returns:** 0 (can be ignored)
 
 Example:
 ```basic
 10 REM Countdown Timer
 20 FOR I = 10 TO 0 STEP -1
 30 PRINT I
-40 SLEEP 1
+40 X = SLEEP(1)
 50 NEXT I
 60 PRINT "BLAST OFF!"
 70 END
@@ -505,14 +516,13 @@ COMMANDS:  RUN LIST NEW SAVE LOAD EDIT ERASE FILES RENUM DELETE HELP VARS BYE
 STATEMENTS: PRINT INPUT LET IF/THEN/ELSE GOTO GOSUB/RETURN
             FOR/NEXT WHILE/WEND DIM REM END CLS
 
-MATH:      ABS INT SGN SQR SIN COS TAN ATAN LOG EXP RND
+MATH:      ABS INT SGN SQR SIN COS TAN ATAN ASIN ACOS LOG EXP RND
+           PI() RADIANS(deg) DEGREES(rad)
 
 STRING:    LEN LEFT$ RIGHT$ MID$ CHR$ ASC STR$ VAL SPACE$ UCASE$ LCASE$
 
 TIME:      TIME$() DATE$() TIMER() HOUR() MINUTE() SECOND()
-           YEAR() MONTH() DAY()
-
-SLEEP:     SLEEP n (statement) or X = SLEEP(n) (function)
+           YEAR() MONTH() DAY() SLEEP(n)
 
 BBS DATA:  $ChatMessage(n) $Mail(n) $UserList(n) $UserInfo$ $Conference(n)
 ```
