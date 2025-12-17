@@ -154,6 +154,30 @@ Comparision operators: `=`, `<>`, `<`, `>`, `<=`, `>=`
 50 NAMES$(0) = "Alice"
 ```
 
+### Associative Arrays (Dictionaries)
+
+Associative arrays use string keys instead of numeric indices. Declare them with curly braces `{}`:
+
+```basic
+10 DIM PHONEBOOK${}         ' String associative array
+20 DIM SCORES{}             ' Numeric associative array
+30 PHONEBOOK${"Alice"} = "555-1234"
+40 PHONEBOOK${"Bob"} = "555-5678"
+50 SCORES{"Alice"} = 95
+60 SCORES{"Bob"} = 87
+70 PRINT "Alice's phone: "; PHONEBOOK${"Alice"}
+80 PRINT "Bob's score: "; SCORES{"Bob"}
+```
+
+Keys can be variables or expressions:
+```basic
+10 DIM DATA{}
+20 INPUT "Enter name: ", N$
+30 INPUT "Enter value: ", V
+40 DATA{N$} = V
+50 PRINT N$; " = "; DATA{N$}
+```
+
 ### REM - Comments
 ```basic
 10 REM This is a comment
@@ -484,6 +508,33 @@ Eccentricity: 0.6  Semi-major: 28
                     ...              ....
                          ...........
 @ = Sun (focus)  * = Satellite  . = Orbit path
+```
+
+### Example 7: Phone Book (Associative Arrays)
+This program demonstrates associative arrays to create a simple phone book:
+
+```basic
+10 REM Simple Phone Book using Associative Arrays
+20 DIM PHONE${}
+30 PRINT "=== PHONE BOOK ==="
+40 PRINT
+50 REM Add some entries
+60 PHONE${"Alice"} = "555-1234"
+70 PHONE${"Bob"} = "555-5678"
+80 PHONE${"Carol"} = "555-9012"
+90 PHONE${"David"} = "555-3456"
+100 PRINT "Stored 4 contacts."
+110 PRINT
+120 REM Look up contacts
+130 INPUT "Enter name to look up: ", NAME$
+140 RESULT$ = PHONE${NAME$}
+150 IF RESULT$ = "" THEN PRINT "Not found!"
+160 IF RESULT$ <> "" THEN PRINT NAME$; ": "; RESULT$
+170 PRINT
+180 INPUT "Look up another? (Y/N): ", A$
+190 IF UCASE$(A$) = "Y" THEN GOTO 130
+200 PRINT "Goodbye!"
+210 END
 ```
 
 ---
