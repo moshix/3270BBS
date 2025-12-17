@@ -586,4 +586,4 @@ BBS DATA:  $ChatMessage(n) $Mail(n) $UserList(n) $UserInfo$ $Conference(n)
 
 ---
 
-*3270BBS BASIC Interpreter v1.6 - Happy coding!* 🚀
+*3270BBS BASIC Interpreter v1.7 - Happy coding!* 🚀
