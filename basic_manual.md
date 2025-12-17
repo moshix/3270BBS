@@ -249,6 +249,11 @@ Example:
 | `SPACE$(n)` | n spaces | `SPACE$(5)` → `"     "` |
 | `UCASE$(s$)` | Uppercase | `UCASE$("hi")` → `"HI"` |
 | `LCASE$(s$)` | Lowercase | `LCASE$("HI")` → `"hi"` |
+| `TRIM$(s$)` | Remove leading/trailing whitespace | `TRIM$("  hi  ")` → `"hi"` |
+| `LTRIM$(s$)` | Remove leading whitespace | `LTRIM$("  hi")` → `"hi"` |
+| `RTRIM$(s$)` | Remove trailing whitespace | `RTRIM$("hi  ")` → `"hi"` |
+| `INSTR(s$,find$)` | Find position of substring (0 if not found) | `INSTR("hello","ll")` → `3` |
+| `REPLACE$(s$,old$,new$)` | Replace all occurrences | `REPLACE$("hello","l","L")` → `"heLLo"` |
 
 ---
 
@@ -571,6 +576,7 @@ MATH:      ABS INT SGN SQR SIN COS TAN ATAN ASIN ACOS LOG EXP RND
            PI() RADIANS(deg) DEGREES(rad)
 
 STRING:    LEN LEFT$ RIGHT$ MID$ CHR$ ASC STR$ VAL SPACE$ UCASE$ LCASE$
+           TRIM$ LTRIM$ RTRIM$ INSTR REPLACE$
 
 TIME:      TIME$() DATE$() TIMER() HOUR() MINUTE() SECOND()
            YEAR() MONTH() DAY() SLEEP(n)
