@@ -1,4 +1,4 @@
-# 🖥️ BASIC/3270BBS Manual
+# 🖥️ TIMESHARE BASIC/3270BBS Manual
 
 **Copyright © 2025-2026 by moshix. All rights reserved.**
 
@@ -48,6 +48,7 @@ READY
 | `EDIT` | Edit program in memory (no filename) |
 | `ERASE "name"` | Delete program file |
 | `FILES` | List your files and community programs |
+| `FILES /W` | Wide format: two columns, no timestamps |
 
 **EDIT without a filename:** Opens the program currently in memory in the full-screen editor. This is useful when you've loaded a community program and want to modify it. When you save, it creates `UNTITLED.bas` in your directory.
 
@@ -57,6 +58,7 @@ The system includes a collection of shared example programs that all users can a
 
 **Using community programs:**
 - `FILES` - Shows both your files and available community programs
+- `FILES /W` - Wide format with two columns (no timestamps, saves screen space)
 - `LOAD "_example.bas"` - Load a community program
 - Community programs are **read-only** - you cannot EDIT or ERASE them
 
@@ -748,7 +750,7 @@ This program demonstrates associative arrays to create a simple phone book:
 ## ❓ Quick Reference Card
 
 ```
-COMMANDS:  RUN LIST NEW SAVE LOAD EDIT ERASE FILES RENUM DELETE HELP VARS BYE
+COMMANDS:  RUN LIST NEW SAVE LOAD EDIT ERASE FILES FILES/W RENUM DELETE HELP VARS BYE
 
 STATEMENTS: PRINT INPUT LET IF/THEN/ELSE GOTO GOSUB/RETURN
             FOR/NEXT WHILE/WEND DIM REM END CLS
@@ -769,4 +771,4 @@ BBS DATA:  $ChatMessage(n) $Mail(n) $UserInfo $Topic(n) $Post(topic_id,n)
 
 ---
 
-*3270BBS BASIC Interpreter v1.8 - Happy coding!* 🚀
+*TIMESHARE BASIC/3270BBS Interpreter v1.8 - Happy coding!* 🚀
