@@ -205,7 +205,7 @@ Keys can be variables or expressions:
 | `ABS(x)` | Absolute value | `ABS(-5)` → `5` |
 | `INT(x)` | Integer part (floor) | `INT(3.7)` → `3` |
 | `SGN(x)` | Sign (-1, 0, or 1) | `SGN(-5)` → `-1` |
-| `SQR(x)` | Square root | `SQR(16)` → `4` |
+| `SQRT(x)` | Square root | `SQRT(16)` → `4` |
 | `SIN(x)` | Sine (radians) | `SIN(3.14159/2)` → `1` |
 | `COS(x)` | Cosine (radians) | `COS(0)` → `1` |
 | `TAN(x)` | Tangent (radians) | `TAN(0)` → `0` |
@@ -734,6 +734,7 @@ This program demonstrates associative arrays to create a simple phone book:
 | **Enter** | Execute comand / Submit input |
 | **Clear** | Clear screen, show new READY prompt |
 | **PA1** / **PA2** | Break/stop running program |
+| **PF11** / **PF12** | Step through command history |
 
 ---
 
@@ -755,7 +756,7 @@ COMMANDS:  RUN LIST NEW SAVE LOAD EDIT ERASE FILES FILES/W RENUM DELETE HELP VAR
 STATEMENTS: PRINT INPUT LET IF/THEN/ELSE GOTO GOSUB/RETURN
             FOR/NEXT WHILE/WEND DIM REM END CLS
 
-MATH:      ABS INT SGN SQR SIN COS TAN ATAN ASIN ACOS LOG EXP RND
+MATH:      ABS INT SGN SQRT SIN COS TAN ATAN ASIN ACOS LOG EXP RND
            PI() RADIANS(deg) DEGREES(rad)
 
 STRING:    LEN LEFT$ RIGHT$ MID$ CHR$ ASC STR$ VAL SPACE$ UCASE$ LCASE$
