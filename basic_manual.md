@@ -279,6 +279,34 @@ Returns box-drawing characters for creating frames and boxes. On CP310 terminals
 
 **Tip:** Use `$TermInfo` to check if the terminal supports CP310, and use ASCII characters (+, -, |) as fallback for CP037 terminals. See `_terminfo.bas` for a complete example.
 
+### CP310$(n) - Extended Graphic Characters
+Returns graphic characters from Code Page 310. Use with CP310-capable terminals for enhanced graphics.
+
+| Range | Characters | Description |
+|-------|-----------|-------------|
+| 1-6 | ┌ ┐ └ ┘ ─ │ | Single-line box (same as BOXCHAR$) |
+| 7-12 | ╔ ╗ ╚ ╝ ═ ║ | Double-line box |
+| 13-16 | ├ ┤ ┬ ┴ | T-junctions |
+| 17-20 | ┼ ╬ ╠ ╣ | Cross junctions |
+| 21-28 | █ ▀ ▄ ▌ ▐ ░ ▒ ▓ | Blocks & shades |
+| 29-32 | ← → ↑ ↓ | Arrows |
+| 33-36 | ■ □ ● ○ | Geometric shapes |
+| 37-40 | ▲ ▼ ◄ ► | Triangle arrows |
+| 41-44 | ╭ ╮ ╰ ╯ | Rounded corners |
+| 45-50 | · • ╳ ╱ ╲ ∙ | Dots and diagonals |
+
+```basic
+10 REM Draw a double-line box with CP310$
+20 DIM T{} : T{} = $TermInfo
+30 IF T{"codepage"} <> "310" THEN PRINT "Need CP310 terminal" : END
+40 PRINT CP310$(7) + CP310$(11) + CP310$(11) + CP310$(11) + CP310$(8)
+50 PRINT CP310$(12) + " Hi " + CP310$(12)
+60 PRINT CP310$(9) + CP310$(11) + CP310$(11) + CP310$(11) + CP310$(10)
+70 PRINT
+80 PRINT "Blocks: "; CP310$(21); CP310$(22); CP310$(23); CP310$(24); CP310$(25)
+90 PRINT "Arrows: "; CP310$(29); CP310$(30); CP310$(31); CP310$(32)
+```
+
 ---
 
 ## 🕐 Time Functions
@@ -801,7 +829,7 @@ MATH:      ABS INT SGN SQRT SIN COS TAN ATAN ASIN ACOS LOG EXP RND
 STRING:    LEN LEFT$ RIGHT$ MID$ CHR$ ASC STR$ VAL SPACE$ UCASE$ LCASE$
            TRIM$ LTRIM$ RTRIM$ INSTR REPLACE$
 
-GRAPHICS:  BOXCHAR$(n) - Box chars (1=TL 2=TR 3=BL 4=BR 5=Horiz 6=Vert)
+GRAPHICS:  BOXCHAR$(1-6) CP310$(1-50) - Box drawing and graphic characters
 
 TIME:      TIME$() DATE$() TIMER() HOUR() MINUTE() SECOND()
            YEAR() MONTH() DAY() SLEEP(n)
