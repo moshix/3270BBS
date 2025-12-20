@@ -245,6 +245,7 @@ Example:
 | `RIGHT$(s$,n)` | Right n characters | `RIGHT$("Hello",2)` → `"lo"` |
 | `MID$(s$,p,n)` | Substring | `MID$("Hello",2,3)` → `"ell"` |
 | `CHR$(n)` | Character from ASCII | `CHR$(65)` → `"A"` |
+| `BOXCHAR$(n)` | Box-drawing character (1-6) | `BOXCHAR$(1)` → `"┌"` |
 | `ASC(s$)` | ASCII from character | `ASC("A")` → `65` |
 | `STR$(n)` | Number to string | `STR$(42)` → `"42"` |
 | `VAL(s$)` | String to number | `VAL("42")` → `42` |
@@ -256,6 +257,27 @@ Example:
 | `RTRIM$(s$)` | Remove trailing whitespace | `RTRIM$("hi  ")` → `"hi"` |
 | `INSTR(s$,find$)` | Find position of substring (0 if not found) | `INSTR("hello","ll")` → `3` |
 | `REPLACE$(s$,old$,new$)` | Replace all occurrences | `REPLACE$("hello","l","L")` → `"heLLo"` |
+
+### BOXCHAR$(n) - Box Drawing Characters
+Returns box-drawing characters for creating frames and boxes. On CP310 terminals, these display as graphical line characters. On CP037 terminals, use ASCII fallbacks (+, -, |).
+
+| n | Character | Description |
+|---|-----------|-------------|
+| 1 | ┌ | Top-left corner |
+| 2 | ┐ | Top-right corner |
+| 3 | └ | Bottom-left corner |
+| 4 | ┘ | Bottom-right corner |
+| 5 | ─ | Horizontal line |
+| 6 | │ | Vertical line |
+
+```basic
+10 REM Draw a simple box
+20 PRINT BOXCHAR$(1) + BOXCHAR$(5) + BOXCHAR$(5) + BOXCHAR$(2)
+30 PRINT BOXCHAR$(6) + "  " + BOXCHAR$(6)
+40 PRINT BOXCHAR$(3) + BOXCHAR$(5) + BOXCHAR$(5) + BOXCHAR$(4)
+```
+
+**Tip:** Use `$TermInfo` to check if the terminal supports CP310, and use ASCII characters (+, -, |) as fallback for CP037 terminals. See `_terminfo.bas` for a complete example.
 
 ---
 
@@ -398,6 +420,23 @@ Access live BBS data direcly from BASIC!
 | `country` | Your country (may be empty) |
 
 **Note:** Admin-only fields like email, IP address, role, and ban status are intentionally not exposed to any user, including admins and moderators.
+
+### $TermInfo - Your Terminal Information (Associative Array)
+`$TermInfo` returns an associative array with information about your current terminal session.
+
+```basic
+10 DIM T{}                  ' Declare associative array
+20 T{} = $TermInfo          ' Get terminal info
+30 PRINT "Terminal: "; T{"model"}
+40 PRINT "Codepage: "; T{"codepage"}
+50 IF T{"codepage"} = "310" THEN PRINT "Graphics characters available!"
+```
+
+**Available Keys:**
+| Key | Description |
+|-----|-------------|
+| `model` | Terminal model: "Mod2" (24x80), "Mod3" (32x80), or "Mod4" (43x80) |
+| `codepage` | Terminal codepage: "310" (with graphics) or "037" (standard EBCDIC) |
 
 ### $Topic(n) - Topics You Can Access (Associative Array)
 `$Topic(n)` returns an associative array with topic metadata. Only returns topics the user has permission to access (respects admin-only, moderator-only, and banned user restrictions).
@@ -762,14 +801,16 @@ MATH:      ABS INT SGN SQRT SIN COS TAN ATAN ASIN ACOS LOG EXP RND
 STRING:    LEN LEFT$ RIGHT$ MID$ CHR$ ASC STR$ VAL SPACE$ UCASE$ LCASE$
            TRIM$ LTRIM$ RTRIM$ INSTR REPLACE$
 
+GRAPHICS:  BOXCHAR$(n) - Box chars (1=TL 2=TR 3=BL 4=BR 5=Horiz 6=Vert)
+
 TIME:      TIME$() DATE$() TIMER() HOUR() MINUTE() SECOND()
            YEAR() MONTH() DAY() SLEEP(n)
 
 UTILITY:   EVAL(expr$) - Evaluate string as expression at runtime
 
-BBS DATA:  $ChatMessage(n) $Mail(n) $UserInfo $Topic(n) $Post(topic_id,n)
+BBS DATA:  $ChatMessage(n) $Mail(n) $UserInfo $TermInfo $Topic(n) $Post(topic_id,n)
 ```
 
 ---
 
-*TIMESHARE BASIC/3270BBS Interpreter v1.8 - Happy coding!* 🚀
+*TIMESHARE BASIC/3270BBS Interpreter v1.9 - Happy coding!* 🚀
