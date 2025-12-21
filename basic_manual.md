@@ -50,7 +50,7 @@ READY
 | `FILES` | List your files and community programs |
 | `FILES /W` | Wide format: two columns, no timestamps |
 | `FILES /U user` | List shared files from another user |
-| `LOAD "user/$file"` | Load a shared file from another user |
+| `LOAD "user/%file"` | Load a shared file from another user |
 
 **EDIT without a filename:** Opens the program currently in memory in the full-screen editor. This is useful when you've loaded a community program and want to modify it. When you save, it creates `UNTITLED.bas` in your directory.
 
@@ -66,20 +66,20 @@ The system includes a collection of shared example programs that all users can a
 
 ### Shared User Files
 
-Users can share programs with each other by naming files with a `$` prefix. These files are visible to other users but remain read-only.
+Users can share programs with each other by naming files with a `%` prefix. These files are visible to other users but remain read-only.
 
 **Creating shared files:**
-- Save your program with a `$` prefix: `SAVE "$myprogram.bas"`
-- Only you can modify, save, or erase your own `$` files
+- Save your program with a `%` prefix: `SAVE "%myprogram.bas"`
+- Only you can modify, save, or erase your own `%` files
 
 **Accessing other users' shared files:**
 - `FILES /U moshix` - List shared files from user moshix
-- `LOAD "moshix/$example.bas"` - Load a shared file from moshix
+- `LOAD "moshix/%example.bas"` - Load a shared file from moshix
 - Shared files are **read-only** - you can load them but not modify the original
 
 **File naming conventions:**
 - `_filename` - Community files (in basic/community/, read-only)
-- `$filename` - Shared user files (visible to others, owner can modify)
+- `%filename` - Shared user files (visible to others, owner can modify)
 - `filename` - Private user files (only visible to you)
 
 **User file restrictions:**
