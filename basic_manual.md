@@ -861,4 +861,4 @@ BBS DATA:  $ChatMessage(n) $Mail(n) $UserInfo $TermInfo $Topic(n) $Post(topic_id
 
 ---
 
-*TIMESHARE BASIC/3270BBS Interpreter v1.9 - Happy coding!* 🚀
+*TIMESHARING BASIC/3270BBS Interpreter v1.9 - Happy coding!* 🚀
