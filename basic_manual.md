@@ -1,4 +1,4 @@
-# 🖥️ TIMESHARE BASIC/3270BBS Manual
+# 🖥️ TIMESHARING BASIC/3270BBS Manual
 
 **Copyright © 2025-2026 by moshix. All rights reserved.**
 
@@ -12,7 +12,7 @@ Welcome to the 3270BBS BASIC Interpreter! This manual will guide you through wri
 From the Extended Menu, press **B** to enter the BASIC interpreter. You'll see:
 
 ```
-BASIC V1.0
+      TIMESHARING BASIC/3270BBS V1.9
 TYPE HELP FOR COMMANDS, BYE TO EXIT
 READY
 >
@@ -54,7 +54,7 @@ READY
 
 ### Community Programs
 
-The system includes a collection of shared example programs that all users can access. These programs are stored in the `basic/community/` directory and have filenames starting with underscore (`_`).
+The system includes a collection of shared example programs that all users can access. These programs are stored in teh `basic/community/` directory and have filenames starting with underscore (`_`).
 
 **Using community programs:**
 - `FILES` - Shows both your files and available community programs
@@ -72,7 +72,7 @@ The system includes a collection of shared example programs that all users can a
 |---------|-------------|
 | `HELP` | Show help information |
 | `VARS` | List all variables |
-| `CLEAR` | Clear the screen |
+| `CLEAR` | Clear teh screen |
 | `BYE` / `EXIT` / `QUIT` | Exit BASIC |
 
 ---
@@ -158,7 +158,7 @@ Comparision operators: `=`, `<>`, `<`, `>`, `<=`, `>=`
 
 ### Associative Arrays (Dictionaries)
 
-Associative arrays use string keys instead of numeric indices. Declare them with curly braces `{}`:
+Associative arrays use string keys instead of nurmeic indices. Declare them with curly braces `{}`:
 
 ```basic
 10 DIM PHONEBOOK${}         ' String associative array
@@ -259,7 +259,7 @@ Example:
 | `REPLACE$(s$,old$,new$)` | Replace all occurrences | `REPLACE$("hello","l","L")` → `"heLLo"` |
 
 ### BOXCHAR$(n) - Box Drawing Characters
-Returns box-drawing characters for creating frames and boxes. On CP310 terminals, these display as graphical line characters. On CP037 terminals, use ASCII fallbacks (+, -, |).
+Returns box-drawing characters, useful for creating frames and boxes. On CP310 capable terminals, these display as graphical line characters. On CP037 terminals, use traditional mainframe boxdrawing characters (+, -, |).
 
 | n | Character | Description |
 |---|-----------|-------------|
@@ -277,7 +277,7 @@ Returns box-drawing characters for creating frames and boxes. On CP310 terminals
 40 PRINT BOXCHAR$(3) + BOXCHAR$(5) + BOXCHAR$(5) + BOXCHAR$(4)
 ```
 
-**Tip:** Use `$TermInfo` to check if the terminal supports CP310, and use ASCII characters (+, -, |) as fallback for CP037 terminals. See `_terminfo.bas` for a complete example.
+**Tip:** Use `$TermInfo` to check if teh terminal supports CP310, and use ASCII characters (+, -, |) as fallback for CP037 terminals. See `_terminfo.bas` for a complete example.
 
 ### CP310$(n) - Extended Graphic Characters
 Returns graphic characters from Code Page 310. Use with CP310-capable terminals for enhanced graphics.
@@ -330,7 +330,7 @@ The `SLEEP(n)` function pauses program execution for the specified number of sec
 
 - **Range:** 0.1 to 255 seconds
 - **Fractions:** Supports decimal values (e.g., `SLEEP(0.5)` for half a second)
-- **CPU-friendly:** Does not consume CPU cycles during the wait
+- **CPU-friendly:** Does not consume CPU cylces during the wait
 - **Returns:** 0 (can be ignored)
 
 Example:
@@ -346,7 +346,7 @@ Example:
 
 ### EVAL Function
 
-The `EVAL(expr$)` function evaluates a string as a BASIC expression at runtime and returns the result.
+The `EVAL(expr$)` function evaluates a string as a BASIC expression at runtime and returns the results.
 
 - **Input:** A string containing a valid BASIC expression
 - **Returns:** The evaluated result (number or string)
