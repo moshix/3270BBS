@@ -49,7 +49,7 @@ The system is heavily multi-threaded, making it blazing fast even on single-core
 ## Requirements
 
 - Either **sqlite3** or **Postgresql** installed on your system
-- An IBM 3270 terminal emulator (c3270, x3270, or [Vista3270](https://www.tombrennansoftware.com/)or any other 3270 emulator)
+- An IBM 3270 terminal emulator (c3270, x3270, or [Vista3270](https://www.tombrennansoftware.com/) or any other 3270 emulator) or a real iron 3270 terminal
 - Electrons delivered thru your power plug in the wall
 
 ## Platform Support
