@@ -12,7 +12,7 @@ Welcome to the 3270BBS BASIC Interpreter! This manual will guide you through wri
 From the Extended Menu, press **B** to enter the BASIC interpreter. You'll see:
 
 ```
-      TIMESHARING BASIC/3270BBS V1.9
+      TIMESHARING BASIC/3270BBS V1.9.3
 TYPE HELP FOR COMMANDS, BYE TO EXIT
 READY
 >
@@ -50,6 +50,8 @@ READY
 | `FILES` | List your files and community programs |
 | `FILES /W` | Wide format: two columns, no timestamps |
 | `FILES /U user` | List shared files from another user |
+| `FILES /C` | List only community files |
+| `FLIST` | List only your files (no community files) |
 | `LOAD "user/%file"` | Load a shared file from another user |
 
 **EDIT without a filename:** Opens the program currently in memory in the full-screen editor. This is useful when you've loaded a community program and want to modify it. When you save, it creates `UNTITLED.bas` in your directory.
@@ -105,6 +107,45 @@ Users can share programs with each other by naming files with a `%` prefix. Thes
 20 PRINT "Value is: "; X
 30 PRINT A; " + "; B; " = "; A+B
 ```
+
+#### COLOR Attribute
+You can add color to your output using the optional `COLOR` attribute at the end of a PRINT statement:
+
+```basic
+PRINT expression [; expression ...] [COLOR colorname [modifier]]
+```
+
+**Colors available:**
+| Color | Description |
+|-------|-------------|
+| `WHITE` | White text |
+| `RED` | Red text |
+| `YELLOW` | Yellow text |
+| `PINK` | Pink/magenta text |
+| `GREEN` | Green text |
+| `BLUE` | Blue text |
+| `TURQUOISE` | Turquoise/cyan text (default) |
+
+**Modifiers (optional):**
+| Modifier | Description |
+|----------|-------------|
+| `BLINK` | Blinking text |
+| `REVERSEVIDEO` | Inverted colors (text becomes background) |
+
+**Examples:**
+```basic
+10 PRINT "ALERT!" COLOR RED
+20 PRINT "Success: "; RESULT$ COLOR GREEN
+30 PRINT "WARNING!" COLOR YELLOW BLINK
+40 PRINT "Selected item" COLOR WHITE REVERSEVIDEO
+50 PRINT "Status: "; S; " - "; MSG$ COLOR PINK
+```
+
+**Notes:**
+- The `COLOR` attribute must appear at the end of the PRINT statement
+- Without `COLOR`, text defaults to turquoise (standard 3270 terminal color)
+- Colors and modifiers are rendered using 3270 terminal extended attributes
+- Not all terminal emulators support all colors or highlighting modes
 
 ### LET - Assign Variables
 ```basic
@@ -843,6 +884,9 @@ COMMANDS:  RUN LIST NEW SAVE LOAD EDIT ERASE FILES FILES/W RENUM DELETE HELP VAR
 STATEMENTS: PRINT INPUT LET IF/THEN/ELSE GOTO GOSUB/RETURN
             FOR/NEXT WHILE/WEND DIM REM END CLS
 
+PRINT COLOR: PRINT "text" COLOR colorname [BLINK|REVERSEVIDEO]
+            Colors: WHITE RED YELLOW PINK GREEN BLUE TURQUOISE
+
 MATH:      ABS INT SGN SQRT SIN COS TAN ATAN ASIN ACOS LOG EXP RND
            PI() RADIANS(deg) DEGREES(rad)
 
@@ -861,4 +905,4 @@ BBS DATA:  $ChatMessage(n) $Mail(n) $UserInfo $TermInfo $Topic(n) $Post(topic_id
 
 ---
 
-*TIMESHARING BASIC/3270BBS Interpreter v1.9 - Happy coding!* 🚀
+*TIMESHARING BASIC/3270BBS Interpreter v1.9.3 - Happy coding!* 🚀
