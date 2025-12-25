@@ -387,7 +387,7 @@ Returns graphic characters from Code Page 310. Use with CP310-capable terminals 
 
 ### SLEEP Function
 
-The `SLEEP(n)` function pauses program execution for the specified number of seconds.
+The `SLEEP(n)` function pauses program execution for the specified number of seconds. Any call of SLEEP with more than 0.25 seconds will reward the program with more allowed iterations and wall clock time before the program is halted for excessive computation or wall clock. SLEEP spares the CPU as it is a non-busy wait function. 
 
 - **Range:** 0.1 to 255 seconds
 - **Fractions:** Supports decimal values (e.g., `SLEEP(0.5)` for half a second)
