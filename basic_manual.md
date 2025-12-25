@@ -46,7 +46,7 @@ READY
 | `LOAD "name"` | Load program from file |
 | `EDIT "name"` | Edit file in full-screen editor |
 | `EDIT` | Edit program in memory (no filename) |
-| `ERASE "name"` | Delete program file |
+| `ERASE "name"` | Delete program file (.bas or .list) |
 | `FILES` | List your files and community programs |
 | `FILES /W` | Wide format: two columns, no timestamps |
 | `FILES /U user` | List shared files from another user |
@@ -55,6 +55,160 @@ READY
 | `LOAD "user/%file"` | Load a shared file from another user |
 
 **EDIT without a filename:** Opens the program currently in memory in the full-screen editor. This is useful when you've loaded a community program and want to modify it. When you save, it creates `UNTITLED.bas` in your directory.
+
+### Syntax Checking Commands
+
+| Command | Description |
+|---------|-------------|
+| `CHECK` | Syntax check program in memory, generate listing file |
+| `VIEW name.list` | View the listing file without clearing program |
+| `EMAIL name.list` | Email the listing as a PDF to your email address |
+
+#### CHECK Command
+
+The `CHECK` command performs a syntax analysis of the program currently in memory without executing it. It generates a z/OS COBOL-style listing file in your directory named after the program (e.g., `myprogram.list`). If the program hasn't been saved yet, it uses `UNNAMED.list`.
+
+**What CHECK does:**
+- Validates syntax of each line
+- Identifies syntax errors without running the program
+- Detects potential problems and issues warnings
+- Builds a variable cross-reference (where each variable is defined and used)
+- Creates a data dictionary (all variables and arrays)
+- Calculates program statistics
+
+**Warnings Detected:**
+- **Loop without SLEEP:** FOR/NEXT, WHILE/WEND, or backward GOTO jumps without a `SLEEP` statement may trigger the loop detector or execution time termination
+- **Overly complex lines:** Lines with 3+ statements separated by colons are flagged as complex
+- **Very long lines:** Lines exceeding 120 characters are flagged for simplification
+- **Insufficient comments:** Programs with less than 1 REM statement per 10 lines of code receive a program-level warning
+
+**Example usage:**
+```basic
+10 REM MY PROGRAM
+20 LET X = 10
+30 PRINT "Value is: "; X
+40 END
+CHECK
+```
+
+Output:
+```
+CHECKING PROGRAM...
+NO ERRORS OR WARNINGS FOUND
+LISTING SAVED TO myprogram.list
+USE VIEW myprogram.list TO SEE FULL LISTING
+```
+
+#### VIEW Command
+
+The `VIEW` command opens `.list` files in the editor for viewing. Unlike `LOAD` or `EDIT`, it does **not** clear the program from memory.
+
+**Restrictions:**
+- Only works with `.list` extension files
+- Opens in read-only mode
+- Program in memory is preserved
+
+**Example:**
+```
+VIEW myprogram.list
+```
+
+#### EMAIL Command
+
+The `EMAIL` command sends a `.list` file as a PDF attachment to your registered email address. It uses the same email controls and daily limits as other BBS email features.
+
+**Requirements:**
+- Must have an email address set in your profile
+- Daily email limit applies (admin bypass available)
+- SendGrid must be configured on the server
+
+**The PDF includes:**
+- Professional header with BBS name and date
+- Full listing content in fixed-width Courier font
+- Syntax highlighting for errors (red) and warnings (orange)
+- Section headers highlighted in blue
+
+**Example:**
+```
+EMAIL myprogram.list
+```
+
+Output:
+```
+GENERATING PDF...
+SENDING EMAIL TO user@example.com...
+EMAIL SENT SUCCESSFULLY
+LISTING myprogram.list EMAILED TO user@example.com
+```
+
+**Error Messages:**
+- `?NO EMAIL ADDRESS IN YOUR PROFILE` - Set email in profile settings
+- `?DAILY EMAIL LIMIT REACHED` - Wait until tomorrow
+- `?FILE NOT FOUND` - Run CHECK first to generate the listing
+
+#### Listing File Format
+
+The `.list` file is formatted like a mainframe z/OS COBOL compiler listing:
+
+```
+================================================================================
+                    3270BBS TIMESHARING BASIC COMPILER LISTING
+================================================================================
+ DATE: 25 DEC 2025 14:30:45  USER: MOSHIX
+ SOURCE: (IN MEMORY)
+================================================================================
+
+                              S O U R C E   L I S T I N G
+--------------------------------------------------------------------------------
+  LINE  STMT  SOURCE TEXT
+--------------------------------------------------------------------------------
+    10     1  REM MY PROGRAM
+    20     2  LET X = 10
+    30     3  PRINT "Value is: "; X
+
+================================================================================
+                       E R R O R   A N D   W A R N I N G   S U M M A R Y
+================================================================================
+
+  ERRORS:
+  LINE   MESSAGE
+  ----   -------
+  (NO ERRORS)
+
+  WARNINGS:
+  LINE   MESSAGE
+  ----   -------
+  (NO WARNINGS)
+
+ TOTAL ERRORS: 0    TOTAL WARNINGS: 0
+
+================================================================================
+                       V A R I A B L E   C R O S S - R E F E R E N C E
+================================================================================
+  VARIABLE      TYPE      DEFINED       REFERENCED
+--------------------------------------------------------------------------------
+  X             NUMERIC   20            30
+
+================================================================================
+                            D A T A   D I C T I O N A R Y
+================================================================================
+  NAME          TYPE        DIM SIZE    DESCRIPTION
+--------------------------------------------------------------------------------
+  X             NUMERIC     -           Simple variable
+
+================================================================================
+                           P R O G R A M   S T A T I S T I C S
+================================================================================
+  SOURCE LINES:              3
+  STATEMENTS:                3
+  TOTAL SIZE:               54 bytes
+  ARRAYS DEFINED:            0
+  ARRAY MEMORY:              0 elements allocated
+
+================================================================================
+                            E N D   O F   L I S T I N G
+================================================================================
+```
 
 ### Community Programs
 
@@ -881,6 +1035,10 @@ This program demonstrates associative arrays to create a simple phone book:
 ```
 COMMANDS:  RUN LIST NEW SAVE LOAD EDIT ERASE FILES FILES/W RENUM DELETE HELP VARS BYE
 
+SYNTAX:    CHECK - Syntax check, generate name.list (or UNNAMED.list)
+           VIEW name.list - View listing without clearing program
+           EMAIL name.list - Email listing as PDF to your email
+
 STATEMENTS: PRINT INPUT LET IF/THEN/ELSE GOTO GOSUB/RETURN
             FOR/NEXT WHILE/WEND DIM REM END CLS
 
@@ -905,4 +1063,4 @@ BBS DATA:  $ChatMessage(n) $Mail(n) $UserInfo $TermInfo $Topic(n) $Post(topic_id
 
 ---
 
-*TIMESHARING BASIC/3270BBS Interpreter v1.9.3 - Happy coding!* 🚀
+*TIMESHARING BASIC/3270BBS Interpreter v2.1.1 - Happy coding!* 🚀
