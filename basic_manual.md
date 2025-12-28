@@ -2,17 +2,17 @@
 
 **Copyright © 2025-2026 by moshix. All rights reserved.**
 
-Welcome to the 3270BBS BASIC Interpreter! This manual will guide you through writing and running BASIC programs on teh 3270BBS system.
+Welcome to the 3270BBS BASIC Interpreter and compiler! This manual will guide you through writing and running BASIC programs on teh 3270BBS system.
 
 ---
 
 ## 🟦 Getting Started
 
 ### Entering BASIC
-From the Extended Menu, press **B** to enter the BASIC interpreter. You'll see:
+From the Extended Menu, press **B** to enter BASIC/3270BBS . You'll see:
 
 ```
-      TIMESHARING BASIC/3270BBS V1.9.3
+      TIMESHARING BASIC/3270BBS V2.4.0
 TYPE HELP FOR COMMANDS, BYE TO EXIT
 READY
 >
@@ -404,6 +404,44 @@ Comparison operators: `=`, `<>`, `<`, `>`, `<=`, `>=`
 50 WEND
 ```
 
+### SELECT CASE - Multi-way Branch
+The SELECT CASE statement provides a cleaner alternative to multiple IF/ELSEIF chains when testing a single value against multiple options.
+
+```basic
+10 INPUT "Enter a number (1-5): ", N
+20 SELECT CASE N
+30     CASE 1
+40         PRINT "One"
+50     CASE 2, 3
+60         PRINT "Two or Three"
+70     CASE 4, 5
+80         PRINT "Four or Five"
+90     CASE ELSE
+100        PRINT "Out of range"
+110 END SELECT
+120 END
+```
+
+**Key features:**
+- The test expression is evaluated once at SELECT CASE
+- Each CASE can have multiple comma-separated values to match
+- Only the first matching CASE block executes (no fall-through)
+- CASE ELSE is optional and executes if no other CASE matches
+- SELECT CASE blocks can be nested
+
+**String matching example:**
+```basic
+10 INPUT "Enter day: ", D$
+20 SELECT CASE D$
+30     CASE "MON", "TUE", "WED", "THU", "FRI"
+40         PRINT "Weekday"
+50     CASE "SAT", "SUN"
+60         PRINT "Weekend"
+70     CASE ELSE
+80         PRINT "Invalid day"
+90 END SELECT
+```
+
 ### DIM - Declare Arrays
 ```basic
 10 DIM SCORES(10)        ' 1D array
@@ -437,11 +475,15 @@ Keys can be variables or expressions:
 50 PRINT N$; " = "; DATA{N$}
 ```
 
-### REM - Comments
+### REM and ' - Comments
 ```basic
-10 REM This is a comment
-20 ' This is also a comment
+10 REM This is a full-line comment
+20 ' Apostrophe also starts a comment
+30 X = 10 ' Inline comment at end of statement
+40 PRINT "Hello" ' Comments work after any statement
 ```
+
+The apostrophe (`'`) can be used anywhere on a line to start a comment. Everything from the `'` to the end of the line is ignored. This is useful for adding inline comments after code.
 
 ### END / STOP - End Program
 ```basic
@@ -1095,7 +1137,10 @@ SYNTAX:    CHECK - Syntax check, generate name.list (or UNNAMED.list)
            EMAIL name.list - Email listing as PDF to your email
 
 STATEMENTS: PRINT INPUT LET IF/THEN/ELSE/ELSEIF/END IF GOTO GOSUB/RETURN
-            FOR/NEXT WHILE/WEND DIM REM END CLS
+            FOR/NEXT WHILE/WEND SELECT CASE/END SELECT DIM REM ' END CLS
+
+COMMENTS:   REM comment text     ' Full line comment
+            code ' comment       ' Inline comment after code
 
 PRINT COLOR: PRINT "text" COLOR colorname [BLINK|REVERSEVIDEO]
             Colors: WHITE RED YELLOW PINK GREEN BLUE TURQUOISE
@@ -1118,4 +1163,4 @@ BBS DATA:  $ChatMessage(n) $Mail(n) $UserInfo $TermInfo $Topic(n) $Post(topic_id
 
 ---
 
-*TIMESHARING BASIC/3270BBS Interpreter v2.3.0 - Happy coding!* 🚀
+*TIMESHARING BASIC/3270BBS v2.4.0 - Happy coding!* 🚀
