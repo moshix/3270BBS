@@ -318,11 +318,53 @@ PRINT expression [; expression ...] [COLOR colorname [modifier]]
 ```
 
 ### IF/THEN/ELSE - Conditional Execution
+
+BASIC supports both single-line and multi-line IF statements.
+
+#### Single-Line IF
 ```basic
 10 INPUT "Enter age: ", AGE
 20 IF AGE >= 18 THEN PRINT "Adult" ELSE PRINT "Minor"
 ```
-Comparision operators: `=`, `<>`, `<`, `>`, `<=`, `>=`
+
+#### Multi-Line Block IF
+For more complex logic, use block IF with ELSEIF and END IF:
+```basic
+10 INPUT "Enter score: ", SCORE
+20 IF SCORE >= 90 THEN
+30   PRINT "Grade: A"
+40 ELSEIF SCORE >= 80 THEN
+50   PRINT "Grade: B"
+60 ELSEIF SCORE >= 70 THEN
+70   PRINT "Grade: C"
+80 ELSE
+90   PRINT "Grade: F"
+100 END IF
+110 PRINT "Done!"
+```
+
+**Block IF Rules:**
+- `IF condition THEN` on its own line starts a block
+- `ELSEIF condition THEN` provides additional conditions (optional)
+- `ELSE` on its own line handles the fallback case (optional)
+- `END IF` (or `ENDIF`) closes the block - **required**
+- Blocks can be nested
+
+**Example: Nested IF Blocks**
+```basic
+10 INPUT "Enter age: ", AGE
+20 IF AGE >= 18 THEN
+30   IF AGE >= 65 THEN
+40     PRINT "Senior adult"
+50   ELSE
+60     PRINT "Adult"
+70   END IF
+80 ELSE
+90   PRINT "Minor"
+100 END IF
+```
+
+Comparison operators: `=`, `<>`, `<`, `>`, `<=`, `>=`
 
 ### GOTO - Jump to Line
 ```basic
@@ -836,21 +878,31 @@ This program retrieves and displays the three most recent chat messages from the
 ```
 
 ### Example 5: Mail Reader
-This program reads and displays your most recent email with full details:
+This program reads and displays your most recent email with full details.
+Demonstrates both single-line and multi-line IF syntax:
 
 ```basic
 10 REM Mail Reader Example
 20 DIM MAIL{}
 30 MAIL{} = $Mail(0)
-40 IF MAIL{"datetime"} = "" THEN PRINT "No mail": END
-50 PRINT "From: "; MAIL{"from"}
-60 PRINT "Date: "; MAIL{"datetime"}
-70 PRINT "Status: ";
-80 IF MAIL{"read"} = "1" THEN PRINT "Read"; ELSE PRINT "Unread";
-90 PRINT
-100 PRINT "---Message---"
-110 PRINT MAIL{"body"}
-120 END
+40 IF MAIL{"datetime"} = "" THEN
+50   PRINT "No mail"
+60   END
+70 END IF
+80 PRINT "From: "; MAIL{"from"}
+90 PRINT "Date: "; MAIL{"datetime"}
+100 PRINT "Status: ";
+110 IF MAIL{"read"} = "1" THEN
+120   PRINT "Read"
+130   IF MAIL{"replied"} = "1" THEN
+140     PRINT "(Replied)"
+150   END IF
+160 ELSE
+170   PRINT "Unread" COLOR YELLOW
+180 END IF
+190 PRINT "---Message---"
+200 PRINT MAIL{"body"}
+210 END
 ```
 
 ### Example 6: Topic and Posts Reader
@@ -998,13 +1050,16 @@ This program demonstrates associative arrays to create a simple phone book:
 120 REM Look up contacts
 130 INPUT "Enter name to look up: ", NAME$
 140 RESULT$ = PHONE${NAME$}
-150 IF RESULT$ = "" THEN PRINT "Not found!"
-160 IF RESULT$ <> "" THEN PRINT NAME$; ": "; RESULT$
-170 PRINT
-180 INPUT "Look up another? (Y/N): ", A$
-190 IF UCASE$(A$) = "Y" THEN GOTO 130
-200 PRINT "Goodbye!"
-210 END
+150 IF RESULT$ = "" THEN
+160   PRINT "Not found!" COLOR RED
+170 ELSE
+180   PRINT NAME$; ": "; RESULT$ COLOR GREEN
+190 END IF
+200 PRINT
+210 INPUT "Look up another? (Y/N): ", A$
+220 IF UCASE$(A$) = "Y" THEN GOTO 130
+230 PRINT "Goodbye!"
+240 END
 ```
 
 ---
@@ -1039,7 +1094,7 @@ SYNTAX:    CHECK - Syntax check, generate name.list (or UNNAMED.list)
            VIEW name.list - View listing without clearing program
            EMAIL name.list - Email listing as PDF to your email
 
-STATEMENTS: PRINT INPUT LET IF/THEN/ELSE GOTO GOSUB/RETURN
+STATEMENTS: PRINT INPUT LET IF/THEN/ELSE/ELSEIF/END IF GOTO GOSUB/RETURN
             FOR/NEXT WHILE/WEND DIM REM END CLS
 
 PRINT COLOR: PRINT "text" COLOR colorname [BLINK|REVERSEVIDEO]
@@ -1063,4 +1118,4 @@ BBS DATA:  $ChatMessage(n) $Mail(n) $UserInfo $TermInfo $Topic(n) $Post(topic_id
 
 ---
 
-*TIMESHARING BASIC/3270BBS Interpreter v2.1.1 - Happy coding!* 🚀
+*TIMESHARING BASIC/3270BBS Interpreter v2.3.0 - Happy coding!* 🚀
