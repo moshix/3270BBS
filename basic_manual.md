@@ -12,7 +12,7 @@ Welcome to the 3270BBS BASIC Interpreter and compiler! This manual will guide yo
 From the Extended Menu, press **B** to enter BASIC/3270BBS . You'll see:
 
 ```
-      TIMESHARING BASIC/3270BBS V2.4.0
+      TIMESHARING BASIC/3270BBS V2.5.0
 TYPE HELP FOR COMMANDS, BYE TO EXIT
 READY
 >
@@ -676,6 +676,183 @@ Examples:
 
 ---
 
+## 🔗 Program Chaining
+
+Call other BASIC programs and share data between them using COMMON and CHAIN.
+
+### COMMON Statement
+
+Declare variables that persist across CHAIN calls:
+
+```basic
+COMMON var1, var2, var3$
+```
+
+Variables declared with COMMON retain their values when you CHAIN to another program. Variables not declared as COMMON are cleared.
+
+### CHAIN Statement
+
+Load and run another BASIC program:
+
+```basic
+CHAIN "programname"
+```
+
+When the chained program ends (via END), control returns to the calling program at the line after CHAIN. COMMON variables are preserved in both directions.
+
+**Example - Main Program:**
+```basic
+10 REM Main program
+20 NAME$ = "John"
+30 COUNT = 42
+40 COMMON NAME$, COUNT, RESULT
+50 CHAIN "helper"
+60 PRINT "Back from helper"
+70 PRINT "Result: "; RESULT
+80 END
+```
+
+**Example - Helper Program (helper.bas):**
+```basic
+10 REM Helper program
+20 COMMON NAME$, COUNT, RESULT
+30 PRINT "Hello, "; NAME$
+40 RESULT = COUNT * 2
+50 END
+```
+
+**Limits:**
+- Total COMMON data limited to 1024 bytes
+- Programs must exist in your directory or community folder
+- COMMON declarations must appear before CHAIN is executed
+
+---
+
+## 📁 File Input/Output
+
+Read and write data files from your BASIC programs.
+
+### OPEN Statement
+
+Open a file for reading, writing, or appending:
+
+```basic
+OPEN "filename.dat" FOR INPUT AS #1
+OPEN "filename.dat" FOR OUTPUT AS #2
+OPEN "filename.dat" FOR APPEND AS #3
+```
+
+**Modes:**
+- `INPUT` - Read from existing file
+- `OUTPUT` - Create new file (overwrites if exists)
+- `APPEND` - Add to end of existing file (creates if not exists)
+
+**File Numbers:** Use #1 through #4 (max 4 files open at once)
+
+### PRINT # Statement
+
+Write to an open file:
+
+```basic
+PRINT #1, "Hello World"
+PRINT #1, "Score: "; SCORE
+PRINT #2, A$; ","; B$
+```
+
+### INPUT # Statement
+
+Read a line from an open file:
+
+```basic
+INPUT #1, LINE$
+INPUT #1, DATA$
+```
+
+Each INPUT reads one line from the file.
+
+### CLOSE Statement
+
+Close an open file:
+
+```basic
+CLOSE #1        ' Close file #1
+CLOSE           ' Close all open files
+```
+
+**Important:** Always CLOSE files when done. Files are also automatically closed when program ends.
+
+### EOF Function
+
+Check if at end of file:
+
+```basic
+IF EOF(1) THEN PRINT "End of file reached"
+
+WHILE NOT EOF(1)
+    INPUT #1, LINE$
+    PRINT LINE$
+WEND
+```
+
+Returns 1 if at end of file, 0 otherwise.
+
+### Complete File I/O Examples
+
+**Writing a data file:**
+```basic
+10 REM Write high scores to file
+20 OPEN "scores.dat" FOR OUTPUT AS #1
+30 PRINT #1, "Player1,1500"
+40 PRINT #1, "Player2,1200"
+50 PRINT #1, "Player3,900"
+60 CLOSE #1
+70 PRINT "Scores saved!"
+80 END
+```
+
+**Reading a data file:**
+```basic
+10 REM Read and display file contents
+20 OPEN "scores.dat" FOR INPUT AS #1
+30 PRINT "=== HIGH SCORES ==="
+40 WHILE NOT EOF(1)
+50     INPUT #1, LINE$
+60     PRINT LINE$
+70 WEND
+80 CLOSE #1
+90 END
+```
+
+**Appending to a file:**
+```basic
+10 REM Add new score
+20 INPUT "Player name: ", NAME$
+30 INPUT "Score: ", SCORE
+40 OPEN "scores.dat" FOR APPEND AS #1
+50 PRINT #1, NAME$; ","; SCORE
+60 CLOSE #1
+70 PRINT "Score added!"
+80 END
+```
+
+**Limits and Security:**
+- Maximum file size: 10KB per file
+- File names must end in `.dat`
+- Files stored in your BASIC directory only
+- No path separators allowed in filenames
+
+**Error Messages:**
+| Error | Description |
+|-------|-------------|
+| `?FILE NOT FOUND` | File doesn't exist (INPUT mode) |
+| `?FILE ALREADY OPEN` | File handle already in use |
+| `?BAD FILE NUMBER` | Invalid handle (not 1-4) or not open |
+| `?FILE SIZE LIMIT EXCEEDED` | Write would exceed 10KB |
+| `?ILLEGAL FILE NAME` | Invalid characters or missing .dat |
+| `?INPUT PAST END` | Attempted read after EOF |
+
+---
+
 ## 🟥 3270BBS Data Access
 
 Access live BBS data direcly from BASIC!
@@ -1138,6 +1315,7 @@ SYNTAX:    CHECK - Syntax check, generate name.list (or UNNAMED.list)
 
 STATEMENTS: PRINT INPUT LET IF/THEN/ELSE/ELSEIF/END IF GOTO GOSUB/RETURN
             FOR/NEXT WHILE/WEND SELECT CASE/END SELECT DIM REM ' END CLS
+            COMMON CHAIN OPEN CLOSE SLEEP
 
 COMMENTS:   REM comment text     ' Full line comment
             code ' comment       ' Inline comment after code
@@ -1151,6 +1329,13 @@ MATH:      ABS INT SGN SQRT SIN COS TAN ATAN ASIN ACOS LOG EXP RND
 STRING:    LEN LEFT$ RIGHT$ MID$ CHR$ ASC STR$ VAL SPACE$ UCASE$ LCASE$
            TRIM$ LTRIM$ RTRIM$ INSTR REPLACE$
 
+FILE I/O:  OPEN "file.dat" FOR INPUT|OUTPUT|APPEND AS #n
+           PRINT #n, expression   INPUT #n, variable   CLOSE #n
+           EOF(n) - Returns 1 if at end of file
+
+CHAINING:  COMMON var1, var2      ' Declare shared variables
+           CHAIN "program"        ' Call another program
+
 GRAPHICS:  BOXCHAR$(1-6) CP310$(1-50) - Box drawing and graphic characters
 
 TIME:      TIME$() DATE$() TIMER() HOUR() MINUTE() SECOND()
@@ -1163,4 +1348,4 @@ BBS DATA:  $ChatMessage(n) $Mail(n) $UserInfo $TermInfo $Topic(n) $Post(topic_id
 
 ---
 
-*TIMESHARING BASIC/3270BBS v2.4.0 - Happy coding!* 🚀
+*TIMESHARING BASIC/3270BBS v2.5.0 - Happy coding!* 🚀
