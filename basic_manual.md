@@ -12,7 +12,7 @@ Welcome to the 3270BBS BASIC Interpreter and compiler! This manual will guide yo
 From the Extended Menu, press **B** to enter BASIC/3270BBS . You'll see:
 
 ```
-      TIMESHARING BASIC/3270BBS V2.5.0
+      TIMESHARING BASIC/3270BBS V2.6.0
 TYPE HELP FOR COMMANDS, BYE TO EXIT
 READY
 >
@@ -383,6 +383,43 @@ Comparison operators: `=`, `<>`, `<`, `>`, `<=`, `>=`
 120 RETURN
 ```
 
+### ON...GOTO / ON...GOSUB - Computed Jumps
+The ON statement provides computed branching based on the value of an expression. The expression is evaluated, and program flow jumps to the corresponding line number in the list (1-based index).
+
+```basic
+ON expression GOTO line1, line2, line3, ...
+ON expression GOSUB line1, line2, line3, ...
+```
+
+**Examples:**
+```basic
+10 REM Menu selection example
+20 INPUT "Enter choice (1-3): ", CHOICE
+30 ON CHOICE GOTO 100, 200, 300
+40 PRINT "Invalid choice"
+50 GOTO 20
+100 PRINT "You chose option 1": GOTO 400
+200 PRINT "You chose option 2": GOTO 400
+300 PRINT "You chose option 3"
+400 END
+```
+
+```basic
+10 REM Device handling with subroutines
+20 FOR DEVICE = 1 TO 3
+30   ON DEVICE GOSUB 100, 200, 300
+40 NEXT DEVICE
+50 END
+100 PRINT "Handling device 1": RETURN
+200 PRINT "Handling device 2": RETURN
+300 PRINT "Handling device 3": RETURN
+```
+
+**Behavior:**
+- If the expression evaluates to a value less than 1 or greater than the number of line numbers, execution continues to the next line (no jump occurs)
+- ON...GOTO jumps to the target line
+- ON...GOSUB calls the target as a subroutine (use RETURN to come back)
+
 ### FOR/NEXT - Counting Loops
 ```basic
 10 FOR I = 1 TO 10
@@ -475,6 +512,45 @@ Keys can be variables or expressions:
 50 PRINT N$; " = "; DATA{N$}
 ```
 
+### DEF FN - User-Defined Functions
+The DEF FN statement allows you to define your own single-expression functions. These are useful for calculations that are used repeatedly throughout your program.
+
+```basic
+DEF FNname(parameter) = expression
+```
+
+**Examples:**
+```basic
+10 REM Define distance function
+20 DEF FND(X) = SQR(X^2 + Y^2)
+30 X = 3: Y = 4
+40 PRINT "Distance: "; FND(0)
+50 REM Output: Distance: 5
+```
+
+```basic
+10 REM Random number in range
+20 DEF FNR(N) = INT(RND(1) * N + 1)
+30 FOR I = 1 TO 5
+40   PRINT "Random 1-10: "; FNR(10)
+50 NEXT I
+```
+
+```basic
+10 REM Temperature conversion
+20 DEF FNC(F) = (F - 32) * 5 / 9
+30 DEF FNF(C) = C * 9 / 5 + 32
+40 INPUT "Enter Fahrenheit: ", TEMP
+50 PRINT TEMP; "F = "; FNC(TEMP); "C"
+```
+
+**Key Points:**
+- Function names must start with `FN` followed by a letter (e.g., `FNA`, `FNB`, `FND`)
+- Functions can have one parameter
+- The function body must be a single expression
+- User-defined functions can reference global variables
+- Call functions using `FNname(argument)`
+
 ### REM and ' - Comments
 ```basic
 10 REM This is a full-line comment
@@ -505,6 +581,7 @@ The apostrophe (`'`) can be used anywhere on a line to start a comment. Everythi
 | `INT(x)` | Integer part (floor) | `INT(3.7)` → `3` |
 | `SGN(x)` | Sign (-1, 0, or 1) | `SGN(-5)` → `-1` |
 | `SQRT(x)` | Square root | `SQRT(16)` → `4` |
+| `SQR(x)` | Square root (alias for SQRT) | `SQR(16)` → `4` |
 | `SIN(x)` | Sine (radians) | `SIN(3.14159/2)` → `1` |
 | `COS(x)` | Cosine (radians) | `COS(0)` → `1` |
 | `TAN(x)` | Tangent (radians) | `TAN(0)` → `0` |
@@ -642,6 +719,38 @@ Example:
 60 PRINT "BLAST OFF!"
 70 END
 ```
+
+### TAB Function
+
+The `TAB(n)` function is used in PRINT statements to move to a specific column position. It returns a string of spaces to reach the specified column.
+
+- **Usage:** `PRINT TAB(n); "text"` or `PRINT TAB(n); variable`
+- **Range:** 1-255 (column 1 is the leftmost position)
+- **Returns:** A string of spaces
+
+**Examples:**
+```basic
+10 REM Formatted output with TAB
+20 PRINT "Name"; TAB(15); "Age"; TAB(25); "City"
+30 PRINT "Alice"; TAB(15); "25"; TAB(25); "Boston"
+40 PRINT "Bob"; TAB(15); "30"; TAB(25); "Chicago"
+```
+
+Output:
+```
+Name           Age       City
+Alice          25        Boston
+Bob            30        Chicago
+```
+
+```basic
+10 REM Centering text
+20 FOR I = 1 TO 5
+30   PRINT TAB(I * 5); "*"
+40 NEXT I
+```
+
+**Note:** TAB returns spaces to reach the specified column position. It's most useful for creating aligned tabular output.
 
 ### EVAL Function
 
@@ -1315,7 +1424,7 @@ SYNTAX:    CHECK - Syntax check, generate name.list (or UNNAMED.list)
 
 STATEMENTS: PRINT INPUT LET IF/THEN/ELSE/ELSEIF/END IF GOTO GOSUB/RETURN
             FOR/NEXT WHILE/WEND SELECT CASE/END SELECT DIM REM ' END CLS
-            COMMON CHAIN OPEN CLOSE SLEEP
+            COMMON CHAIN OPEN CLOSE SLEEP ON...GOTO ON...GOSUB DEF FN
 
 COMMENTS:   REM comment text     ' Full line comment
             code ' comment       ' Inline comment after code
@@ -1323,7 +1432,11 @@ COMMENTS:   REM comment text     ' Full line comment
 PRINT COLOR: PRINT "text" COLOR colorname [BLINK|REVERSEVIDEO]
             Colors: WHITE RED YELLOW PINK GREEN BLUE TURQUOISE
 
-MATH:      ABS INT SGN SQRT SIN COS TAN ATAN ASIN ACOS LOG EXP RND
+COMPUTED:  ON expr GOTO line1,line2,...  ' Jump based on expression value
+           ON expr GOSUB line1,line2,... ' Call subroutine based on expression
+           DEF FNx(param) = expression   ' Define user function
+
+MATH:      ABS INT SGN SQRT SQR SIN COS TAN ATAN ASIN ACOS LOG EXP RND
            PI() RADIANS(deg) DEGREES(rad)
 
 STRING:    LEN LEFT$ RIGHT$ MID$ CHR$ ASC STR$ VAL SPACE$ UCASE$ LCASE$
@@ -1341,6 +1454,8 @@ GRAPHICS:  BOXCHAR$(1-6) CP310$(1-50) - Box drawing and graphic characters
 TIME:      TIME$() DATE$() TIMER() HOUR() MINUTE() SECOND()
            YEAR() MONTH() DAY() SLEEP(n)
 
+OUTPUT:    TAB(n) - Move to column n in PRINT statements
+
 UTILITY:   EVAL(expr$) - Evaluate string as expression at runtime
 
 BBS DATA:  $ChatMessage(n) $Mail(n) $UserInfo $TermInfo $Topic(n) $Post(topic_id,n)
@@ -1348,4 +1463,4 @@ BBS DATA:  $ChatMessage(n) $Mail(n) $UserInfo $TermInfo $Topic(n) $Post(topic_id
 
 ---
 
-*TIMESHARING BASIC/3270BBS v2.5.0 - Happy coding!* 🚀
+*TIMESHARING BASIC/3270BBS v2.6.0 - Happy coding!* 🚀
