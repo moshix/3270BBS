@@ -514,23 +514,31 @@ Quit:
 
 ### FOR/NEXT - Counting Loops
 ```basic
-10 FOR I = 1 TO 10
-20 PRINT I
-30 NEXT I
+START:
+    FOR I = 1 TO 10
+        PRINT I
+    NEXT I
+    END
+```
 
-' With STEP:
-10 FOR I = 10 TO 0 STEP -1
-20 PRINT I
-30 NEXT I
+With STEP (label-based):
+```basic
+START:
+    FOR I = 10 TO 0 STEP -1
+        PRINT I
+    NEXT I
+    END
 ```
 
 ### WHILE/WEND - Conditional Loops
 ```basic
-10 X = 1
-20 WHILE X <= 10
-30 PRINT X
-40 X = X + 1
-50 WEND
+START:
+    X = 1
+    WHILE X <= 10
+        PRINT X
+        X = X + 1
+    WEND
+    END
 ```
 
 ### SELECT CASE - Multi-way Branch
@@ -558,26 +566,30 @@ The SELECT CASE statement provides a cleaner alternative to multiple IF/ELSEIF c
 - CASE ELSE is optional and executes if no other CASE matches
 - SELECT CASE blocks can be nested
 
-**String matching example:**
+**String matching example (label-based):**
 ```basic
-10 INPUT "Enter day: ", D$
-20 SELECT CASE D$
-30     CASE "MON", "TUE", "WED", "THU", "FRI"
-40         PRINT "Weekday"
-50     CASE "SAT", "SUN"
-60         PRINT "Weekend"
-70     CASE ELSE
-80         PRINT "Invalid day"
-90 END SELECT
+START:
+    INPUT "Enter day: ", D$
+    SELECT CASE D$
+        CASE "MON", "TUE", "WED", "THU", "FRI"
+            PRINT "Weekday"
+        CASE "SAT", "SUN"
+            PRINT "Weekend"
+        CASE ELSE
+            PRINT "Invalid day"
+    END SELECT
+    END
 ```
 
 ### DIM - Declare Arrays
 ```basic
-10 DIM SCORES(10)        ' 1D array
-20 DIM GRID(5, 5)        ' 2D array
-30 DIM NAMES$(20)        ' String array
-40 SCORES(1) = 95
-50 NAMES$(0) = "Alice"
+START:
+    DIM SCORES(10)        ' 1D array
+    DIM GRID(5, 5)        ' 2D array
+    DIM NAMES$(20)        ' String array
+    SCORES(1) = 95
+    NAMES$(0) = "Alice"
+    END
 ```
 
 ### Associative Arrays (Dictionaries)
@@ -585,23 +597,27 @@ The SELECT CASE statement provides a cleaner alternative to multiple IF/ELSEIF c
 Associative arrays use string keys instead of nurmeic indices. Declare them with curly braces `{}`:
 
 ```basic
-10 DIM PHONEBOOK${}         ' String associative array
-20 DIM SCORES{}             ' Numeric associative array
-30 PHONEBOOK${"Alice"} = "555-1234"
-40 PHONEBOOK${"Bob"} = "555-5678"
-50 SCORES{"Alice"} = 95
-60 SCORES{"Bob"} = 87
-70 PRINT "Alice's phone: "; PHONEBOOK${"Alice"}
-80 PRINT "Bob's score: "; SCORES{"Bob"}
+START:
+    DIM PHONEBOOK${}         ' String associative array
+    DIM SCORES{}             ' Numeric associative array
+    PHONEBOOK${"Alice"} = "555-1234"
+    PHONEBOOK${"Bob"} = "555-5678"
+    SCORES{"Alice"} = 95
+    SCORES{"Bob"} = 87
+    PRINT "Alice's phone: "; PHONEBOOK${"Alice"}
+    PRINT "Bob's score: "; SCORES{"Bob"}
+    END
 ```
 
 Keys can be variables or expressions:
 ```basic
-10 DIM DATA{}
-20 INPUT "Enter name: ", N$
-30 INPUT "Enter value: ", V
-40 DATA{N$} = V
-50 PRINT N$; " = "; DATA{N$}
+START:
+    DIM DATA{}
+    INPUT "Enter name: ", N$
+    INPUT "Enter value: ", V
+    DATA{N$} = V
+    PRINT N$; " = "; DATA{N$}
+    END
 ```
 
 ### DEF FN - User-Defined Functions
@@ -611,29 +627,35 @@ The DEF FN statement allows you to define your own single-expression functions. 
 DEF FNname(parameter) = expression
 ```
 
-**Examples:**
+**Examples (label-based):**
 ```basic
-10 REM Define distance function
-20 DEF FND(X) = SQR(X^2 + Y^2)
-30 X = 3: Y = 4
-40 PRINT "Distance: "; FND(0)
-50 REM Output: Distance: 5
+START:
+    REM Define distance function
+    DEF FND(X) = SQR(X^2 + Y^2)
+    X = 3: Y = 4
+    PRINT "Distance: "; FND(0)
+    REM Output: Distance: 5
+    END
 ```
 
 ```basic
-10 REM Random number in range
-20 DEF FNR(N) = INT(RND(1) * N + 1)
-30 FOR I = 1 TO 5
-40   PRINT "Random 1-10: "; FNR(10)
-50 NEXT I
+START:
+    REM Random number in range
+    DEF FNR(N) = INT(RND(1) * N + 1)
+    FOR I = 1 TO 5
+        PRINT "Random 1-10: "; FNR(10)
+    NEXT I
+    END
 ```
 
 ```basic
-10 REM Temperature conversion
-20 DEF FNC(F) = (F - 32) * 5 / 9
-30 DEF FNF(C) = C * 9 / 5 + 32
-40 INPUT "Enter Fahrenheit: ", TEMP
-50 PRINT TEMP; "F = "; FNC(TEMP); "C"
+START:
+    REM Temperature conversion
+    DEF FNC(F) = (F - 32) * 5 / 9
+    DEF FNF(C) = C * 9 / 5 + 32
+    INPUT "Enter Fahrenheit: ", TEMP
+    PRINT TEMP; "F = "; FNC(TEMP); "C"
+    END
 ```
 
 **Key Points:**
@@ -820,12 +842,14 @@ The `TAB(n)` function is used in PRINT statements to move to a specific column p
 - **Range:** 1-255 (column 1 is the leftmost position)
 - **Returns:** A string of spaces
 
-**Examples:**
+**Examples (label-based):**
 ```basic
-10 REM Formatted output with TAB
-20 PRINT "Name"; TAB(15); "Age"; TAB(25); "City"
-30 PRINT "Alice"; TAB(15); "25"; TAB(25); "Boston"
-40 PRINT "Bob"; TAB(15); "30"; TAB(25); "Chicago"
+START:
+    REM Formatted output with TAB
+    PRINT "Name"; TAB(15); "Age"; TAB(25); "City"
+    PRINT "Alice"; TAB(15); "25"; TAB(25); "Boston"
+    PRINT "Bob"; TAB(15); "30"; TAB(25); "Chicago"
+    END
 ```
 
 Output:
@@ -836,10 +860,12 @@ Bob            30        Chicago
 ```
 
 ```basic
-10 REM Centering text
-20 FOR I = 1 TO 5
-30   PRINT TAB(I * 5); "*"
-40 NEXT I
+START:
+    REM Centering text
+    FOR I = 1 TO 5
+        PRINT TAB(I * 5); "*"
+    NEXT I
+    END
 ```
 
 **Note:** TAB returns spaces to reach the specified column position. It's most useful for creating aligned tabular output.
@@ -852,27 +878,41 @@ The `EVAL(expr$)` function evaluates a string as a BASIC expression at runtime a
 - **Returns:** The evaluated result (number or string)
 - **Variables:** Can reference current program variables
 
-Examples:
+Examples (label-based):
 ```basic
-10 REM Simple calculator
-20 INPUT "Enter expression: ", E$
-30 PRINT "Result: "; EVAL(E$)
+START:
+    REM Simple calculator
+    INPUT "Enter expression: ", E$
+    PRINT "Result: "; EVAL(E$)
+    END
+```
 
-10 REM Using variables in EVAL
-20 A = 10
-30 B = 5
-40 PRINT EVAL("A + B")           ' Prints 15
-50 PRINT EVAL("A * B + 2")       ' Prints 52
+```basic
+START:
+    REM Using variables in EVAL
+    A = 10
+    B = 5
+    PRINT EVAL("A + B")           ' Prints 15
+    PRINT EVAL("A * B + 2")       ' Prints 52
+    END
+```
 
-10 REM Dynamic math
-20 FORMULA$ = "SIN(X) * 2"
-30 FOR X = 0 TO 3
-40 PRINT "X="; X; " Result="; EVAL(FORMULA$)
-50 NEXT X
+```basic
+START:
+    REM Dynamic math
+    FORMULA$ = "SIN(X) * 2"
+    FOR X = 0 TO 3
+        PRINT "X="; X; " Result="; EVAL(FORMULA$)
+    NEXT X
+    END
+```
 
-10 REM String functions in EVAL
-20 NAME$ = "HELLO WORLD"
-30 PRINT EVAL("LEFT$(NAME$, 5)")  ' Prints HELLO
+```basic
+START:
+    REM String functions in EVAL
+    NAME$ = "HELLO WORLD"
+    PRINT EVAL("LEFT$(NAME$, 5)")  ' Prints HELLO
+    END
 ```
 
 ---
@@ -999,41 +1039,44 @@ Returns 1 if at end of file, 0 otherwise.
 
 ### Complete File I/O Examples
 
-**Writing a data file:**
+**Writing a data file (label-based):**
 ```basic
-10 REM Write high scores to file
-20 OPEN "scores.dat" FOR OUTPUT AS #1
-30 PRINT #1, "Player1,1500"
-40 PRINT #1, "Player2,1200"
-50 PRINT #1, "Player3,900"
-60 CLOSE #1
-70 PRINT "Scores saved!"
-80 END
+START:
+    REM Write high scores to file
+    OPEN "scores.dat" FOR OUTPUT AS #1
+    PRINT #1, "Player1,1500"
+    PRINT #1, "Player2,1200"
+    PRINT #1, "Player3,900"
+    CLOSE #1
+    PRINT "Scores saved!"
+    END
 ```
 
-**Reading a data file:**
+**Reading a data file (label-based):**
 ```basic
-10 REM Read and display file contents
-20 OPEN "scores.dat" FOR INPUT AS #1
-30 PRINT "=== HIGH SCORES ==="
-40 WHILE NOT EOF(1)
-50     INPUT #1, LINE$
-60     PRINT LINE$
-70 WEND
-80 CLOSE #1
-90 END
+START:
+    REM Read and display file contents
+    OPEN "scores.dat" FOR INPUT AS #1
+    PRINT "=== HIGH SCORES ==="
+    WHILE NOT EOF(1)
+        INPUT #1, LINE$
+        PRINT LINE$
+    WEND
+    CLOSE #1
+    END
 ```
 
-**Appending to a file:**
+**Appending to a file (label-based):**
 ```basic
-10 REM Add new score
-20 INPUT "Player name: ", NAME$
-30 INPUT "Score: ", SCORE
-40 OPEN "scores.dat" FOR APPEND AS #1
-50 PRINT #1, NAME$; ","; SCORE
-60 CLOSE #1
-70 PRINT "Score added!"
-80 END
+START:
+    REM Add new score
+    INPUT "Player name: ", NAME$
+    INPUT "Score: ", SCORE
+    OPEN "scores.dat" FOR APPEND AS #1
+    PRINT #1, NAME$; ","; SCORE
+    CLOSE #1
+    PRINT "Score added!"
+    END
 ```
 
 **Limits and Security:**
@@ -1326,24 +1369,27 @@ Output:
                               *
 ```
 
-### Example 2: Display Last 3 Chat Messages
+### Example 2: Display Last 3 Chat Messages (Label-Based)
 This program retrieves and displays the three most recent chat messages from the BBS:
 
 ```basic
-10 REM Display Last 3 Chat Messages
-20 DIM C{}
-30 PRINT "=============================="
-40 PRINT "   RECENT CHAT MESSAGES"
-50 PRINT "=============================="
-60 PRINT
-70 FOR I = 0 TO 2
-80   C{} = $ChatMessage(I)
-90   IF C{"message"} = "" THEN GOTO 120
-100   PRINT C{"datetime"}; " "; C{"username"}; ": "; C{"message"}
-110 NEXT I
-120 PRINT
-130 PRINT "=============================="
-140 END
+START:
+    REM Display Last 3 Chat Messages
+    DIM C{}
+    PRINT "=============================="
+    PRINT "   RECENT CHAT MESSAGES"
+    PRINT "=============================="
+    PRINT
+    FOR I = 0 TO 2
+        C{} = $ChatMessage(I)
+        IF C{"message"} = "" THEN GOTO Done
+        PRINT C{"datetime"}; " "; C{"username"}; ": "; C{"message"}
+    NEXT I
+
+Done:
+    PRINT
+    PRINT "=============================="
+    END
 ```
 
 ### Example 3: User Greeting
@@ -1356,58 +1402,59 @@ This program retrieves and displays the three most recent chat messages from the
 60 END
 ```
 
-### Example 4: Personal Dashboard
+### Example 4: Personal Dashboard (Label-Based)
 ```basic
-10 REM Personal Dashboard
-20 DIM U{} : DIM M{} : DIM C{} : DIM T{}
-30 U{} = $UserInfo
-40 PRINT "==============================="
-50 PRINT "  WELCOME, "; U{"username"}
-60 PRINT "==============================="
-70 PRINT
-80 PRINT "Your latest mail:"
-90 M{} = $Mail(0)
-100 IF M{"datetime"} <> "" THEN PRINT "  From: "; M{"from"}; " - "; LEFT$(M{"body"}, 40)
-110 IF M{"datetime"} = "" THEN PRINT "  No mail"
-120 PRINT
-130 PRINT "Latest chat:"
-140 C{} = $ChatMessage(0)
-150 IF C{"message"} <> "" THEN PRINT "  "; C{"username"}; ": "; C{"message"}
-160 IF C{"message"} = "" THEN PRINT "  No messages"
-170 PRINT
-180 PRINT "Latest topic:"
-190 T{} = $Topic(0)
-200 IF T{"title"} <> "" THEN PRINT "  "; T{"title"}; " by "; T{"author"}
-210 IF T{"title"} = "" THEN PRINT "  No topics"
-220 END
+START:
+    REM Personal Dashboard
+    DIM U{} : DIM M{} : DIM C{} : DIM T{}
+    U{} = $UserInfo
+    PRINT "==============================="
+    PRINT "  WELCOME, "; U{"username"}
+    PRINT "==============================="
+    PRINT
+    PRINT "Your latest mail:"
+    M{} = $Mail(0)
+    IF M{"datetime"} <> "" THEN PRINT "  From: "; M{"from"}; " - "; LEFT$(M{"body"}, 40)
+    IF M{"datetime"} = "" THEN PRINT "  No mail"
+    PRINT
+    PRINT "Latest chat:"
+    C{} = $ChatMessage(0)
+    IF C{"message"} <> "" THEN PRINT "  "; C{"username"}; ": "; C{"message"}
+    IF C{"message"} = "" THEN PRINT "  No messages"
+    PRINT
+    PRINT "Latest topic:"
+    T{} = $Topic(0)
+    IF T{"title"} <> "" THEN PRINT "  "; T{"title"}; " by "; T{"author"}
+    IF T{"title"} = "" THEN PRINT "  No topics"
+    END
 ```
 
-### Example 5: Mail Reader
+### Example 5: Mail Reader (Label-Based)
 This program reads and displays your most recent email with full details.
 Demonstrates both single-line and multi-line IF syntax:
 
 ```basic
-10 REM Mail Reader Example
-20 DIM MAIL{}
-30 MAIL{} = $Mail(0)
-40 IF MAIL{"datetime"} = "" THEN
-50   PRINT "No mail"
-60   END
-70 END IF
-80 PRINT "From: "; MAIL{"from"}
-90 PRINT "Date: "; MAIL{"datetime"}
-100 PRINT "Status: ";
-110 IF MAIL{"read"} = "1" THEN
-120   PRINT "Read"
-130   IF MAIL{"replied"} = "1" THEN
-140     PRINT "(Replied)"
-150   END IF
-160 ELSE
-170   PRINT "Unread" COLOR YELLOW
-180 END IF
-190 PRINT "---Message---"
-200 PRINT MAIL{"body"}
-210 END
+START:
+    REM Mail Reader Example
+    DIM MAIL{}
+    MAIL{} = $Mail(0)
+    IF MAIL{"datetime"} = "" THEN GOTO NoMail
+    PRINT "From: "; MAIL{"from"}
+    PRINT "Date: "; MAIL{"datetime"}
+    PRINT "Status: ";
+    IF MAIL{"read"} = "1" THEN GOSUB ShowRead ELSE PRINT "Unread" COLOR YELLOW
+    PRINT "---Message---"
+    PRINT MAIL{"body"}
+    END
+
+NoMail:
+    PRINT "No mail"
+    END
+
+ShowRead:
+    PRINT "Read"
+    IF MAIL{"replied"} = "1" THEN PRINT "(Replied)"
+    RETURN
 ```
 
 ### Example 6: Topic and Posts Reader
@@ -1445,27 +1492,28 @@ This program reads a topic and displays all its posts:
 290 END
 ```
 
-### Example 7: Digital Clock (Time Functions)
+### Example 7: Digital Clock (Label-Based)
 This program displays the current date and time using all time functions:
 
 ```basic
-10 REM Digital Clock Display
-20 PRINT "================================"
-30 PRINT "    CURRENT DATE AND TIME"
-40 PRINT "================================"
-50 PRINT
-60 PRINT "  Date: "; DATE$()
-70 PRINT "  Time: "; TIME$()
-80 PRINT
-90 PRINT "  Year:   "; YEAR()
-100 PRINT "  Month:  "; MONTH()
-110 PRINT "  Day:    "; DAY()
-120 PRINT "  Hour:   "; HOUR()
-130 PRINT "  Minute: "; MINUTE()
-140 PRINT "  Second: "; SECOND()
-150 PRINT
-160 PRINT "  Seconds since midnight: "; TIMER()
-170 END
+START:
+    REM Digital Clock Display
+    PRINT "================================"
+    PRINT "    CURRENT DATE AND TIME"
+    PRINT "================================"
+    PRINT
+    PRINT "  Date: "; DATE$()
+    PRINT "  Time: "; TIME$()
+    PRINT
+    PRINT "  Year:   "; YEAR()
+    PRINT "  Month:  "; MONTH()
+    PRINT "  Day:    "; DAY()
+    PRINT "  Hour:   "; HOUR()
+    PRINT "  Minute: "; MINUTE()
+    PRINT "  Second: "; SECOND()
+    PRINT
+    PRINT "  Seconds since midnight: "; TIMER()
+    END
 ```
 
 ### Example 8: Orbital Mechanics Plot (24x80 terminal)
@@ -1537,34 +1585,35 @@ Eccentricity: 0.6  Semi-major: 28
 @ = Sun (focus)  * = Satellite  . = Orbit path
 ```
 
-### Example 9: Phone Book (Associative Arrays)
+### Example 9: Phone Book (Label-Based)
 This program demonstrates associative arrays to create a simple phone book:
 
 ```basic
-10 REM Simple Phone Book using Associative Arrays
-20 DIM PHONE${}
-30 PRINT "=== PHONE BOOK ==="
-40 PRINT
-50 REM Add some entries
-60 PHONE${"Alice"} = "555-1234"
-70 PHONE${"Bob"} = "555-5678"
-80 PHONE${"Carol"} = "555-9012"
-90 PHONE${"David"} = "555-3456"
-100 PRINT "Stored 4 contacts."
-110 PRINT
-120 REM Look up contacts
-130 INPUT "Enter name to look up: ", NAME$
-140 RESULT$ = PHONE${NAME$}
-150 IF RESULT$ = "" THEN
-160   PRINT "Not found!" COLOR RED
-170 ELSE
-180   PRINT NAME$; ": "; RESULT$ COLOR GREEN
-190 END IF
-200 PRINT
-210 INPUT "Look up another? (Y/N): ", A$
-220 IF UCASE$(A$) = "Y" THEN GOTO 130
-230 PRINT "Goodbye!"
-240 END
+START:
+    REM Simple Phone Book using Associative Arrays
+    DIM PHONE${}
+    PRINT "=== PHONE BOOK ==="
+    PRINT
+    REM Add some entries
+    PHONE${"Alice"} = "555-1234"
+    PHONE${"Bob"} = "555-5678"
+    PHONE${"Carol"} = "555-9012"
+    PHONE${"David"} = "555-3456"
+    PRINT "Stored 4 contacts."
+    PRINT
+
+Lookup:
+    INPUT "Enter name to look up: ", NAME$
+    RESULT$ = PHONE${NAME$}
+    IF RESULT$ = "" THEN PRINT "Not found!" COLOR RED: GOTO AskAgain
+    PRINT NAME$; ": "; RESULT$ COLOR GREEN
+
+AskAgain:
+    PRINT
+    INPUT "Look up another? (Y/N): ", A$
+    IF UCASE$(A$) = "Y" THEN GOTO Lookup
+    PRINT "Goodbye!"
+    END
 ```
 
 ---
