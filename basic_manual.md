@@ -2,17 +2,17 @@
 
 **Copyright © 2025-2026 by moshix. All rights reserved.**
 
-Welcome to the 3270BBS BASIC Interpreter and compiler! This manual will guide you through writing and running BASIC programs on teh 3270BBS system.
+Welcome to the 3270BBS BASIC Interpreter and compiler! This manaul will guide you through writing and running BASIC programs on teh 3270BBS system.
 
 ---
 
-## 🟦 Getting Started
+##  Getting Started
 
 ### Entering BASIC
 From the Extended Menu, press **B** to enter BASIC/3270BBS . You'll see:
 
 ```
-      TIMESHARING BASIC/3270BBS V2.6.0
+      TIMESHARING BASIC/3270BBS V2.7.0
 TYPE HELP FOR COMMANDS, BYE TO EXIT
 READY
 >
@@ -27,7 +27,7 @@ READY
 
 ---
 
-## 🟩 Program Commands
+##  Program Commands
 
 | Command | Description |
 |---------|-------------|
@@ -253,7 +253,7 @@ Users can share programs with each other by naming files with a `%` prefix. Thes
 
 ---
 
-## 🟨 Statements
+##  Statements
 
 ### PRINT - Display Output
 ```basic
@@ -419,6 +419,98 @@ ON expression GOSUB line1, line2, line3, ...
 - If the expression evaluates to a value less than 1 or greater than the number of line numbers, execution continues to the next line (no jump occurs)
 - ON...GOTO jumps to the target line
 - ON...GOSUB calls the target as a subroutine (use RETURN to come back)
+
+---
+
+## 🏷️ Label-Based Programs (No Line Numbers)
+
+As an alternative to traditional line-numbered BASIC programs, you can write programs using **labels** instead of line numbers. This provides a more modern, readable coding style while remaining fully compatible with all BASIC features.
+
+### Detection Rules
+The interpreter automatically detects label-mode based on the first non-empty, non-comment line:
+- If the first line starts with a **number**, the program uses line numbers
+- If the first line starts with anything else, the program uses labels
+
+### Label Syntax
+Labels are identifiers followed by a colon at the start of a line:
+```basic
+LabelName:
+```
+
+**Rules:**
+- Labels are **case-insensitive** (`Start:` = `START:` = `start:`)
+- Labels must start with a letter or underscore
+- Labels can contain letters, digits, and underscores
+- Every label-mode program **must** have a `START:` label (execution begins there)
+- Labels must be unique within a program
+
+### Example: Simple Label-Based Program
+```basic
+START:
+    PRINT "Enter a number (0 to quit):"
+    INPUT N
+    IF N = 0 THEN GOTO Done
+    PRINT "Square is:"; N * N
+    GOTO Start
+
+Done:
+    PRINT "Goodbye!"
+    END
+```
+
+### GOTO and GOSUB with Labels
+In label-mode programs, use label names instead of line numbers:
+```basic
+GOTO Start
+GOSUB Calculate
+```
+
+### ON...GOTO and ON...GOSUB with Labels
+Computed jumps work with labels too:
+```basic
+START:
+    PRINT "Menu: 1=Add 2=Sub 3=Quit"
+    INPUT Choice
+    ON Choice GOTO Add, Sub, Quit
+    PRINT "Invalid choice"
+    GOTO Start
+
+Add:
+    INPUT "A, B: ", A, B
+    PRINT "Sum:"; A + B
+    GOTO Start
+
+Sub:
+    INPUT "A, B: ", A, B
+    PRINT "Difference:"; A - B
+    GOTO Start
+
+Quit:
+    PRINT "Goodbye!"
+    END
+```
+
+**Note:** You cannot mix line numbers and labels in the same ON...GOTO/GOSUB statement.
+
+### Important Differences from Line-Numbered Programs
+| Feature | Line Numbers | Labels |
+|---------|--------------|--------|
+| Entry point | First line number | `START:` label |
+| Line format | `10 PRINT "Hello"` | `PRINT "Hello"` |
+| Jump target | `GOTO 100` | `GOTO Done` |
+| Listing format | Shows line numbers | Shows line index |
+
+### When to Use Labels
+- **New programs** - More readable, easier to maintain
+- **Structured code** - Natural fit for subroutines and blocks
+- **Modern style** - Familiar to programmers from other languages
+
+### Compatibility Notes
+- All BASIC features work identically in both modes
+- The `CHECK` command validates label programs and shows "INDX" instead of "LINE"
+- `RENUM` command is not applicable to label-based programs
+
+---
 
 ### FOR/NEXT - Counting Loops
 ```basic
@@ -1108,6 +1200,91 @@ Access live BBS data direcly from BASIC!
 
 ---
 
+## ⚡ Compiler Optimizations
+
+The BASIC/3270BBS compiler automatically applies safe optimizations to improve runtime performance. These optimizations are performed at compile time when you `LOAD` or enter a program, and are visible in the `CHECK` command's OPTIMIZER REPORT section.
+
+### Constant Folding
+
+When the compiler detects arithmetic operations with literal (constant) numbers, it evaluates them at compile time instead of at runtime. This eliminates redundant calculations during program execution.
+
+**Example - Before optimization:**
+```basic
+10 X = 2 + 3 * 4
+20 AREA = 3.14159 * 10 * 10
+30 TIMEOUT = 60 * 60 * 24
+```
+
+**After optimization (internally):**
+```basic
+10 X = 14
+20 AREA = 314.159
+30 TIMEOUT = 86400
+```
+
+**Supported operations:** `+`, `-`, `*`, `/`, `^` (power), `MOD`
+
+**Note:** The compiler will NOT optimize division or MOD by zero - these remain unevaluated to produce proper runtime errors.
+
+### Function Precomputation
+
+For certain built-in functions called with constant (literal) arguments, the compiler evaluates the function at compile time.
+
+**Example - Before optimization:**
+```basic
+10 SPACE_CODE = ASC(" ")
+20 MSG_LEN = LEN("Hello, World!")
+30 CHAR_A = CHR$(65)
+40 VALUE = VAL("42.5")
+50 TEXT = STR$(100)
+```
+
+**After optimization (internally):**
+```basic
+10 SPACE_CODE = 32
+20 MSG_LEN = 13
+30 CHAR_A = "A"
+40 VALUE = 42.5
+50 TEXT = "100"
+```
+
+**Precomputed functions:**
+| Function | Description | Example | Result |
+|----------|-------------|---------|--------|
+| `LEN()` | String length | `LEN("HELLO")` | `5` |
+| `ASC()` | Character to ASCII | `ASC("A")` | `65` |
+| `CHR$()` | ASCII to character | `CHR$(65)` | `"A"` |
+| `VAL()` | String to number | `VAL("123")` | `123` |
+| `STR$()` | Number to string | `STR$(42)` | `"42"` |
+
+### Viewing Optimizations
+
+Use the `CHECK` command to see what optimizations were applied to your program. The listing includes an OPTIMIZER REPORT section:
+
+```
+OPTIMIZER REPORT
+
+  LINE   TYPE              ORIGINAL                 OPTIMIZED
+  ----   ----              --------                 ---------
+    10   CONSTANT_FOLD     2 + 3 * 4                14
+    20   CONSTANT_FOLD     3.14159 * 10 * 10        314.159
+    30   FUNC_PRECOMPUTE   LEN("Hello, World!")     13
+    40   FUNC_PRECOMPUTE   ASC("A")                 65
+
+  TOTAL OPTIMIZATIONS: 4
+```
+
+### Safety Guarantees
+
+The optimizer only applies safe transformations that do not change program behavior:
+
+- Only constant expressions are folded (variables are never evaluated at compile time)
+- Division/MOD by zero is not optimized (proper runtime error handling preserved)
+- Functions with side effects (like `RND`, `TIMER()`, `INKEY$`) are never precomputed
+- String concatenation with variables is not optimized
+
+---
+
 ## 🟫 Example Programs
 
 ### Example 1: Sine Wave Graph
@@ -1413,7 +1590,7 @@ This program demonstrates associative arrays to create a simple phone book:
 
 ---
 
-## ❓ Quick Reference Card
+##  Quik Reference Card
 
 ```
 COMMANDS:  RUN LIST NEW SAVE LOAD EDIT ERASE FILES FILES/W RENUM DELETE HELP VARS BYE
@@ -1449,12 +1626,12 @@ FILE I/O:  OPEN "file.dat" FOR INPUT|OUTPUT|APPEND AS #n
 CHAINING:  COMMON var1, var2      ' Declare shared variables
            CHAIN "program"        ' Call another program
 
-GRAPHICS:  BOXCHAR$(1-6) CP310$(1-50) - Box drawing and graphic characters
+GRAPHICS:  BOXCHAR$(1-6) CP310$(1-50) - Box drawing and grahpic characters
 
 TIME:      TIME$() DATE$() TIMER() HOUR() MINUTE() SECOND()
            YEAR() MONTH() DAY() SLEEP(n)
 
-OUTPUT:    TAB(n) - Move to column n in PRINT statements
+OUTPUT:    TAB(n) - Move to colun n in PRINT statements
 
 UTILITY:   EVAL(expr$) - Evaluate string as expression at runtime
 
@@ -1463,4 +1640,4 @@ BBS DATA:  $ChatMessage(n) $Mail(n) $UserInfo $TermInfo $Topic(n) $Post(topic_id
 
 ---
 
-*TIMESHARING BASIC/3270BBS v2.6.0 - Happy coding!* 🚀
+*TIMESHARING BASIC/3270BBS v2.7.0 - Happy coding!* 🚀
