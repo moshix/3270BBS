@@ -286,13 +286,15 @@ PRINT expression [; expression ...] [COLOR colorname [modifier]]
 | `BLINK` | Blinking text |
 | `REVERSEVIDEO` | Inverted colors (text becomes background) |
 
-**Examples:**
+**Examples (label-based):**
 ```basic
-10 PRINT "ALERT!" COLOR RED
-20 PRINT "Success: "; RESULT$ COLOR GREEN
-30 PRINT "WARNING!" COLOR YELLOW BLINK
-40 PRINT "Selected item" COLOR WHITE REVERSEVIDEO
-50 PRINT "Status: "; S; " - "; MSG$ COLOR PINK
+START:
+    PRINT "ALERT!" COLOR RED
+    PRINT "Success: "; RESULT$ COLOR GREEN
+    PRINT "WARNING!" COLOR YELLOW BLINK
+    PRINT "Selected item" COLOR WHITE REVERSEVIDEO
+    PRINT "Status: "; S; " - "; MSG$ COLOR PINK
+    END
 ```
 
 **Notes:**
@@ -823,15 +825,16 @@ The `SLEEP(n)` function pauses program execution for the specified number of sec
 - **CPU-friendly:** Does not consume CPU cylces during the wait
 - **Returns:** 0 (can be ignored)
 
-Example:
+Example (label-based):
 ```basic
-10 REM Countdown Timer
-20 FOR I = 10 TO 0 STEP -1
-30 PRINT I
-40 X = SLEEP(1)
-50 NEXT I
-60 PRINT "BLAST OFF!"
-70 END
+START:
+    REM Countdown Timer
+    FOR I = 10 TO 0 STEP -1
+        PRINT I
+        X = SLEEP(1)
+    NEXT I
+    PRINT "BLAST OFF!"
+    END
 ```
 
 ### TAB Function
@@ -1392,14 +1395,15 @@ Done:
     END
 ```
 
-### Example 3: User Greeting
+### Example 3: User Greeting (Label-Based)
 ```basic
-10 REM User Greeting
-20 DIM U{}
-30 U{} = $UserInfo
-40 PRINT "Welcome, "; U{"username"}; "!"
-50 IF U{"country"} <> "" THEN PRINT "Connecting from: "; U{"country"}
-60 END
+START:
+    REM User Greeting
+    DIM U{}
+    U{} = $UserInfo
+    PRINT "Welcome, "; U{"username"}; "!"
+    IF U{"country"} <> "" THEN PRINT "Connecting from: "; U{"country"}
+    END
 ```
 
 ### Example 4: Personal Dashboard (Label-Based)
@@ -1457,39 +1461,41 @@ ShowRead:
     RETURN
 ```
 
-### Example 6: Topic and Posts Reader
+### Example 6: Topic and Posts Reader (Label-Based)
 This program reads a topic and displays all its posts:
 
 ```basic
-10 REM Topic and Posts Reader
-20 DIM T{}
-30 DIM P{}
-40 
-50 REM Get the most recent topic
-60 T{} = $Topic(0)
-70 IF T{"title"} = "" THEN PRINT "No topics available": END
-80 
-90 PRINT "================================"
-100 PRINT T{"title"}
-110 PRINT "by "; T{"author"}; " in "; T{"conference"}
-120 PRINT "Posted: "; T{"datetime"}
-130 PRINT "================================"
-140 PRINT
-150 
-160 REM Get the topic ID for fetching posts
-170 TOPIC_ID = VAL(T{"id"})
-180 NUM_POSTS = VAL(T{"posts"})
-190 
-200 REM Display all posts in this topic
-210 FOR I = 0 TO NUM_POSTS - 1
-220   P{} = $Post(TOPIC_ID, I)
-230   IF P{"body"} = "" THEN GOTO 280
-240   PRINT "--- "; P{"author"}; " ("; P{"datetime"}; ") ---"
-250   PRINT P{"body"}
-260   PRINT "Likes: "; P{"likes"}; "  Dislikes: "; P{"dislikes"}
-270   PRINT
-280 NEXT I
-290 END
+START:
+    REM Topic and Posts Reader
+    DIM T{}
+    DIM P{}
+
+    REM Get the most recent topic
+    T{} = $Topic(0)
+    IF T{"title"} = "" THEN PRINT "No topics available": END
+
+    PRINT "================================"
+    PRINT T{"title"}
+    PRINT "by "; T{"author"}; " in "; T{"conference"}
+    PRINT "Posted: "; T{"datetime"}
+    PRINT "================================"
+    PRINT
+
+    REM Get the topic ID for fetching posts
+    TOPIC_ID = VAL(T{"id"})
+    NUM_POSTS = VAL(T{"posts"})
+
+    REM Display all posts in this topic
+    FOR I = 0 TO NUM_POSTS - 1
+        P{} = $Post(TOPIC_ID, I)
+        IF P{"body"} = "" THEN GOTO SkipPost
+        PRINT "--- "; P{"author"}; " ("; P{"datetime"}; ") ---"
+        PRINT P{"body"}
+        PRINT "Likes: "; P{"likes"}; "  Dislikes: "; P{"dislikes"}
+        PRINT
+SkipPost:
+    NEXT I
+    END
 ```
 
 ### Example 7: Digital Clock (Label-Based)
