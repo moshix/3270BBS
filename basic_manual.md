@@ -48,11 +48,28 @@ READY
 | `EDIT` | Edit program in memory (no filename) |
 | `ERASE "name"` | Delete program file (.bas or .list) |
 | `FILES` | List your files and community programs |
+| `FILES pattern` | List files matching wildcard pattern (* and ?) |
 | `FILES /W` | Wide format: two columns, no timestamps |
 | `FILES /U user` | List shared files from another user |
 | `FILES /C` | List only community files |
 | `FLIST` | List only your files (no community files) |
+| `FLIST pattern` | List your files matching wildcard pattern |
 | `LOAD "user/%file"` | Load a shared file from another user |
+
+**Wildcard Patterns:** FILES and FLIST support MS-DOS style wildcards:
+- `*` matches zero or more characters
+- `?` matches exactly one character
+
+Examples:
+```
+FILES *.bas          All .bas files
+FILES test*          Files starting with "test"
+FILES *game*         Files containing "game"
+FILES ?.bas          Single-character .bas files (a.bas, x.bas)
+FILES test?.bas      test0.bas, test1.bas, testa.bas, etc.
+FLIST *.list         Your .list files only
+FILES *.bas /W       Wide format with wildcard filter
+```
 
 **EDIT without a filename:** Opens the program currently in memory in the full-screen editor. This is useful when you've loaded a community program and want to modify it. When you save, it creates `UNTITLED.bas` in your directory.
 
@@ -1648,7 +1665,10 @@ AskAgain:
 ##  Quik Reference Card
 
 ```
-COMMANDS:  RUN LIST NEW SAVE LOAD EDIT ERASE FILES FILES/W RENUM DELETE HELP VARS BYE
+COMMANDS:  RUN LIST NEW SAVE LOAD EDIT ERASE FILES FLIST RENUM DELETE HELP VARS BYE
+
+FILES:     FILES [pattern] [/W] [/C] [/U user]   FLIST [pattern] [/W]
+           Wildcards: * (any chars), ? (single char)  e.g. FILES *.bas
 
 SYNTAX:    CHECK - Syntax check, generate name.list (or UNNAMED.list)
            VIEW name.list - View listing without clearing program
