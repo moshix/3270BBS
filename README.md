@@ -36,13 +36,6 @@ Just to make it clear, this BBS need to be accessed with an **IBM 3270 terminal 
 
 The system is heavily multi-threaded, making it blazing fast even on single-core systems, though more cores improve performance. It runs perfectly on small servers like Raspberry Pi or basic VPS instances, and particularly loves Linux/s390x.
 
-## Public 3270BBS Servers
-
-| BBS Name            | SysOp     | URL                        | Port |
-|---------------------|-----------|----------------------------|------|
-| Forum3270           | moshix    | www.moshix.tech            | 2300 |
-| Ernietech's 3270BBS | Ernietech | ernietech.net              | 3270 |
-| tqw3270 BBS         | MeaTMaN   | bbs.erb.pw                 | 3270 |
 
 ## Requirements
 
