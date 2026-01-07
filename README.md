@@ -149,7 +149,9 @@ For installation questions, reach out to moshix on Forum3270.
 
 ### Basic Configuration
 
-Create a `tsu.cnf` file (required for startup). Here's an example configuration, which by default
+Run the ./configure script and answer the questions which will create a syntactically correct tsu.cnf configuration file. That's the easiest option. 
+
+Or...create a `tsu.cnf` file (required for startup). Here's an example configuration, which by default
 assumes a sqlite3 database:
 
 ```
@@ -396,4 +398,4 @@ By using this software, you agree to abide by any applicable local, national, or
 
 ---
 
-**Moshix, Dec 21, 2025 - New York**
+**Moshix, Jan 7, 2026 - New York**
