@@ -12,7 +12,7 @@ Welcome to the 3270BBS BASIC Interpreter and compiler! This manaul will guide yo
 From the Extended Menu, press **B** to enter BASIC/3270BBS . You'll see:
 
 ```
-      TIMESHARING BASIC/3270BBS V2.7.0
+      TIMESHARING BASIC/3270BBS V2.7.1
 TYPE HELP FOR COMMANDS, BYE TO EXIT
 READY
 >
@@ -46,6 +46,7 @@ READY
 | `LOAD "name"` | Load program from file |
 | `EDIT "name"` | Edit file in full-screen editor |
 | `EDIT` | Edit program in memory (no filename) |
+| `BROWSE` | Open file browser to select and edit files |
 | `ERASE "name"` | Delete program file (.bas or .list) |
 | `FILES` | List your files and community programs |
 | `FILES pattern` | List files matching wildcard pattern (* and ?) |
@@ -72,6 +73,14 @@ FILES *.bas /W       Wide format with wildcard filter
 ```
 
 **EDIT without a filename:** Opens the program currently in memory in the full-screen editor. This is useful when you've loaded a community program and want to modify it. When you save, it creates `UNTITLED.bas` in your directory.
+
+**BROWSE:** Opens an interactive file browser that displays all your files and community programs. You can:
+- Navigate with F7 (page up) and F8 (page down)
+- Type U/C to switch between User and Community files
+- Type N/D to sort by Name or Date
+- Type any character on a file line to select and open it in the editor
+- Type D on a file line to delete it (with confirmation)
+- Press F3 to return to BASIC without selecting a file
 
 ### Syntax Checking Commands
 
@@ -856,11 +865,11 @@ START:
 
 ### TAB Function
 
-The `TAB(n)` function is used in PRINT statements to move to a specific column position. It returns a string of spaces to reach the specified column.
+The `TAB(n)` function is used in PRINT statements to move to a specific column position. It calculates how many spaces are needed to reach column n based on what has already been printed on the current line.
 
-- **Usage:** `PRINT TAB(n); "text"` or `PRINT TAB(n); variable`
+- **Usage:** `PRINT "text"; TAB(n); "more text"`
 - **Range:** 1-255 (column 1 is the leftmost position)
-- **Returns:** A string of spaces
+- **Behavior:** Adds spaces to reach column n; if already past column n, no spaces are added
 
 **Examples (label-based):**
 ```basic
@@ -1665,7 +1674,7 @@ AskAgain:
 ##  Quik Reference Card
 
 ```
-COMMANDS:  RUN LIST NEW SAVE LOAD EDIT ERASE FILES FLIST RENUM DELETE HELP VARS BYE
+COMMANDS:  RUN LIST NEW SAVE LOAD EDIT BROWSE ERASE FILES FLIST RENUM DELETE HELP VARS BYE
 
 FILES:     FILES [pattern] [/W] [/C] [/U user]   FLIST [pattern] [/W]
            Wildcards: * (any chars), ? (single char)  e.g. FILES *.bas
@@ -1715,4 +1724,4 @@ BBS DATA:  $ChatMessage(n) $Mail(n) $UserInfo $TermInfo $Topic(n) $Post(topic_id
 
 ---
 
-*TIMESHARING BASIC/3270BBS v2.7.0 - Happy coding!* 🚀
+*TIMESHARING BASIC/3270BBS v2.7.1 - Happy coding!* 🚀
