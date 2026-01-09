@@ -2,8 +2,10 @@
 
 **Copyright © 2025-2026 by moshix. All rights reserved.**
 
-Welcome to the 3270BBS BASIC Interpreter and compiler! This manaul will guide you through writing and running BASIC programs on teh 3270BBS system.
+Welcome to the BASIC/3270BBS interpreter and compiler! This manual will guide you through writing and running BASIC programs on the 3270BBS system.
 
+As of version 2.3.0 of BASIC/3270BBS, programs can be traditional line numbered (e.g. 100 PRINT "Hello, world") or without line numbers and use labels instead, in which case every program must start with a START: label. 
+  
 ---
 
 ##  Getting Started
@@ -18,7 +20,7 @@ READY
 >
 ```
 
-### Basic Concepts
+### Command Line BASIC
 - Programs are made of **numbered lines** (e.g., `10`, `20`, `30`)
 - Lines execute in numerical order
 - Type a line number + code to add it to yuor program
@@ -152,7 +154,7 @@ The `EMAIL` command sends a `.list` file as a PDF attachment to your registered 
 - Professional header with BBS name and date
 - Full listing content in fixed-width Courier font
 - Syntax highlighting for errors (red) and warnings (orange)
-- Section headers highlighted in blue
+- Section headers highlighted for cross-reference, data dictionary etc.
 
 **Example:**
 ```
