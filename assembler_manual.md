@@ -409,6 +409,8 @@ The listing shows:
 | `PACK D1(L1,B1),D2(L2,B2)` | Pack |
 | `UNPK D1(L1,B1),D2(L2,B2)` | Unpack |
 | `TR D1(L,B1),D2(B2)` | Translate |
+| `ED D1(L,B1),D2(B2)` | Edit (format packed decimal) |
+| `EDMK D1(L,B1),D2(B2)` | Edit and Mark |
 
 ### Extended Branch Mnemonics
 
@@ -554,18 +556,42 @@ These macros provide compatibility with standard MVS/z/OS linkage conventions:
 
 ### WTO - Write To Operator
 
+WTO supports two formats:
+
+**Inline Message Format:**
 ```
          WTO   'message text'
 ```
+Writes a message to the operator console, prefixed with "WTO:".
 
-Writes a message to the operator console. In the interpreter, this prints the message prefixed with "WTO:".
-- **message**: A quoted string containing the message text
-- On real z/OS, this expands to building a parameter list and issuing SVC 35
+**Execute Form (MF=E):**
+```
+         WTO   MF=(E,addr)
+```
+Uses a pre-built parameter list at the specified address. This allows dynamic message content by modifying the message area before calling WTO.
 
-Example:
+**Parameter List Format for MF=(E,addr):**
+```asm
+MSGAREA  DC    H'40'               Length (including 4-byte header)
+         DC    H'0'                MCS flags (must be zeros)
+         DC    CL36'Message text'  The actual message (EBCDIC)
+```
+
+The length field (first halfword) should be the total parameter list length including the 4-byte header.
+
+Example (Inline):
 ```asm
          WTO   'PROGRAM STARTING'
          WTO   'PROCESSING COMPLETE'
+```
+
+Example (Execute Form - for dynamic messages):
+```asm
+* Build message at runtime
+         MVC   MSG+4(10),COUNTER   Insert counter value
+         WTO   MF=(E,MSG)
+*
+MSG      DC    H'24',H'0',CL20'Count: XXXXXXXXXX'
 ```
 
 ### SAVE - Save Registers
@@ -606,6 +632,59 @@ Example:
 ```asm
          L     R13,SAVEAREA+4    Restore caller's R13
          RETURN (14,12),RC=0     Restore registers, return code 0
+```
+
+### ED - Edit Instruction
+
+The ED instruction formats packed decimal data for printing using a pattern.
+
+```
+         ED    PATTERN(L),SOURCE
+```
+
+**Pattern Characters:**
+- First byte = Fill character (usually X'40' = space)
+- X'20' = Digit Select - replaced with source digit or fill char
+- X'21' = Significance Starter - turns on significance, shows digit
+- X'22' = Field Separator - resets significance
+- Other bytes = Message characters (kept if significant, else fill)
+
+**Example:**
+```asm
+         CVD   R2,DW           Convert binary to packed decimal
+         MVC   ZN,EDMASK       Load edit mask
+         ED    ZN,DW+6         Edit packed decimal to printable
+*
+DW       DS    D               Doubleword work area
+ZN       DS    CL4             Zone decimal result
+EDMASK   DC    X'40202120'     Fill=' ', digit, digit, sig+digit
+```
+
+**Condition Code:**
+- CC=0: Result is zero
+- CC=1: Result is negative
+- CC=2: Result is positive
+
+### YREGS - Define Register Equates
+
+```
+         YREGS
+```
+
+Expands to register equates R0-R15 for all 16 general purpose registers.
+- Equivalent to defining: `R0 EQU 0`, `R1 EQU 1`, ... `R15 EQU 15`
+- Place near the end of your program, before the `END` statement
+- Standard IBM macro for convenience
+
+Example:
+```asm
+MYPROG   CSECT
+         USING MYPROG,R12
+         LR    R12,R15
+         ...
+         BR    R14
+         YREGS
+         END   MYPROG
 ```
 
 ## Register Conventions
@@ -681,8 +760,8 @@ Listing files: `.list`
 
 ## Tips
 
-1. Always establish addresability with USING
-2. Use meaningful labels max 8 characters
+1. Always establish addressability with USING
+2. Use meaningful labels (max 8 characters for traditional compatibility)
 3. Align data appropriately (DS 0F for fullwords)
 4. Use extended branch mnemonics for clarity
 5. Comment your code generously with asterisk (*) lines
@@ -705,8 +784,8 @@ Listing files: `.list`
 
 ## References
 
-- IBM System/360 Principles of Operation (GA22-6821)
-- ASSIST User's Guide (NIU CS Department)
+- [IBM System/360 Principles of Operation (A22-6821-0)](https://bitsavers.trailing-edge.com/pdf/ibm/360/princOps/A22-6821-0_360PrincOps.pdf) - Complete instruction set reference
+- [ASSIST Introductory Assembler User's Manual](https://faculty.cs.niu.edu/~byrnes/csci360/ho/asusergd.shtml#part1s4) - Original ASSIST documentation by John R. Mashey, Pennsylvania State University
 - IBM High Level Assembler Language Reference
 
 ---
