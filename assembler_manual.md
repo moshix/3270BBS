@@ -551,6 +551,49 @@ Converts hex string to binary in register.
 
 Converts register to 8-character hex string.
 
+### XPNCH - Punch Output
+
+```
+         XPNCH buffer,length
+```
+
+Punches output to the card punch device (simulated as print output).
+- **buffer**: Address of output area
+- **length**: Number of characters to punch (default: 80)
+- Functionally equivalent to XPRNT in this interpreter
+
+### XGET - Get Record
+
+```
+         XGET buffer,length
+```
+
+Reads a record from input (extended version of XREAD).
+- **buffer**: Address of input area
+- **length**: Maximum characters to read (default: 80)
+- Functionally equivalent to XREAD in this interpreter
+
+### XPUT - Put Record
+
+```
+         XPUT buffer,length
+```
+
+Writes a record to output (extended version of XPRNT).
+- **buffer**: Address of output area
+- **length**: Number of characters to write (default: 133)
+- Functionally equivalent to XPRNT in this interpreter
+
+### XLIMD - Limit Dump
+
+```
+         XLIMD maxlines
+```
+
+Sets maximum lines for XDUMP output.
+- **maxlines**: Maximum number of dump lines to display
+- This macro is accepted but has no effect in this interpreter
+
 ## MVS/z/OS Linkage Macros
 
 These macros provide compatibility with standard MVS/z/OS linkage conventions:
@@ -634,37 +677,6 @@ Example:
          L     R13,SAVEAREA+4    Restore caller's R13
          RETURN (14,12),RC=0     Restore registers, return code 0
 ```
-
-### ED - Edit Instruction
-
-The ED instruction formats packed decimal data for printing using a pattern.
-
-```
-         ED    PATTERN(L),SOURCE
-```
-
-**Pattern Characters:**
-- First byte = Fill character (usually X'40' = space)
-- X'20' = Digit Select - replaced with source digit or fill char
-- X'21' = Significance Starter - turns on significance, shows digit
-- X'22' = Field Separator - resets significance
-- Other bytes = Message characters (kept if significant, else fill)
-
-**Example:**
-```asm
-         CVD   R2,DW           Convert binary to packed decimal
-         MVC   ZN,EDMASK       Load edit mask
-         ED    ZN,DW+6         Edit packed decimal to printable
-*
-DW       DS    D               Doubleword work area
-ZN       DS    CL4             Zone decimal result
-EDMASK   DC    X'40202120'     Fill=' ', digit, digit, sig+digit
-```
-
-**Condition Code:**
-- CC=0: Result is zero
-- CC=1: Result is negative
-- CC=2: Result is positive
 
 ### YREGS - Define Register Equates
 
@@ -805,7 +817,7 @@ RUN                   Run again from clean state
 
 ## References
 
-- [IBM System/360 Principles of Operation (A22-6821-0)](https://bitsavers.trailing-edge.com/pdf/ibm/360/princOps/A22-6821-0_360PrincOps.pdf) - Complete instruction set reference
+- [IBM System/360 Principles of Operation (A22-6821-0)](https://bitsavers.org/pdf/ibm/360/princOps/A22-6821-0_360PrincOps.pdf) - Complete instruction set reference
 - [ASSIST Introductory Assembler User's Manual](https://faculty.cs.niu.edu/~byrnes/csci360/ho/asusergd.shtml#part1s4) - Original ASSIST documentation by John R. Mashey, Pennsylvania State University
 - IBM High Level Assembler Language Reference
 
