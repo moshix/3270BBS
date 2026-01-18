@@ -25,6 +25,8 @@ Acces the assembler from the Extended Menu by selecting option **A** (or use sho
 | `RESET` | Reset CPU registers, PSW, and memory to pristine state |
 | `BYE` / `EXIT` | Return to menu |
 
+> ⚠️ **Note:** When a program finishes executing, the S/360 CPU state (registers, PSW, memory) is preserved and not cleared. This allows you to inspect the CPU state after execution using `REGS` or `DUMP`. To run the program again from a clean state, use `RESET` first to restore the CPU to its initial pristine state.
+
 ### Debugging Commands
 
 | Command | Description |
@@ -353,6 +355,10 @@ The listing shows:
 | `BALR R1,R2` | Branch and Link Register |
 | `BCR M,R2` | Branch on Condition Register |
 | `BCTR R1,R2` | Branch on Count Register |
+| `MVCL R1,R2` | Move Long (R1,R2 must be even) |
+| `CLCL R1,R2` | Compare Logical Long (R1,R2 must be even) |
+| `BSM R1,R2` | Branch and Set Mode |
+| `BASSM R1,R2` | Branch and Save and Set Mode |
 
 ### RX Format (Register-Storage)
 
@@ -376,6 +382,9 @@ The listing shows:
 | `BC M,D(X,B)` | Branch on Condition |
 | `BAL R1,D(X,B)` | Branch and Link |
 | `BCT R1,D(X,B)` | Branch on Count |
+| `EX R1,D(X,B)` | Execute |
+| `CVB R1,D(X,B)` | Convert to Binary |
+| `CVD R1,D(X,B)` | Convert to Decimal |
 
 ### RS Format (Register-Storage)
 
@@ -389,6 +398,11 @@ The listing shows:
 | `SRL R1,D(B)` | Shift Right Logical |
 | `BXH R1,R3,D(B)` | Branch on Index High |
 | `BXLE R1,R3,D(B)` | Branch on Index Low or Equal |
+| `ICM R1,M3,D(B)` | Insert Character under Mask |
+| `STCM R1,M3,D(B)` | Store Characters under Mask |
+| `CLM R1,M3,D(B)` | Compare Logical under Mask |
+| `CS R1,R3,D(B)` | Compare and Swap |
+| `CDS R1,R3,D(B)` | Compare Double and Swap |
 
 ### SI Format (Storage-Immediate)
 
@@ -413,8 +427,20 @@ The listing shows:
 | `PACK D1(L1,B1),D2(L2,B2)` | Pack |
 | `UNPK D1(L1,B1),D2(L2,B2)` | Unpack |
 | `TR D1(L,B1),D2(B2)` | Translate |
+| `TRT D1(L,B1),D2(B2)` | Translate and Test |
 | `ED D1(L,B1),D2(B2)` | Edit (format packed decimal) |
 | `EDMK D1(L,B1),D2(B2)` | Edit and Mark |
+| `AP D1(L1,B1),D2(L2,B2)` | Add Packed |
+| `SP D1(L1,B1),D2(L2,B2)` | Subtract Packed |
+| `MP D1(L1,B1),D2(L2,B2)` | Multiply Packed |
+| `DP D1(L1,B1),D2(L2,B2)` | Divide Packed |
+| `ZAP D1(L1,B1),D2(L2,B2)` | Zero and Add Packed |
+| `CP D1(L1,B1),D2(L2,B2)` | Compare Packed |
+| `SRP D1(L1,B1),D2(B2),I3` | Shift and Round Packed |
+| `MVO D1(L1,B1),D2(L2,B2)` | Move with Offset |
+| `MVN D1(L,B1),D2(B2)` | Move Numerics |
+| `MVZ D1(L,B1),D2(B2)` | Move Zones |
+| `MVCIN D1(L,B1),D2(B2)` | Move Inverse (reverse order) |
 
 ### Extended Branch Mnemonics
 
@@ -434,6 +460,19 @@ The listing shows:
 | `BNZ addr` | Branch if Not Zero | 7 |
 | `BO addr` | Branch if Overflow | 1 |
 | `NOP addr` | No Operation | 0 |
+
+## Unsupported Instructions
+
+The following S/360 instruction categories are not implemented. They are not needed for educational programs or ASSIST-compatible code.
+
+### Floating-Point Instructions (Not Implemented)
+`LE`, `LER`, `LD`, `LDR`, `STE`, `STD`, `AE`, `AER`, `AD`, `ADR`, `SE`, `SER`, `SD`, `SDR`, `ME`, `MER`, `MD`, `MDR`, `DE`, `DER`, `DD`, `DDR`, `CE`, `CER`, `CD`, `CDR`, `AW`, `AWR`, `AU`, `AUR`, `SW`, `SWR`, `SU`, `SUR`, `HDR`, `HER`, `LTER`, `LTDR`, `LCER`, `LCDR`, `LNER`, `LNDR`, `LPER`, `LPDR`, `MXD`, `MXDR`, `MXR`
+
+### I/O Instructions (Privileged - Not Implemented)
+`SIO`, `TIO`, `HIO`, `TCH`
+
+### System Control Instructions (Privileged - Not Implemented)
+`SSM`, `LPSW`, `SPM`, `ISK`, `SSK`, `RDD`, `WRD`, `DIAG`
 
 ## Assembler Directives
 
