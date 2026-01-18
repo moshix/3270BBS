@@ -822,7 +822,7 @@ RUN                   Run again from clean state
 
 - [IBM System/360 Principles of Operation (A22-6821-0)](https://bitsavers.org/pdf/ibm/360/princOps/A22-6821-0_360PrincOps.pdf) - Complete instruction set reference
 - [ASSIST Introductory Assembler User's Manual](https://faculty.cs.niu.edu/~byrnes/csci360/ho/asusergd.shtml#part1s4) - Original ASSIST documentation by John R. Mashey, Pennsylvania State University
-- IBM High Level Assembler Language Reference
+- [IBM High Level Assembler Language Reference](https://public.dhe.ibm.com/software/websphere/awdtools/hlasm/S8164JEA.pdf) - An introduction
 
 ---
 
