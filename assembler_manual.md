@@ -1,8 +1,8 @@
-# TIMESHARING ASSEMBLER V1.0.1 Manual
+# TIMESHARING ASSEMBLER Manual
 
 ## Overview
 
-The TIMESHARING ASSEMBLER V1.0.1 provides a complete environment for writing, assembling, and executing IBM System/360 assembly language programs. It supports teh core S/360 instrction set and ASSIST I/O macros for simplified input/output operations. It's primarily a learning tool. And it's still experimeental, so report any issues to the developr. 
+The TIMESHARING ASSEMBLER provides a complete environment for writing, assembling, and executing IBM System/360 assembly language programs. It supports teh core S/360 instrction set and ASSIST I/O macros for simplified input/output operations. It's primarily a learning tool. And it's still experimeental, so report any issues to the developr. 
 
 ## Getting Started
 
@@ -256,7 +256,7 @@ OUTLINE  DS    CL12
 When you run teh `CHECK` command, the assembler produces a listing file showing object code, addresses, and source. Here is a sample from the N-Queens solver:
 
 ```
-  TIMESHARING S/360 ASSEMBLER v1.0.1 - NQUEENS
+  TIMESHARING S/360 ASSEMBLER v1.1.0 - NQUEENS
   Generated: 2026-01-17 13:02:12
 
 
@@ -790,4 +790,4 @@ Listing files: `.list`
 
 ---
 
-*Copyright 2025 by moshix - TIMESHARING ASSEMBLER V1.0.1*
+*Copyright 2025 by moshix - TIMESHARING ASSEMBLER 
