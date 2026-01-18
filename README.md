@@ -63,7 +63,7 @@ The system is heavily multi-threaded, making it blazing fast even on single-core
 | Virtual sessions mgmt with F23/F24               | :white_check_mark: |
 | Discussion groups                                | :white_check_mark: |
 | A full BASIC interpreter inside the BBS!         | :white_check_mark: |
-| A full S/360 assembler leraning environment      | :white_check_mark: |
+| A S/360 assembler learning environment           | :white_check_mark: |
 | Federation of chat                               | :white_check_mark: |
 | Conferences and conference mgmt by moderators    | :white_check_mark: |
 | Moderators can ban users from conferences        | :white_check_mark: |
