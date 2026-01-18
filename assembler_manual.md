@@ -257,7 +257,7 @@ OUTLINE  DS    CL12
 When you run teh `CHECK` command, the assembler produces a listing file showing object code, addresses, and source. Here is a sample from the N-Queens solver:
 
 ```
-  TIMESHARING S/360 ASSEMBLER v1.1.0 - NQUEENS
+  TIMESHARING S/360 ASSEMBLER v1.2.0 - NQUEENS
   Generated: 2026-01-17 13:02:12
 
 
