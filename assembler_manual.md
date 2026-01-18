@@ -19,6 +19,7 @@ Acces the assembler from the Extended Menu by selecting option **A** (or use sho
 | `LIST` | Display program source code |
 | `RUN` | Assemble and execute program |
 | `CHECK` | Syntax check and generate listing |
+| `RESET` | Reset CPU registers, PSW, and memory to pristine state |
 | `BYE` / `EXIT` | Return to menu |
 
 ### Debugging Commands
@@ -768,6 +769,26 @@ Listing files: `.list`
 6. Use CHECK command to validate before RUN
 7. Use XDUMP to debug memory contents
 8. First byte of XPRNT output is carriage control (use space for single spacing)
+9. Use RESET to clear CPU state between runs if you need a pristine environment
+
+### RESET vs NEW
+
+| Command | Clears Source | Clears Registers | Clears Memory | Resets Limits |
+|---------|---------------|------------------|---------------|---------------|
+| `NEW` | Yes | Yes | Yes | Yes |
+| `RESET` | No | Yes | Yes | Yes |
+
+Use `RESET` when you want to re-run the same program with a clean CPU state (all registers zeroed, PSW cleared, memory initialized) without reloading the source. Use `NEW` when you want to start with a completely blank slate.
+
+Example workflow:
+```
+LOAD MYPROG           Load program
+RUN                   Execute
+REGS                  Check registers after execution
+RESET                 Reset CPU to pristine state
+REGS                  Verify all registers are zeroed
+RUN                   Run again from clean state
+```
 
 ## Error Messages
 
