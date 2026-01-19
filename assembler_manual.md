@@ -4,7 +4,7 @@
 
 The TIMESHARING ASSEMBLER provides a complete environment for writing, assembling, and executing IBM System/360 assembly language programs. It supports teh core S/360 instrction set and ASSIST I/O macros for simplified input/output operations. It's primarily a learning tool. And it's still experimeental, so report any issues to the developr. 
 
-TTIMESHARING ASSEMBLER does not include any code from the ASSIST assembler of fame. Rather, it is compatible with the macro library of ASSIST assembler simply because it makes it so much easier for the learning assembly developer to focus on the S/360 instructions rather than the learning the vast MVS or z/OS MACLIB. 
+TIMESHARING ASSEMBLER does not include any code from the ASSIST assembler of fame. Rather, it is compatible with the macro library of ASSIST assembler simply because it makes it so much easier for the learning assembly developer to focus on the S/360 instructions rather than the learning the vast MVS or z/OS MACLIB. 
 
 
 ## Getting Started
@@ -64,6 +64,15 @@ DATA     DS    ...                Data definitions
          END   PROGNAME           End of program
 ```
 
+### Source Code Format (S/360 Card Conventions)
+
+The assembler follows traditional S/360 card format conventions:
+
+- **Columns 1-71**: Active source code area
+- **Column 72**: ⚠️  Continuation character - any non-blank character in column 72 indicates the statement continues on the next line
+- **Columns 73-80**: Sequence numbers (ignored by the assembler)
+
+
 ## Example: Simple Test Program
 
 This minimal program demonstrates basic program structure:
@@ -104,22 +113,22 @@ R15      EQU   15
 *-----------------------------------------------------------------
 * DATA AREA
 *-----------------------------------------------------------------
-         DS    0F
-NUM1     DC    F'25'
-NUM2     DC    F'17'
-RESULT   DS    F
+         DS 0F
+NUM1     DC F'25'
+NUM2     DC F'17'
+RESULT   DS F
 *
 * MESSAGES
-BANNER1  DC    CL50'=================================================='
-BANNER2  DC    CL50'        WELCOME TO S/360 ASSEMBLER!              '
-BANNER3  DC    CL50'=================================================='
-MSG1     DC    CL40' THIS IS YOUR FIRST ASSEMBLER PROGRAM  '
-MSG2     DC    CL40' IT DEMONSTRATES:                      '
-MSG3     DC    CL40'   - PRINTING AND ARITHMETIC           '
-MATH1    DC    CL40' SIMPLE ARITHMETIC: 25 + 17 =          '
-OUTMSG   DC    CL12' RESULT:    '
-GOODBYE  DC    CL50' THANK YOU FOR TRYING THE ASSEMBLER! GOODBYE!'
-BLANK    DC    CL1' '
+BANNER1  DC CL50'=================================================='
+BANNER2  DC CL50'        WELCOME TO S/360 ASSEMBLER!              '
+BANNER3  DC CL50'=================================================='
+MSG1     DC CL40' THIS IS YOUR FIRST ASSEMBLER PROGRAM  '
+MSG2     DC CL40' IT DEMONSTRATES:                      '
+MSG3     DC CL40'   - PRINTING AND ARITHMETIC           '
+MATH1    DC CL40' SIMPLE ARITHMETIC: 25 + 17 =          '
+OUTMSG   DC CL12' RESULT:    '
+GOODBYE  DC CL50' THANK YOU FOR TRYING THE ASSEMBLER! GOODBYE!'
+BLANK    DC CL1' '
 *
 * OUTPUT BUFFER FOR XDECO
 OUTLINE  DS    CL12
@@ -262,7 +271,7 @@ OUTLINE  DS    CL12
 When you run teh `CHECK` command, the assembler produces a listing file showing object code, addresses, and source. Here is a sample from the N-Queens solver:
 
 ```
-  TIMESHARING S/360 ASSEMBLER v1.2.0 - NQUEENS
+  TIMESHARING S/360 ASSEMBLER v1.5.0 - NQUEENS
   Generated: 2026-01-17 13:02:12
 
 
