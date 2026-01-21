@@ -4,7 +4,7 @@
 
 The TIMESHARING ASSEMBLER provides a complete environment for writing, assembling, and executing IBM System/360 assembly language programs. It supports teh core S/360 instrction set and ASSIST I/O macros for simplified input/output operations. It's primarily a learning tool. And it's still experimeental, so report any issues to the developr. 
 
-TTIMESHARING ASSEMBLER does not include any code from the ASSIST assembler of fame. Rather, it is compatible with the macro library of ASSIST assembler simply because it makes it so much easier for the learning assembly developer to focus on the S/360 instructions rather than the learning the vast MVS or z/OS MACLIB. 
+TIMESHARING ASSEMBLER does not include any code from the ASSIST assembler of fame. Rather, it is compatible with the macro library of ASSIST assembler simply because it makes it so much easier for the learning assembly developer to focus on the S/360 instructions rather than the learning the vast MVS or z/OS MACLIB. 
 
 
 ## Getting Started
