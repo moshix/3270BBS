@@ -4,7 +4,7 @@
 
 The TIMESHARING ASSEMBLER provides a complete environment for writing, assembling, and executing IBM System/360 assembly language programs. It supports teh core S/360 instrction set and ASSIST I/O macros for simplified input/output operations. It's primarily a learning tool. And it's still experimeental, so report any issues to the developr. 
 
-TIMESHARING ASSEMBLER does not include any code from the ASSIST assembler of fame. Rather, it is compatible with the macro library of ASSIST assembler simply because it makes it so much easier for the learning assembly developer to focus on the S/360 instructions rather than the learning the vast MVS or z/OS MACLIB. 
+TTIMESHARING ASSEMBLER does not include any code from the ASSIST assembler of fame. Rather, it is compatible with the macro library of ASSIST assembler simply because it makes it so much easier for the learning assembly developer to focus on the S/360 instructions rather than the learning the vast MVS or z/OS MACLIB. 
 
 
 ## Getting Started
@@ -32,14 +32,56 @@ Acces the assembler from the Extended Menu by selecting option **A** (or use sho
 | Command | Description |
 |---------|-------------|
 | `REGS` | Display CPU registers |
-| `DUMP addr [len]` | Dump memory contents |
+| `DUMP [addr] [len]` | Dump memory contents |
 | `SYMBOLS` | Display symbol table |
+
+#### DUMP Command
+
+The `DUMP` command displays memory contents in hexadecimal and character format.
+
+**Syntax:** `DUMP [address] [length]`
+
+- **No arguments**: Dumps the entire program starting from the program's start address
+- **address**: Hexadecimal address to start dumping from
+- **length**: Number of bytes to dump (decimal)
+
+**Examples:**
+```
+DUMP              Dump entire program
+DUMP 100          Dump from address 0x100, full program length
+DUMP 0 256        Dump 256 bytes starting at address 0
+DUMP 48 64        Dump 64 bytes starting at address 0x48
+```
+
+**Output format:** Two groups of 8 bytes each with character representation:
+```
+000048: 90 EC D0 0C 50 D0 F0 04  50 F0 D0 08 18 DF 1B 00  |....P... P.......|
+```
+
+**Paging:** For large dumps, results are displayed one page at a time:
+- Press **ENTER** to see the next page
+- Press **PF3** to stop and return to READY
+
+### Function Keys
+
+| Key | Description |
+|-----|-------------|
+| `PA1` / `PA2` | Interrupt program execution during XREAD or XPRNT |
+| `CLEAR` | Clear screen and stop program |
+| `ENTER` | Continue paged output / Submit input |
+| `PF3` | Stop paged output |
+
+> **Tip:** If your program enters an infinite loop or you want to stop it early, press **PA1** or **PA2** while the program is waiting for input (XREAD) or producing output (XPRNT). The program will be interrupted and a register dump will be displayed.
 
 ### File Management
 
 | Command | Description |
 |---------|-------------|
-| `FILES` | List all available programs |
+| `FILES` | List your files and community programs |
+| `FILES pattern` | List files matching wildcard pattern (* and ?) |
+| `FILES /W` | Wide format: two columns, no timestamps |
+| `FILES /U user` | List shared files from another user |
+| `FILES /C` | List only community files |
 | `FLIST` | List your programs only |
 | `BROWSE` | Open file browser |
 | `ERASE name` | Delete a program file |
@@ -82,7 +124,7 @@ This minimal program demonstrates basic program structure:
 *        HELLO WORLD - SIMPLE INTRODUCTION PROGRAM              *
 *        S/360 ASSEMBLER FOR TSU TIMESHARING                    *
 *        DEMONSTRATES BASIC OUTPUT AND PROGRAM STRUCTURE        *
-*        COPYRIGHT 2025 MOSHIX - ALL RIGHTS RESERVED            *
+*        COPYRIGHT 2026 MOSHIX - ALL RIGHTS RESERVED            *
 *****************************************************************
 HELLO    CSECT
          USING HELLO,R15
@@ -145,7 +187,7 @@ This program demonstrates user input, string handling, and arithmetic:
 *        HELLO WORLD - SIMPLE INTRODUCTION PROGRAM              *
 *        S/360 ASSEMBLER FOR TSU TIMESHARING                    *
 *        DEMONSTRATES INPUT, OUTPUT, AND STRING HANDLING        *
-*        COPYRIGHT 2025 MOSHIX - ALL RIGHTS RESERVED            *
+*        COPYRIGHT 2026 MOSHIX - ALL RIGHTS RESERVED            *
 *****************************************************************
 HELLO    CSECT
          USING HELLO,R15
@@ -271,7 +313,7 @@ OUTLINE  DS    CL12
 When you run teh `CHECK` command, the assembler produces a listing file showing object code, addresses, and source. Here is a sample from the N-Queens solver:
 
 ```
-  TIMESHARING S/360 ASSEMBLER v1.5.0 - NQUEENS
+  TIMESHARING S/360 ASSEMBLER v1.2.0 - NQUEENS
   Generated: 2026-01-17 13:02:12
 
 
@@ -281,7 +323,7 @@ LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                 NQUEENS
                                     2  *        N-QUEENS SOLVER - ITERATIV
                                     3  *        S/360 ASSEMBLER FOR ASSIST
                                     4  *        FINDS ALL SOLUTIONS FOR N 
-                                    5  *        COPYRIGHT 2025 MOSHIX - AL
+                                    5  *        COPYRIGHT 2026 MOSHIX - AL
                                     6  ***********************************
 00000                               7  NQUEENS  CSECT
                                     8           USING NQUEENS,R15
@@ -822,6 +864,26 @@ Listing files: `.list`
 
 **Note**: You cannot save programs with a `_` prefix in your private area (reserved for community files).
 
+## File Sharing
+
+### Shared Files (% Prefix)
+
+Files saved with a `%` prefix (e.g., `%example.asm`) are **shared files** that other users can access:
+
+- **Save a shared file**: `SAVE %myshared` - saves as `%myshared.asm` in your directory
+- **Load from another user**: `LOAD otheruser/%myshared.asm`
+- **List another user's shared files**: `FILES /U otheruser`
+
+Only files with the `%` prefix are visible to other users. Regular files remain private.
+
+### File Prefix Summary
+
+| Prefix | Meaning | Who Can Access |
+|--------|---------|----------------|
+| (none) | Private file | Only you |
+| `%` | Shared file | Anyone (read-only) |
+| `_` | Community file | Everyone (admin-managed) |
+
 ## Tips
 
 1. Always establish addressability with USING
@@ -874,4 +936,4 @@ RUN                   Run again from clean state
 
 ---
 
-*Copyright 2025 by moshix - TIMESHARING ASSEMBLER 
+*Copyright 2026 by moshix - TIMESHARING ASSEMBLER 
