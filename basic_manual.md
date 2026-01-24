@@ -14,7 +14,7 @@ As of version 2.3.0 of BASIC/3270BBS, programs can be traditional line numbered 
 From the Extended Menu, press **B** to enter BASIC/3270BBS . You'll see:
 
 ```
-      TIMESHARING BASIC/3270BBS V2.7.1
+      TIMESHARING BASIC/3270BBS V2.8.0
 TYPE HELP FOR COMMANDS, BYE TO EXIT
 READY
 >
@@ -1726,4 +1726,22 @@ BBS DATA:  $ChatMessage(n) $Mail(n) $UserInfo $TermInfo $Topic(n) $Post(topic_id
 
 ---
 
-*TIMESHARING BASIC/3270BBS v2.7.1 - Happy coding!* 🚀
+## 📋 Version History
+
+### Version 2.8.0
+
+**Syntax Checker Improvements:**
+
+- **Fixed OPEN statement with variable filenames**: The syntax checker now correctly handles OPEN statements where the filename is a variable (e.g., `OPEN FILENAME$ FOR INPUT AS #1`). Previously, this would incorrectly report "EXPECTED FOR AFTER FILENAME".
+
+- **Fixed associative array assignments**: The syntax checker now properly validates associative array assignments using curly brace syntax (e.g., `IDX{KEY$} = "value"`). Previously, this would report "EXPECTED =".
+
+- **FN is no longer a reserved keyword**: You can now use `FN` as a variable name (though this is not recommended). This fixes the "UNKNOWN STATEMENT: FN" error when using `FN` as a loop variable or in assignments like `FN = 1`. The `DEF FN` syntax continues to work correctly.
+
+**Note for Programmers:**
+- While `FN` can now be used as a variable name, it's strongly recommended to avoid this practice as it may cause confusion with user-defined functions (`DEF FN`).
+- The recommended pattern for user-defined functions remains: `DEF FNX(param) = expression`
+
+---
+
+*TIMESHARING BASIC/3270BBS v2.8.0 - Happy coding!* 🚀
