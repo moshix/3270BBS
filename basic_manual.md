@@ -993,8 +993,7 @@ When the chained program ends (via END), control returns to the calling program 
 50 END
 ```
 
-**Limits:**
-- Total COMMON data limited to 1024 bytes
+**Notes:**
 - Programs must exist in your directory or community folder
 - COMMON declarations must appear before CHAIN is executed
 
