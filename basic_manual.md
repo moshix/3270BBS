@@ -14,7 +14,7 @@ As of version 2.3.0 of BASIC/3270BBS, programs can be traditional line numbered 
 From the Extended Menu, press **B** to enter BASIC/3270BBS . You'll see:
 
 ```
-      TIMESHARING BASIC/3270BBS V2.8.0
+      TIMESHARING BASIC/3270BBS V2.8.1
 TYPE HELP FOR COMMANDS, BYE TO EXIT
 READY
 >
@@ -1122,7 +1122,7 @@ START:
 | `?FILE NOT FOUND` | File doesn't exist (INPUT mode) |
 | `?FILE ALREADY OPEN` | File handle already in use |
 | `?BAD FILE NUMBER` | Invalid handle (not 1-4) or not open |
-| `?FILE SIZE LIMIT EXCEEDED` | Write would exceed 10KB |
+| `?FILE SIZE LIMIT EXCEEDED` | Write would exceed 256KB |
 | `?ILLEGAL FILE NAME` | Invalid characters or missing .dat |
 | `?INPUT PAST END` | Attempted read after EOF |
 
@@ -1728,6 +1728,14 @@ BBS DATA:  $ChatMessage(n) $Mail(n) $UserInfo $TermInfo $Topic(n) $Post(topic_id
 
 ## 📋 Version History
 
+### Version 2.8.1
+
+**Syntax Checker Fix:**
+
+- **Fixed whole-array assignment syntax**: The syntax checker now correctly handles whole-array assignment using empty braces (e.g., `U{} = $UserInfo`). Previously, this would incorrectly report "EXPECTED EXPRESSION" because the checker expected a key inside the braces.
+
+---
+
 ### Version 2.8.0
 
 **Syntax Checker Improvements:**
@@ -1744,4 +1752,4 @@ BBS DATA:  $ChatMessage(n) $Mail(n) $UserInfo $TermInfo $Topic(n) $Post(topic_id
 
 ---
 
-*TIMESHARING BASIC/3270BBS v2.8.0 - Happy coding!* 🚀
+*TIMESHARING BASIC/3270BBS v2.8.1 - Happy coding!* 🚀
