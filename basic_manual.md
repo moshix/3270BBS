@@ -14,7 +14,7 @@ As of version 2.3.0 of BASIC/3270BBS, programs can be traditional line numbered 
 From the Extended Menu, press **B** to enter BASIC/3270BBS . You'll see:
 
 ```
-      TIMESHARING BASIC/3270BBS V2.8.1
+      TIMESHARING BASIC/3270BBS V2.9.0
 TYPE HELP FOR COMMANDS, BYE TO EXIT
 READY
 >
@@ -1127,6 +1127,127 @@ START:
 
 ---
 
+## Indexed Files (ISAM)
+
+Version 2.9.0 introduces indexed file support using associative arrays as records. This provides random access by key or record number, similar to VSAM/ISAM on mainframes.
+
+### Opening an Indexed File
+
+Use the `INDEXED` mode with a key field:
+
+```basic
+DIM C{}
+OPEN "contacts.dat" FOR INDEXED AS #1 KEY = "id"
+```
+
+The key field specifies which field in your associative array serves as the primary key.
+
+### Writing Records with PUT
+
+Store an associative array as a record:
+
+```basic
+DIM C{}
+OPEN "contacts.dat" FOR INDEXED AS #1 KEY = "id"
+C{"id"} = "001"
+C{"name"} = "John Smith"
+C{"city"} = "New York"
+PUT #1, C{}
+CLOSE #1
+```
+
+If a record with the same key exists, it is updated. Otherwise, a new record is added.
+
+### Reading Records with GET
+
+Retrieve records by key, record number, or sequentially:
+
+**By Key:**
+```basic
+DIM C{}
+OPEN "contacts.dat" FOR INDEXED AS #1 KEY = "id"
+GET #1, C{}, KEY = "001"
+IF FOUND(1) THEN
+    PRINT "Name: "; C{"name"}
+ELSE
+    PRINT "Not found"
+ENDIF
+CLOSE #1
+```
+
+**By Record Number:**
+```basic
+GET #1, C{}, REC = 1
+```
+
+**Sequential Access:**
+```basic
+RESET #1
+WHILE NOT EOF(1)
+    GET #1, C{}, NEXT
+    IF FOUND(1) THEN
+        PRINT C{"id"}; " - "; C{"name"}
+    ENDIF
+WEND
+```
+
+### Deleting Records
+
+Delete by key or record number:
+
+```basic
+DELETE #1, KEY = "001"
+DELETE #1, REC = 2
+```
+
+### Status Functions
+
+| Function | Description |
+|----------|-------------|
+| `FOUND(n)` | Returns 1 if last GET found a record |
+| `DELETED(n)` | Returns 1 if current record is deleted |
+| `EOF(n)` | Returns 1 if at end of file |
+| `RESET #n` | Rewind file for sequential reading |
+
+### Complete Example (Label-Based)
+
+```basic
+MAIN:
+    DIM CONTACT{}
+    OPEN "rolodex.dat" FOR INDEXED AS #1 KEY = "id"
+    GOSUB ADDCONTACT
+    GOSUB LISTALL
+    CLOSE #1
+    END
+
+ADDCONTACT:
+    CONTACT{"id"} = "C001"
+    CONTACT{"name"} = "Alice"
+    CONTACT{"phone"} = "555-1234"
+    PUT #1, CONTACT{}
+    RETURN
+
+LISTALL:
+    RESET #1
+    WHILE NOT EOF(1)
+        GET #1, CONTACT{}, NEXT
+        IF FOUND(1) THEN
+            PRINT CONTACT{"name"}; ": "; CONTACT{"phone"}
+        ENDIF
+    WEND
+    RETURN
+```
+
+### Error Messages for Indexed Files
+
+| Error | Description |
+|-------|-------------|
+| `?FILE NOT OPENED FOR INDEXED` | Using PUT/GET on non-indexed file |
+| `?ARRAY NOT DEFINED` | Associative array not declared with DIM |
+| `?KEY FIELD NOT SET` | PUT without setting the key field |
+
+---
+
 ## 🟥 3270BBS Data Access
 
 Access live BBS data direcly from BASIC!
@@ -1708,6 +1829,12 @@ FILE I/O:  OPEN "file.dat" FOR INPUT|OUTPUT|APPEND AS #n
            PRINT #n, expression   INPUT #n, variable   CLOSE #n
            EOF(n) - Returns 1 if at end of file
 
+INDEXED:   OPEN "file.dat" FOR INDEXED AS #n KEY = "field"
+           PUT #n, array{}           GET #n, array{}, KEY = expr
+           GET #n, array{}, REC = n  GET #n, array{}, NEXT
+           DELETE #n, KEY = expr     DELETE #n, REC = n
+           RESET #n  FOUND(n)  DELETED(n)
+
 CHAINING:  COMMON var1, var2      ' Declare shared variables
            CHAIN "program"        ' Call another program
 
@@ -1726,6 +1853,25 @@ BBS DATA:  $ChatMessage(n) $Mail(n) $UserInfo $TermInfo $Topic(n) $Post(topic_id
 ---
 
 ## 📋 Version History
+
+### Version 2.9.0
+
+**New Feature: Indexed Files (ISAM)**
+
+- **OPEN FOR INDEXED**: Open data files for random access by key
+- **PUT #n, array{}**: Write associative array as a record
+- **GET #n, array{}, KEY=expr**: Read record by key value
+- **GET #n, array{}, REC=n**: Read record by number
+- **GET #n, array{}, NEXT**: Sequential read
+- **DELETE #n, KEY=expr**: Delete record by key
+- **DELETE #n, REC=n**: Delete record by number
+- **RESET #n**: Rewind file for sequential read
+- **FOUND(n)**: Check if last GET found a record
+- **DELETED(n)**: Check if current record is deleted
+
+This feature enables database-like operations using associative arrays as records, providing a familiar ISAM/VSAM experience.
+
+---
 
 ### Version 2.8.1
 
@@ -1751,4 +1897,4 @@ BBS DATA:  $ChatMessage(n) $Mail(n) $UserInfo $TermInfo $Topic(n) $Post(topic_id
 
 ---
 
-*TIMESHARING BASIC/3270BBS v2.8.1 - Happy coding!* 🚀
+*TIMESHARING BASIC/3270BBS v2.9.0 - Happy coding!* 🚀
