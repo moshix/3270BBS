@@ -392,4 +392,4 @@ By using this software, you agree to abide by any applicable local, national, or
 
 ---
 
-**Moshix, Jan 17, 2026 - Milan**
+**Moshix, Feb 2, 2026 - Cortina**
