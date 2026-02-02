@@ -1110,8 +1110,7 @@ START:
 ```
 
 **Limits and Security:**
-- Maximum file size: 10KB per file
-- File names must end in `.dat`
+- File names must end in `.dat` or in '.idx'
 - Files stored in your BASIC directory only
 - No path separators allowed in filenames
 
@@ -1852,7 +1851,77 @@ BBS DATA:  $ChatMessage(n) $Mail(n) $UserInfo $TermInfo $Topic(n) $Post(topic_id
 
 ---
 
-## 📋 Version History
+## Limitations
+
+This section documents the built-in limits of the BASIC interpreter.
+
+### Source Code Limits
+
+| Limit | Value | Description |
+|-------|-------|-------------|
+| Line length | 255 characters | Maximum characters per source line |
+| Program size | 256 KB | Maximum file size for BASIC programs |
+
+### Array Limits
+
+| Limit | Value | Description |
+|-------|-------|-------------|
+| Dimension size | 10,000 | Maximum size per array dimension |
+| Total elements | 100,000,000 | Maximum for 2D array (10000 x 10000) |
+| Associative arrays | Unlimited | Limited only by available memory |
+
+### Execution Limits
+
+| Limit | Value | Description |
+|-------|-------|-------------|
+| Iterations | 55,000,000 | Maximum loop iterations before timeout |
+| Execution time | 15 seconds | Maximum runtime (excluding SLEEP) |
+| Sleep credit | 15% | Percentage of used resources credited back when SLEEP is called |
+
+Programs that call `SLEEP` with duration >= 0.1 seconds receive credit that extends both iteration and time limits.
+
+### File I/O Limits
+
+| Limit | Value | Description |
+|-------|-------|-------------|
+| Open files | 4 | Maximum concurrent open files (#1 to #4) |
+| File size | 256 KB | Maximum size for data files |
+| Output buffer | 1,000 lines | Maximum lines in screen output buffer |
+
+### SLEEP Statement
+
+| Limit | Value | Description |
+|-------|-------|-------------|
+| Minimum | 0.1 seconds | Shortest allowed sleep duration |
+| Maximum | 255 seconds | Longest allowed sleep duration |
+
+### Control Structure Nesting
+
+The following control structures have no explicit depth limit and are limited only by available memory:
+
+- **GOSUB/RETURN** - Subroutine call stack
+- **FOR/NEXT** - Loop nesting
+- **WHILE/WEND** - Loop nesting
+- **IF/END IF** - Conditional block nesting
+- **SELECT CASE/END SELECT** - Case block nesting
+- **CHAIN** - Program chaining stack
+
+### Variable Names
+
+- Must start with a letter (A-Z)
+- Can contain letters and digits
+- String variables end with `$` (e.g., `NAME$`)
+- Case insensitive (`count` and `COUNT` are the same variable)
+- Reserved keywords cannot be used as variable names
+
+### String Limits
+
+- Strings are dynamically sized with no fixed maximum length
+- String functions like `SPACE$()` and `STRING$()` cap repetition at 255 characters
+
+---
+
+## Version History
 
 ### Version 2.9.0
 
