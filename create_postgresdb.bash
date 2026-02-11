@@ -202,7 +202,8 @@ CREATE TABLE users (
     confirm_delete INTEGER DEFAULT 1 CHECK (confirm_delete IN (0, 1)),
     newsgroup_data TEXT DEFAULT '{}',
     newsgroup_email_delivery TEXT DEFAULT 'no' CHECK (newsgroup_email_delivery IN ('yes', 'no')),
-    newsgroup_email_mode TEXT DEFAULT 'daily' CHECK (newsgroup_email_mode IN ('all', 'daily'))
+    newsgroup_email_mode TEXT DEFAULT 'daily' CHECK (newsgroup_email_mode IN ('all', 'daily')),
+    user_preferences TEXT DEFAULT '{}'
 );
 
 CREATE TABLE conferences (
