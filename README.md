@@ -153,7 +153,7 @@ assumes a sqlite3 database:
 
 ```
 # Server settings
-# (c) 2025 by Moshix. All rights reserved.
+# (c) 2026 by Moshix. All rights reserved.
 # bbs_name is the name of your BBS, up to 10 characters wide only!
 bbs_name=My3270BBS
 
