@@ -761,6 +761,15 @@ configure_integrations() {
     else
         print_info "Discord integration disabled"
     fi
+
+    # News API
+    print_subsection "News API (optional)"
+    print_hint "Used for market news in the stock quote terminal"
+    print_hint "Get a free key at https://newsapi.org"
+    ask_question "News API key (leave empty to skip)" "" news_api_key
+    if [ -n "$news_api_key" ]; then
+        print_success "News API configured"
+    fi
 }
 
 # ============================================================================
@@ -985,8 +994,7 @@ db_port=$db_port
 ENDCONFIG
     else
         cat >> "$output_file" << ENDCONFIG
-# Using SQLite3 (default)
-#db=pg
+db=sqlite3
 #db_user=
 #db_password=
 #db_name=
@@ -1167,7 +1175,7 @@ MOTD="$motd"
 # FTP SERVER
 # ============================================================================
 # FTP upload limit in KB
-FTP_limit=$ftp_limit
+FTP_limit=${ftp_limit:-40}
 FTP_port=${ftp_port:-2100}
 ENDCONFIG
     if [ "$start_ftpd" = "yes" ]; then
@@ -1214,6 +1222,17 @@ ENDCONFIG
 #discord_token=
 #discord_guild_id=
 show_discord_in_menu=no
+ENDCONFIG
+    fi
+
+    # News API key
+    if [ -n "$news_api_key" ]; then
+        cat >> "$output_file" << ENDCONFIG
+
+# ============================================================================
+# NEWS API
+# ============================================================================
+newsapikey=$news_api_key
 ENDCONFIG
     fi
 
