@@ -222,6 +222,21 @@ CREATE INDEX idx_conference_subscriptions_user ON conference_subscriptions(user_
 CREATE INDEX idx_conference_subscriptions_conference ON conference_subscriptions(conference_id);
 CREATE INDEX idx_conference_subscriptions_notifications ON conference_subscriptions(conference_id, notification_enabled);
 
+CREATE TABLE oneliners (
+    oneliner_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    ext1 TEXT DEFAULT '',
+    ext2 TEXT DEFAULT '',
+    ext3 INTEGER DEFAULT 0,
+    ext4 TEXT DEFAULT '{}',
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_oneliners_created_at ON oneliners(created_at DESC);
+CREATE INDEX idx_oneliners_user_id ON oneliners(user_id);
+
 -- Insert default General conference
 INSERT INTO conferences (conference_name, description)
 VALUES ('General', 'Default conference for general discussions');
