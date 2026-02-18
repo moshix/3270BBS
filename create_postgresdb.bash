@@ -342,6 +342,18 @@ CREATE TABLE conference_subscriptions (
     UNIQUE(user_id, conference_id)
 );
 
+CREATE TABLE oneliners (
+    oneliner_id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    ext1 TEXT DEFAULT '',
+    ext2 TEXT DEFAULT '',
+    ext3 INTEGER DEFAULT 0,
+    ext4 TEXT DEFAULT '{}',
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
 -- Create indexes for performance
 CREATE INDEX idx_chat_created_at ON chat(created_at);
 CREATE INDEX idx_chat_room_id ON chat(room_id);
@@ -357,6 +369,8 @@ CREATE INDEX idx_topics_created_at ON topics(created_at);
 CREATE INDEX idx_conference_subscriptions_user ON conference_subscriptions(user_id);
 CREATE INDEX idx_conference_subscriptions_conference ON conference_subscriptions(conference_id);
 CREATE INDEX idx_conference_subscriptions_notifications ON conference_subscriptions(conference_id, notification_enabled);
+CREATE INDEX idx_oneliners_created_at ON oneliners(created_at DESC);
+CREATE INDEX idx_oneliners_user_id ON oneliners(user_id);
 
 -- Insert initial admin user (admin/admin) - password hashed with SHA-256
 INSERT INTO users (username, password_hash, email, is_admin, is_moderator, karma, city, country, units, stocks, calendar_preferences)
