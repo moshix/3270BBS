@@ -358,7 +358,7 @@ sqlite3 tsu.db .dump > backup_$(date +%Y%m%d).sql
 
 ## Technical Implementation Details
 
-The application consists of roughly 60,000 lines of Go code. The most complex component is the real-time chat system, which is heavily multi-threaded. For implementation details, see [this documentation](https://github.com/moshix/BITNETServices/blob/master/forum3270_chat.md).
+The application consists of roughly 110,000 lines of Go code. The most complex component is the real-time chat system, which is heavily multi-threaded. For implementation details, see [this documentation](https://github.com/moshix/BITNETServices/blob/master/forum3270_chat.md).
 
 Built using the [go3270](https://github.com/racingmars/go3270) library by **racingmars**.
 
