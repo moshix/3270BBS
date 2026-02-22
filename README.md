@@ -67,7 +67,6 @@ The system is heavily multi-threaded, making it blazing fast even on single-core
 | Federation of chat                               | :white_check_mark: |
 | Conferences and conference mgmt by moderators    | :white_check_mark: |
 | Moderators can ban users from conferences        | :white_check_mark: |
-| I Like for topics                                | :white_check_mark: |
 | Messages                                         | :white_check_mark: |
 | Live Chat                                        | :white_check_mark: |
 | Private chat                                     | :white_check_mark: |
@@ -83,9 +82,6 @@ The system is heavily multi-threaded, making it blazing fast even on single-core
 | Web Server for notes, topics, sysadmin access    | :white_check_mark: |
 | Console                                          | :white_check_mark: |
 | SDSF activity panel                              | :white_check_mark: |
-| Updating clock with seeing eye and IBM logo      | :white_check_mark: |
-| Hot air balloon game                             | :white_check_mark: |
-| Blackjack game                                   | :white_check_mark: |
 | Wordle in English/Italian/German                 | :white_check_mark: |
 | TSO command line with several utilities          | :white_check_mark: |
 | Log viewer                                       | :white_check_mark: |
@@ -102,8 +98,6 @@ The system is heavily multi-threaded, making it blazing fast even on single-core
 | DELTAMON performance monitor                     | :white_check_mark: |
 | Doors to other 3270BBS communities               | :white_check_mark: |
 | Discord access to Mainframe Enthusiasts Channel  | :white_check_mark: |
-| The Matrix in the raw                            | :white_check_mark: |
-| Time skew detection compared to NTP              | :white_check_mark: |
 | User email verification during sign-up           | :white_check_mark: |
 | SHA256 password hashing for all accounts         | :white_check_mark: |
 | Account enumeration protection                   | :white_check_mark: |
