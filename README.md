@@ -278,17 +278,21 @@ Messages and topics support color tags (best placed on their own lines):
 
 **Editor Function Keys:**
 ```
+
 F2  = Spell checker
+F3  = Abandon edit session
 F4  = Delete current line
 F5  = Insert line below
 F6  = Insert line above
 F7  = Scroll up
 F8  = Scroll down
+F9  = Go to bottom of text
 F10 = Center current line
 F11 = Make centered box
+F12 = Save and exit
 F13 = Centered box until next empty row
-F14 = Abandon Edit unsaved
-F15 = Save and exit editor
+F14 = Go to first line of text
+F15 = Make left aligned box
 Save content with SAVE
 Exit editor unsaved with CANCEL
 ```
