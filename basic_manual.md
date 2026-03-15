@@ -14,7 +14,7 @@ As of version 2.3.0 of BASIC/3270BBS, programs can be traditional line numbered 
 From the Extended Menu, press **B** to enter BASIC/3270BBS . You'll see:
 
 ```
-      TIMESHARING BASIC/3270BBS V2.9.0
+      TIMESHARING BASIC/3270BBS V2.9.2
 TYPE HELP FOR COMMANDS, BYE TO EXIT
 READY
 >
@@ -46,10 +46,12 @@ READY
 |---------|-------------|
 | `SAVE "name"` | Save program to file |
 | `LOAD "name"` | Load program from file |
+| `RENAME old.bas new.bas` | Rename a .bas file (both must include .bas) |
 | `EDIT "name"` | Edit file in full-screen editor |
 | `EDIT` | Edit program in memory (no filename) |
 | `BROWSE` | Open file browser to select and edit files |
-| `ERASE "name"` | Delete program file (.bas or .list) |
+| `ERASE "name"` | Delete a single file (.bas, .list, .dat, .idx) |
+| `ERASE pattern` | Delete files matching wildcard (* and ?) |
 | `FILES` | List your files and community programs |
 | `FILES pattern` | List files matching wildcard pattern (* and ?) |
 | `FILES /W` | Wide format: two columns, no timestamps |
@@ -73,6 +75,15 @@ FILES test?.bas      test0.bas, test1.bas, testa.bas, etc.
 FLIST *.list         Your .list files only
 FILES *.bas /W       Wide format with wildcard filter
 ```
+
+**RENAME:** Both source and target must include the `.bas` extension to avoid conflicts with .list, .dat, and .idx files. Example: `RENAME oldprog.bas newprog.bas`
+
+**ERASE with wildcards:** When the argument contains `*` or `?`, ERASE deletes all matching files in your directory:
+- `*` matches zero or more characters
+- `?` matches exactly one character
+- Works with .bas, .list, .dat, .idx extensions
+- Example: `ERASE pi*.*` deletes all files starting with "pi" and any extension
+- Community files (names starting with `_`) cannot be erased
 
 **EDIT without a filename:** Opens the program currently in memory in the full-screen editor. This is useful when you've loaded a community program and want to modify it. When you save, it creates `UNTITLED.bas` in your directory.
 
@@ -246,7 +257,7 @@ The system includes a collection of shared example programs that all users can a
 - `FILES` - Shows both your files and available community programs
 - `FILES /W` - Wide format with two columns (no timestamps, saves screen space)
 - `LOAD "_example.bas"` - Load a community program
-- Community programs are **read-only** - you cannot EDIT or ERASE them
+- Community programs are **read-only** - you cannot EDIT or ERASE them (including wildcard ERASE)
 
 ### Shared User Files
 
@@ -1795,7 +1806,7 @@ AskAgain:
 ##  Quik Reference Card
 
 ```
-COMMANDS:  RUN LIST NEW SAVE LOAD EDIT BROWSE ERASE FILES FLIST RENUM DELETE HELP VARS BYE
+COMMANDS:  RUN LIST NEW SAVE LOAD RENAME EDIT BROWSE ERASE FILES FLIST RENUM DELETE HELP VARS BYE
 
 FILES:     FILES [pattern] [/W] [/C] [/U user]   FLIST [pattern] [/W]
            Wildcards: * (any chars), ? (single char)  e.g. FILES *.bas
@@ -1923,6 +1934,21 @@ The following control structures have no explicit depth limit and are limited on
 
 ## Version History
 
+### Version 2.9.2
+
+**New File Commands:**
+
+- **RENAME "old.bas" "new.bas"**: Rename a .bas file. Both filenames must include the .bas extension to avoid conflicts with .list, .dat, and .idx files.
+
+- **ERASE with wildcards**: ERASE now supports MS-DOS style wildcards for bulk deletion:
+  - `?` = single character placeholder
+  - `*` = wildcard (zero or more characters)
+  - Works with .bas, .list, .dat, .idx extensions
+  - Example: `ERASE pi*.*` deletes all files starting with "pi" and any extension
+  - Example: `ERASE a???.bas` deletes 4-character .bas files (a001.bas, abcd.bas, etc.)
+
+---
+
 ### Version 2.9.0
 
 **New Feature: Indexed Files (ISAM)**
@@ -1950,7 +1976,7 @@ This feature enables database-like operations using associative arrays as record
 
 ---
 
-### Version 2.8.0
+### Version 2.9.2
 
 **Syntax Checker Improvements:**
 
@@ -1966,4 +1992,4 @@ This feature enables database-like operations using associative arrays as record
 
 ---
 
-*TIMESHARING BASIC/3270BBS v2.9.0 - Happy coding!* 🚀
+*TIMESHARING BASIC/3270BBS v2.9.2 - Happy coding!* 🚀
