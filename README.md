@@ -36,12 +36,14 @@ Just to make it clear, this BBS need to be accessed with an **IBM 3270 terminal 
 
 The system is heavily multi-threaded, making it blazing fast even on single-core systems, though more cores improve performance. It runs perfectly on small servers like Raspberry Pi or basic VPS instances, and particularly loves Linux/s390x.
 
+There is a guided set-up which configures your BBS for your thru simple dialogues. 
+
 
 ## Requirements
 
-- Either **sqlite3** or **Postgresql** installed on your system
 - An IBM 3270 terminal emulator (c3270, x3270, or [Vista3270](https://www.tombrennansoftware.com/) or any other 3270 emulator) or a real iron 3270 terminal
 - Electrons delivered thru your power plug in the wall
+- No database, compilers etc. needed!
 
 ## Platform Support
 
@@ -111,17 +113,12 @@ The system is heavily multi-threaded, making it blazing fast even on single-core
 
 ## Installation
 
-Choose either the fast Docker method or DIY installation:
 
-### Docker Installation
 
-Use Harding's [dockerized 3270BBS](https://github.com/MortenHarding/docker-3270BBS)
-
-### Manual Installation
 
 1. Download the [binary for your platform](https://github.com/moshix/3270BBS/releases/tag/26.7) and **rename it to 3270bbs**
 
-2. **Run the create_tsudb.sh script** to create tsu.db with default users:
+2. **start the BBS with running the tsu binary** it will guide you thru configuration and then create 2 users:
    - `admin/admin` - Administrative account (change password immediately)
    - `noreply/noreply` - Internal system messages account
 
@@ -135,15 +132,9 @@ For installation questions, reach out to moshix on Forum3270.
 
 ## Configuration
 
-### Basic Configuration
+When you run the **tsu** command for the first time it will guide you thru a dialog to produce the **tsu.cnf** file for you.
 
-Either 
-1. Run the ./configure script and answer the questions which will create a syntactically correct tsu.cnf configuration file. That's the easiest option. 
-
-or...
-
-2. create a `tsu.cnf` file (required for startup). Here's an example configuration, which by default
-assumes a sqlite3 database:
+You can change it a later time with your favorite editor. Below we explain the main config options: 
 
 ```
 # Server settings
@@ -261,13 +252,13 @@ Configure the SSHD port in tsu.cnf. Users must be registered to use SSH access, 
 
 ### Federated Chat
 
-3270BBS instances can participate in federated worldwide chat. Operators must contact moshix for credentials and configuration. Good standing in Forum3270 is required.
+3270BBS instances can participate in federated worldwide chat, provided they have at least 50 registered users. Operators must contact moshix for credentials and configuration. Good standing in Forum3270 is required.
 
 ## Operation
 
 ### Content Editing
 
-3270BBS includes a built-in editor for Topics, Posts, Notes, marketplace items, and Messages. The editor features a spell checker enhanced with mainframe terminology (JCL, ABEND, etc.). 
+3270BBS includes a built-in editor for Topics, Posts, Notes, marketplace items, and Messages. The editor features a spell checker enhanced with mainframe terminology (JCL, ABEND, etc.).  There is also a built-in ISPF editor to edit BASIC and Assembler programs. 
 
 **We use ANSI code page 1047 as the standard code page in 3270BBS** This means we don't support foreign language character sets. 
 
@@ -311,7 +302,6 @@ The BBS is very stable and can run for months, but requires regular content mode
 - Users can delete their own accounts from the Edit Profile option (0) in main menu
 - Password recovery available via PF9 from logon panel
 - `insert_to_dictionary.bash` - Add words to spell checker dictionary
-- `import_calendar.sh` - Import .ics files to individual calendars
 
 **FTP/HTTP Access:**
 If enabled, users can upload/download notes directly, allowing external editing of longer content. Notes can be converted to posts with a single function key.
@@ -393,4 +383,4 @@ By using this software, you agree to abide by any applicable local, national, or
 
 ---
 
-**Moshix, Mar 1, 2026 - Cutchogue**
+**Moshix, April 1, 2026 - Cutchogue**
