@@ -38,6 +38,8 @@ The system is heavily multi-threaded, making it blazing fast even on single-core
 
 There is a guided set-up which configures your BBS for your thru simple dialogues. 
 
+It comes with it's own database code, so you don't need to install any database server. 
+
 
 ## Requirements
 
