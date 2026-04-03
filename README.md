@@ -84,7 +84,6 @@ It comes with it's own database code, so you don't need to install any database 
 | Sqlite3 and PostgreSQL support                   | :white_check_mark: |
 | FTP Server for notes access                      | :white_check_mark: |
 | Web Server for notes, topics, sysadmin access    | :white_check_mark: |
-| Console                                          | :white_check_mark: |
 | SDSF activity panel                              | :white_check_mark: |
 | Wordle in English/Italian/German                 | :white_check_mark: |
 | TSO command line with several utilities          | :white_check_mark: |
@@ -93,8 +92,6 @@ It comes with it's own database code, so you don't need to install any database 
 | FTPD server and HTTPD server                     | :white_check_mark: |
 | SMTP server to receive emails,spam filter        | :white_check_mark: |
 | Console view                                     | :white_check_mark: |
-| Forex updated table                              | :white_check_mark: |
-| Stocks quotron screen                            | :white_check_mark: |
 | All Seeing Eye from clock view                   | :white_check_mark: |
 | TLS and SSL support with certificates            | :white_check_mark: |
 | SSH access to chat and topics                    | :white_check_mark: |
@@ -104,8 +101,6 @@ It comes with it's own database code, so you don't need to install any database 
 | Discord access to Mainframe Enthusiasts Channel  | :white_check_mark: |
 | User email verification during sign-up           | :white_check_mark: |
 | SHA256 password hashing for all accounts         | :white_check_mark: |
-| Account enumeration protection                   | :white_check_mark: |
-| Regular security audits by outside firm          | :white_check_mark: |
 | No root privileges required                      | :white_check_mark: |
 | SysOp-definable, dynamic logon screen logo       | :white_check_mark: |
 | Support Sqlite3 and Postgres                     | :white_check_mark: |
@@ -385,4 +380,4 @@ By using this software, you agree to abide by any applicable local, national, or
 
 ---
 
-**Moshix, April 1, 2026 - Cutchogue**
+**Moshix, April 3, 2026 - Cutchogue**
