@@ -64,6 +64,7 @@ It comes with it's own database code, so you don't need to install any database 
 
 | Feature                                          | Included           |
 |--------------------------------------------------|--------------------|
+| Includes its own 3270 client in browser          | :white_check_mark: |
 | Virtual sessions mgmt with F23/F24               | :white_check_mark: |
 | Discussion groups                                | :white_check_mark: |
 | A full BASIC interpreter inside the BBS!         | :white_check_mark: |
