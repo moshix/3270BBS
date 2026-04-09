@@ -43,9 +43,12 @@ It comes with it's own database code, so you don't need to install any database 
 
 ## Requirements
 
-- An IBM 3270 terminal emulator (c3270, x3270, or [Vista3270](https://www.tombrennansoftware.com/) or any other 3270 emulator) or a real iron 3270 terminal
-- Electrons delivered thru your power plug in the wall
-- No database, compilers etc. needed!
+- No database is needed
+- No 3270 emulator is needed, web3270 is included in 3270BBS when it starts up
+- No compiler needed. 3270BBS is pre-compiled for your operating system
+
+You only need:
+- About 5 min of your time to get it up and running. 
 
 ## Platform Support
 
