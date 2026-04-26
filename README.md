@@ -104,7 +104,7 @@ You only need:
 | Doors to other 3270BBS communities               | :white_check_mark: |
 | Discord access to Mainframe Enthusiasts Channel  | :white_check_mark: |
 | User email verification during sign-up           | :white_check_mark: |
-| SHA256 password hashing for all accounts         | :white_check_mark: |
+| bcrypt passwords for all accounts                | :white_check_mark: |
 | No root privileges required                      | :white_check_mark: |
 | SysOp-definable, dynamic logon screen logo       | :white_check_mark: |
 | Support Sqlite3 and Postgres                     | :white_check_mark: |
@@ -384,4 +384,4 @@ By using this software, you agree to abide by any applicable local, national, or
 
 ---
 
-**Moshix, April 3, 2026 - Cutchogue**
+**Moshix, April 26, 2026 - Cutchogue**
