@@ -88,21 +88,17 @@ You only need:
 | Sqlite3 and PostgreSQL support                   | :white_check_mark: |
 | FTP Server for notes access                      | :white_check_mark: |
 | Web Server for notes, topics, sysadmin access    | :white_check_mark: |
-| SDSF activity panel                              | :white_check_mark: |
 | Wordle in English/Italian/German                 | :white_check_mark: |
 | TSO command line with several utilities          | :white_check_mark: |
 | Log viewer                                       | :white_check_mark: |
 | TLS and TN3270 listeners                         | :white_check_mark: |
 | FTPD server and HTTPD server                     | :white_check_mark: |
 | SMTP server to receive emails,spam filter        | :white_check_mark: |
-| Console view                                     | :white_check_mark: |
-| All Seeing Eye from clock view                   | :white_check_mark: |
 | TLS and SSL support with certificates            | :white_check_mark: |
 | SSH access to chat and topics                    | :white_check_mark: |
 | Screensaver to protect from burn-in              | :white_check_mark: |
 | DELTAMON performance monitor                     | :white_check_mark: |
 | Doors to other 3270BBS communities               | :white_check_mark: |
-| Discord access to Mainframe Enthusiasts Channel  | :white_check_mark: |
 | User email verification during sign-up           | :white_check_mark: |
 | bcrypt passwords for all accounts                | :white_check_mark: |
 | No root privileges required                      | :white_check_mark: |
