@@ -34,11 +34,11 @@ Just to make it clear, this BBS need to be accessed with an **IBM 3270 terminal 
 
 3270BBS is an extremely efficient bulletin board system designed for IBM 3270 terminals. It uses minimal resources - supporting many thousands of concurrent users. All data is stored in either an SQLite3 or a Postgres database, and after six months of heavy activity with hundreds of users and many hundreds of posted topics, the database remains under 50MB.
 
-The system is heavily multi-threaded, making it blazing fast even on single-core systems, though more cores improve performance. It runs perfectly on small servers like Raspberry Pi or basic VPS instances, and particularly loves Linux/s390x.
+The system is heavily multi-threaded, and highly performance-optmimized, making it blazing fast even on single-core systems, though more cores improve performance even further. It runs perfectly on small servers like Raspberry Pi or basic VPS instances, and particularly loves Linux/s390x.
 
-There is a guided set-up which configures your BBS for your thru simple dialogues. 
+There is a guided set-up which configuruation of your BBS, when you first start a fresh copy of 3270BBS. 
 
-It comes with it's own database code, so you don't need to install any database server. 
+It comes with a built-in database, so you don't need to install any database server, although it can also work with Postgres optionally.
 
 
 ## Requirements
