@@ -4,7 +4,7 @@
 
 This is the same code that runs [my Forum3270 BBS](https://www.moshix.tech:3270)
 
-Just to make it clear, this BBS need to be accessed with an **IBM 3270 terminal emulator**, not Putty, or telnet. A web 3270 emulator is included in 3270BBS.
+Just to make it clear, this BBS need to be accessed with an **IBM 3270 terminal emulator**, not Putty, or telnet. A web 3270 emulator is included in 3270BBS, and can be downloaded seperately [here](https://github.com/moshix/web3270)
 
 ## Table of Contents
 
@@ -380,4 +380,4 @@ By using this software, you agree to abide by any applicable local, national, or
 
 ---
 
-**Moshix, June 2026 - Dallas, TX**
+**Moshix, June 2026 - Taipeh**
