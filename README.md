@@ -1,6 +1,6 @@
 # A 3270 BBS
 
-<img src="mac3270.jpeg" width="500">
+<img src="mac3270.jpeg" width="400">
 
 This is the same code that runs [my Forum3270 BBS](https://www.moshix.tech:3270)
 
