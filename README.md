@@ -248,7 +248,15 @@ For secure TLS access, you'll need certificates specified in tsu.cnf with the `t
 
 ### Web access
 
-If you enable web access in tsu.cnf, then you users can log in over a browser to view Conferences and topics.
+If you enable web access in tsu.cnf, then you users can log in over a browser to view Conferences and topics.Here are the necessary config options to get web going:
+  
+```
+# web interface
+httpd_port=9000
+https_port=9443
+start_HTTPD=yes
+```
+
 
 <img src="Screenshot%202026-06-25%20at%2008.17.40.png" width="360">
 Only very few features of the BBS are available over the web. For the full experience, a 3270 terminal is needed. 
