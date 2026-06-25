@@ -115,15 +115,18 @@ You only need:
 
 1. Download the [binary for your platform](https://github.com/moshix/3270BBS/releases/tag/26.7) and **rename it to 3270bbs**
 
-2. **start the BBS with running the tsu binary** it will guide you thru configuration and then create 2 users:
-   - `admin/admin` - Administrative account (change password immediately)
-   - `noreply/noreply` - Internal system messages account
+2. **start the BBS with the provided start script** it will guide you thru configuration and will create the tsu.cnf configuration file for you.  It also  creates **3 users**:
+   - `admin/admin` - Administrative account change password immediately
+   - `noreply/noreply` - Internal system messages account change password immediately
+   - 'dmarc/dmarc' - Needed if you want to receive internet email change password immediately
 
 3. Edit the sample `tsu.greet` file (greeting for new users, max 80 characters wide)
 
-4. Start the BBS using the provided `start_bbs.bash` script (recommend logging output to a file)
+4. Start the BBS using again the provided `start_bbs.bash` script
+  
+5. Connect to either the included browser 3270 terminal (if you specified a port for it) or with a 3270 terminal emulator to the specified (during configuraiton) non-TLS or TLS port. You can look up again the ports in tsu.cnf  
 
-5. Announce your new BBS and consider submitting it to be listed in the Public Servers section
+6. Announce your new BBS and consider submitting it to be listed in the Public Servers section
 
 For installation questions, reach out to moshix on Forum3270.
 
