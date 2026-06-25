@@ -113,7 +113,7 @@ You only need:
 
 
 
-1. Download the [binary for your platform](https://github.com/moshix/3270BBS/releases/tag/26.7) and **rename it to 3270bbs**
+1. Download the [binary for your platform](https://github.com/moshix/3270BBS/releases/tag/26.7) and **rename it to tsu**
 
 2. **start the BBS with the provided start script** it will guide you thru configuration and will create the tsu.cnf configuration file for you.  It also  creates **3 users**:
    - `admin/admin` - Administrative account change password immediately
