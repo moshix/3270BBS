@@ -353,6 +353,9 @@ P TN3270TLS         - Stop the TLS listener
 S TN3270TLS         - Start the TLS listener
 P TN3270            - Stop the TN3270 listener
 S TN3270            - Start the TN3270 listener
+S FINGERD           - Start built-in finger daemon
+S SMTPD             - Start built-in email server
+S WEBSRV            - Start built-in web server
 
 C U=MOSHIX          - Terminate session of user MOSHIX
 $PJES2,TERM         - Terminate the BBS gracefully
