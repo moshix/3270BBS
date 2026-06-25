@@ -269,7 +269,12 @@ If you enable web3270 (the browser-based 3270 emulator which comes delivered wit
 
 ### SSH Access
 
-Configure the SSHD port in tsu.cnf. Users must be registered to use SSH access, using the same password as 3270 access. SSH mode provides limited features (chat and topics) as this is primarily a 3270 BBS.
+Configure the SSHD port in tsu.cnf. Users must be registered to use SSH access, using the same password as 3270 access. SSH mode provides limited features (chat and topics) as this is primarily a 3270 BBS.  
+```
+# ssh server settings
+start_SSHD=yes
+sshd_port=3296
+```
 
 ### Federated Chat
 
