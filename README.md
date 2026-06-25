@@ -246,6 +246,14 @@ required_conferences="General","3270BBS","User content"
 
 For secure TLS access, you'll need certificates specified in tsu.cnf with the `tlscert` and `tlskey` parameters.
 
+### Web access
+
+If you enable web access in tsu.cnf, then you users can log in over a browser to view [Conferences and topics](https://github.com/moshix/3270BBS/blob/main/Screenshot%202026-06-25%20at%2008.17.40.png). Only very few features of the BBS are available over the web. For the full experience, a 3270 terminal is needed. 
+
+If you enable web3270 (the browser-based 3270 emulator which comes delivered with 3270BBS) then you can conveniently log in to 3270BBS with your [web browser](https://github.com/moshix/3270BBS/blob/main/Screenshot%202026-06-25%20at%2008.17.53.png), eliminating the need for a 3270 terminal emulator completely. 
+
+
+
 ### SSH Access
 
 Configure the SSHD port in tsu.cnf. Users must be registered to use SSH access, using the same password as 3270 access. SSH mode provides limited features (chat and topics) as this is primarily a 3270 BBS.
