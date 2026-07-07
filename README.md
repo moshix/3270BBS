@@ -405,4 +405,4 @@ By using this software, you agree to abide by any applicable local, national, or
 
 ---
 
-**Moshix, June 2026 - Taipeh**
+**Moshix, July  2026 - Buenos Aires**
