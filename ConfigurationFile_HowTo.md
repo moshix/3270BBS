@@ -89,6 +89,17 @@ startup.
 - **Duplicate keys:** the last occurrence in the file wins. The one exception is
   `show_logon_stats`, which has its own reader and takes the *first* occurrence.
 
+> **If you inherited a config file from somewhere else, still check the key
+> names.** Case-insensitivity does not rescue a name whose *shape* is wrong.
+> Sample and generated configs circulating for this BBS have used CamelCase names
+> such as `Port`, `TLSPort`, `HttpdPort`, `FTPPort`, `FTPLimit`, `StartFTPD` and
+> `SendgridAPIKey`. `Port` and `TLSPort` now work, because lowercasing them lands
+> on real keys — but the rest do not, because the underscores are missing:
+> `httpdport` is not `httpd_port` and `startftpd` is not `start_ftpd`. Those
+> lines are ignored and the built-in default is used, with nothing logged. The
+> names `ChatRefresh`, `NewsSearch`, `AlphavantageAPIKey` and `FinnhubAPIKey`
+> turn up in the same files and are not options at all.
+
 ### All three readers follow the same rules
 
 `tsu.cnf` is read by three different pieces of code — the main parser, the
@@ -101,6 +112,12 @@ comment any line.
 One value is still handled specially: `required_conferences` is a comma-separated
 list, so its quotes are stripped per item after the split rather than around the
 whole line. Write it as `required_conferences="General","Support"`.
+
+Because of that, **a `#` anywhere in the conference list truncates it**, quoting
+or not: the trailing-comment rule is applied to the whole line before it is split
+on commas, so `required_conferences="General","Off # Topic"` protects only
+`General` and drops the rest. Conference names cannot contain a `#`. The setup
+wizard refuses one.
 
 ### Value matching is case-insensitive
 
@@ -350,19 +367,21 @@ nothing else may use.
 to the console in red and to the `LOG` screen, where they appear as
 `TSU <SERVICE> FAILED ON PORT <n>` followed by the reason:
 
-| Service | On bind failure |
-|---|---|
-| TN3270 (`port`) | **Fatal.** The BBS exits. |
-| HTTP (`httpd_port`) | Reported; the BBS keeps running without the web interface. |
-| SSH (`sshd_port`) | Reported; the BBS keeps running without SSH. |
-| FINGER (`fingerd_port`) | Reported; the BBS keeps running without FINGER. |
-| HTTPS (`https_port`) | Reported: `Failed to start HTTPS server`. Plain HTTP continues. |
-| FTP (`ftp_port`) | Reported: `Error starting FTP server`. |
-| SMTP (`smtp_port`) | Reported: `Failed to start SMTP server`. |
-| TLS TN3270 (`tlsport`) | See §5. |
+| Service | LOG line on bind failure | Effect |
+|---|---|---|
+| TN3270 (`port`) | — | **Fatal.** The BBS exits. |
+| HTTP (`httpd_port`) | `TSU HTTPD FAILED ON PORT n` | No web interface; the BBS runs. |
+| HTTPS (`https_port`) | `TSU HTTPDS FAILED ON PORT n` | Plain HTTP continues. |
+| FTP (`ftp_port`) | `TSU FTPD FAILED ON PORT n` | No FTP; the BBS runs. |
+| SSH (`sshd_port`) | `TSU SSHD FAILED ON PORT n` | No SSH; the BBS runs. |
+| FINGER (`fingerd_port`) | `TSU FINGERD FAILED ON PORT n` | No FINGER; the BBS runs. |
+| SMTP (`smtp_port`) | `TSU SMTPD FAILED ON PORT n` | No inbound mail; the BBS runs. |
+| TLS TN3270 (`tlsport`) | See §5. | |
 
-If a service you enabled is not answering, look for its `FAILED` line on the
-`LOG` screen; a port collision or a privilege problem is the usual reason.
+If a service you enabled is not answering, search the `LOG` screen for its
+daemon name — `FTPD`, `HTTPD`, `SSHD`, `FINGERD`, `SMTPD` — and look for a
+`FAILED` line. The reason follows it on the next line. A port collision or a
+privilege problem is the usual cause.
 
 Ports below 1024 require root or `CAP_NET_BIND_SERVICE`. The built-in default for
 `fingerd_port` is 79 and an `smtp_port` of 25 is common; both fail to bind as an
@@ -396,6 +415,17 @@ printed at startup as `FTP upload limit: N KB` and it is **enforced**: an upload
 that would push a note past the limit is refused with
 `552 note exceeds the N KB upload limit` and the note is not truncated or
 partially stored. Raise the value if your users need to move larger notes.
+
+**`ftp_limit=0` does not mean "no uploads".** Zero is read as "not configured"
+and the 20 KB default is used instead. There is no way to switch uploads off with
+this key — turn FTP off with `start_ftpd=no` if that is what you want. The setup
+wizard refuses a zero here for the same reason.
+
+One caveat on how the refusal lands. A large file arrives in several chunks and
+each is saved as it lands, so when the chunk that would cross the limit is
+refused, the chunks that already fit are stored. The transfer fails and the
+client is told, but the note keeps what got through — check and delete it rather
+than assuming a refused upload left nothing behind.
 
 The limit is re-read when FTP is restarted from SDSF (`P FTPD` then `S FTPD`), so
 you can change it without a full BBS restart.
@@ -665,9 +695,16 @@ it does not need root; setting it to 25 needs root or
 rejected; the check is crude — it just requires at least one dot.
 
 These settings can be changed without restarting the BBS: `P SMTPD` then
-`S SMTPD` from the SDSF Activity screen re-reads `tsu.cnf` and rebinds. If the
-server cannot start, the SDSF error row shows the reason instead of reporting
-success.
+`S SMTPD` from the SDSF Activity screen re-reads `tsu.cnf` and rebinds.
+
+Two details of that command are worth knowing. If the configuration is
+unusable — no `smtp_domain`, or a bare TLD — the SDSF error row shows the reason
+rather than reporting success. And if you forget the `P SMTPD` first, it answers
+`SMTP server already running - P SMTPD first` instead of silently doing nothing
+while you believe your edit was applied. On success it says
+`SMTP server starting`, not "started": the bind happens a moment later, so the
+result — including a `TSU SMTPD FAILED ON PORT n` line — appears on the `LOG`
+screen.
 
 Once running, `smtp_domain` is what decides which mail is accepted. Anything
 addressed outside the domain (or its subdomains) gets `550 Relay not permitted`.
@@ -914,10 +951,17 @@ Collected in one place, because each of these has bitten someone:
    before a `#`, and put no trailing comment on a quoted line.
 9. **There is no range checking on ports when the file is read.**
    `port=99999` is accepted and fails at bind time — reported, but at bind time.
-10. **`S SMTPD` starts SMTPD even when `start_smtpd=no`.** An explicit operator
+10. **`ftp_limit=0` means 20 KB, not "no uploads".** Zero reads as "not
+    configured" and the default is used.
+11. **A `#` truncates `required_conferences` even when the names are quoted**,
+    because the comment is stripped from the whole line before the commas are
+    split. Conference names cannot contain a `#`.
+12. **`S SMTPD` starts SMTPD even when `start_smtpd=no`.** An explicit operator
     command wins over the file; the file decides only what happens at the next
     startup. The same is true of `S FTPD` and `S FINGERD`.
-11. **`dns_name`, `mail_listen_port` and `globalchat_pollrate` do nothing**, and
+13. **CamelCase key names still do not work.** Keys match in any case, but not
+    with the underscores missing: `HttpdPort` is not `httpd_port`.
+14. **`dns_name`, `mail_listen_port` and `globalchat_pollrate` do nothing**, and
     `chatgpt_key` is not used by the BBS.
 
 ### What used to be on this list
@@ -1049,7 +1093,8 @@ start_web3270=yes
 # ═══ Other services ═════════════════════════════════════════════════════════
 # start_ftpd defaults to ON. FTP also reserves the passive range 40000-40100.
 # ftp_limit is the per-note upload cap in KB and IS enforced: a larger upload
-# is refused with "552 note exceeds the N KB upload limit".
+# is refused with "552 note exceeds the N KB upload limit". 0 is NOT "no
+# uploads" - it reads as "not configured" and gives you the 20 KB default.
 # "P FTPD" then "S FTPD" re-reads this file, ftp_limit included.
 start_ftpd=yes
 ftp_port=2100
@@ -1104,7 +1149,8 @@ smtp_drop_dimarc=yes
 
 # ═══ Content ════════════════════════════════════════════════════════════════
 # Conferences users may not unsubscribe from. Re-read live - edits take effect
-# without a restart. Quoted per item, so no trailing comment on this line.
+# without a restart. No trailing comment on this line, and no '#' inside a
+# conference name: both truncate the whole list.
 required_conferences="General","3270BBS","User content"
 
 # ═══ Federated newsgroups ═══════════════════════════════════════════════════
