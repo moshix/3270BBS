@@ -119,6 +119,7 @@ You only need:
    - `admin/admin` - Administrative account change password immediately
    - `noreply/noreply` - Internal system messages account change password immediately
    - 'dmarc/dmarc' - Needed if you want to receive internet email change password immediately
+   - Learn how to adapt tsu.cnf manually from [this](https://github.com/moshix/3270BBS/blob/main/ConfigurationFile_HowTo.md)document
 
 3. Edit the sample `tsu.greet` file (greeting for new users, max 80 characters wide)
 
