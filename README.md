@@ -285,7 +285,7 @@ sshd_port=3296
 
 3270BBS includes a built-in editor for Topics, Posts, Notes, marketplace items, and Messages. The editor features a spell checker enhanced with mainframe terminology (JCL, ABEND, etc.).  There is also a built-in ISPF editor to edit BASIC and Assembler programs. 
 
-**We use ANSI code page 1047 as the standard code page in 3270BBS** This means we don't support foreign language character sets. 
+**We use ANSI code page 037 as the standard code page in 3270BBS** This means we don't support foreign language character sets. 
 
 **Rendering Tags:**
 Messages and topics support color tags (best placed on their own lines):
@@ -386,7 +386,7 @@ Built using the [go3270](https://github.com/racingmars/go3270) library by **raci
 
 ## Code Page Support
 
-We support code page 1047 thruout the application. You can enable optional code page 310 with F2 in main menu to have overlay boxes drawn with graphical elements for much better look. 
+We support code page 037 thruout the application. If your terminal is capale of code page 310, then 3270BBS will automatically use it. 
 Emulators known to support CP310 are: x3270, c3270, Glink3270, Vista3270, pw3270. 
 
 
