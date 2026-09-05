@@ -84,11 +84,10 @@ You only need:
 | User management                                  | :white_check_mark: |
 | Admin panels                                     | :white_check_mark: |
 | Session management                               | :white_check_mark: |
-| DB creation script                               | :white_check_mark: |
 | Sqlite3 and PostgreSQL support                   | :white_check_mark: |
 | FTP Server for notes access                      | :white_check_mark: |
 | Web Server for notes, topics, sysadmin access    | :white_check_mark: |
-| Wordle in English/Italian/German                 | :white_check_mark: |
+| Wordle,Space Invaders, Flappy Bird               | :white_check_mark: |
 | TSO command line with several utilities          | :white_check_mark: |
 | Log viewer                                       | :white_check_mark: |
 | TLS and TN3270 listeners                         | :white_check_mark: |
@@ -106,7 +105,6 @@ You only need:
 | Support Sqlite3 and Postgres                     | :white_check_mark: |
 | Print by PDF to email                            | :white_check_mark: |
 | internal finger daemon                           | :white_check_mark: |
-| Pre-defined signature for editor use             | :white_check_mark: |
 
 ## Installation
 
@@ -406,4 +404,4 @@ By using this software, you agree to abide by any applicable local, national, or
 
 ---
 
-**Moshix, July  2026 - Buenos Aires**
+**Moshix, September  2026 - New York**
