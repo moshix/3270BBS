@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# copyright 2025 by moshix
-# This is a BBS for 3270 terminals
+# copyright 2025,2026 by moshix
+# This script starts the BBS and can also restart it from SDSF by typing:
+#    $pjes2,reipl (admins only)
 # all rights reserved by moshix
 
 # Detect if we're running on Linux
@@ -15,17 +16,14 @@ if [[ "$OSTYPE" == "linux-gnu"* ]] || [[ "$OSTYPE" == "linux"* ]]; then
         echo
         # Fall back to non-logging mode
         while true; do
-            time ./tsu
+            ./tsu
             EXIT_CODE=$?
-            
+
             if [ $EXIT_CODE -eq 0 ]; then
-                echo "tsu exited successfully. Not restarting."
                 break
             elif [ $EXIT_CODE -eq 42 ]; then
-                echo "REIPL requested. Restarting immediately..."
                 continue
             else
-                echo "tsu exited with error $EXIT_CODE. Restarting in 2 seconds..."
                 sleep 2
             fi
         done
@@ -40,17 +38,14 @@ if [[ "$OSTYPE" == "linux-gnu"* ]] || [[ "$OSTYPE" == "linux"* ]]; then
         echo
         # Fall back to non-logging mode
         while true; do
-            time ./tsu
+            ./tsu
             EXIT_CODE=$?
-            
+
             if [ $EXIT_CODE -eq 0 ]; then
-                echo "tsu exited successfully. Not restarting."
                 break
             elif [ $EXIT_CODE -eq 42 ]; then
-                echo "REIPL requested. Restarting immediately..."
                 continue
             else
-                echo "tsu exited with error $EXIT_CODE. Restarting in 2 seconds..."
                 sleep 2
             fi
         done
@@ -71,17 +66,14 @@ if [[ "$OSTYPE" == "linux-gnu"* ]] || [[ "$OSTYPE" == "linux"* ]]; then
         echo
         # Fall back to non-logging mode
         while true; do
-            time ./tsu
+            ./tsu
             EXIT_CODE=$?
-            
+
             if [ $EXIT_CODE -eq 0 ]; then
-                echo "tsu exited successfully. Not restarting."
                 break
             elif [ $EXIT_CODE -eq 42 ]; then
-                echo "REIPL requested. Restarting immediately..."
                 continue
             else
-                echo "tsu exited with error $EXIT_CODE. Restarting in 2 seconds..."
                 sleep 2
             fi
         done
@@ -99,17 +91,17 @@ if [[ "$OSTYPE" == "linux-gnu"* ]] || [[ "$OSTYPE" == "linux"* ]]; then
     
     while true; do
         log_message "Launching TSU application"
-        time ./tsu 2>&1 | sudo tee -a "$LOG_FILE"
+        ./tsu 2>&1 | sudo tee -a "$LOG_FILE"
         EXIT_CODE=${PIPESTATUS[0]}  # Get exit code of ./tsu, not tee
-        
+
         if [ $EXIT_CODE -eq 0 ]; then
-            log_message "TSU exited successfully. Not restarting."
+            log_message "TSU BBS shutdown complete"
             break
         elif [ $EXIT_CODE -eq 42 ]; then
-            log_message "REIPL requested. Restarting immediately..."
+            log_message "REIPL requested"
             continue
         else
-            log_message "TSU exited with error code $EXIT_CODE. Restarting in 2 seconds..."
+            log_message "TSU exited with code $EXIT_CODE"
             sleep 2
         fi
     done
@@ -124,17 +116,14 @@ else
     echo
     
     while true; do
-        time ./tsu
+        ./tsu
         EXIT_CODE=$?
-        
+
         if [ $EXIT_CODE -eq 0 ]; then
-            echo "tsu exited successfully. Not restarting."
             break
         elif [ $EXIT_CODE -eq 42 ]; then
-            echo "REIPL requested. Restarting immediately..."
             continue
         else
-            echo "tsu exited with error $EXIT_CODE. Restarting in 2 seconds..."
             sleep 2
         fi
     done
