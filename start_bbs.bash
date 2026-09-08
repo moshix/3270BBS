@@ -1,49 +1,129 @@
-#!/bin/bash
-# Copyright 2025,2026 by moshix
-#
-# reset_admin_password.bash
-# Thin wrapper around `tsu --change-admin-password`.
-#
-# The reset itself now lives INSIDE the TSU binary (changeadminpw.go), so it
-# uses models.HashPasswordBcrypt and the BBS's own password-length rules
-# directly. That removes this script's two external dependencies -- an external
-# bcrypt tool (htpasswd, or a throwaway Go program) and the sqlite3 CLI -- and
-# removes any chance of the hash format or the length limits drifting away from
-# what the running BBS accepts.
-#
-# The binary reads tsu.cnf and tsu.db from the CURRENT WORKING DIRECTORY, so
-# run this from the TSU install directory.
+#!/usr/bin/env bash
+# copyright 2025 by moshix
+# This is a BBS for 3270 terminals
+# all rights reserved by moshix
 
-set -u
+# Detect if we're running on Linux
+if [[ "$OSTYPE" == "linux-gnu"* ]] || [[ "$OSTYPE" == "linux"* ]]; then
+    # Linux machine - enable logging to /var/log/tsu.log
+    LOG_FILE="/var/log/tsu.log"
+    
+    # Check if sudo is available and working
+    if ! command -v sudo &> /dev/null; then
+        echo "Error: sudo is not available. Cannot enable logging."
+        echo "Falling back to non-logging mode."
+        echo
+        # Fall back to non-logging mode
+        while true; do
+            ./tsu
+            EXIT_CODE=$?
 
-RED='\033[0;31m'
-NC='\033[0m'
-print_error() { echo -e "${RED}[-]${NC} $1" >&2; }
+            if [ $EXIT_CODE -eq 0 ]; then
+                break
+            elif [ $EXIT_CODE -eq 42 ]; then
+                continue
+            else
+                sleep 2
+            fi
+        done
+        exit 0
+    fi
+    
+    # Test if we can write to the log file
+    if ! sudo touch "$LOG_FILE" 2>/dev/null; then
+        echo "Error: Cannot create or write to log file $LOG_FILE"
+        echo "Check permissions or run with appropriate sudo access."
+        echo "Falling back to non-logging mode."
+        echo
+        # Fall back to non-logging mode
+        while true; do
+            ./tsu
+            EXIT_CODE=$?
 
-# Resolve the binary: $TSU_BIN wins, else 'tsu' beside this script (derived
-# from $0 so an absolute invocation from another directory still finds it),
-# else ./tsu in the current directory.
-SCRIPT_DIR="$(cd -- "$(dirname -- "$0")" && pwd)"
+            if [ $EXIT_CODE -eq 0 ]; then
+                break
+            elif [ $EXIT_CODE -eq 42 ]; then
+                continue
+            else
+                sleep 2
+            fi
+        done
+        exit 0
+    fi
+    
+    # Inform user about logging (console only, not in log file)
+    echo "=== TSU BBS Startup Script ==="
+    echo "Linux system detected - logging enabled"
+    echo "Log file: $LOG_FILE"
+    echo "All application output will be logged there"
+    echo "========================================"
+    echo
+    
+    # Start logging to file
+    if ! echo "$(date '+%Y-%m-%d %H:%M:%S') - TSU BBS starting on Linux - logging to $LOG_FILE" | sudo tee -a "$LOG_FILE" >/dev/null; then
+        echo "Warning: Failed to write to log file. Continuing without logging."
+        echo
+        # Fall back to non-logging mode
+        while true; do
+            ./tsu
+            EXIT_CODE=$?
 
-if [ -n "${TSU_BIN:-}" ]; then
-    BIN="$TSU_BIN"
-elif [ -x "$SCRIPT_DIR/tsu" ]; then
-    BIN="$SCRIPT_DIR/tsu"
+            if [ $EXIT_CODE -eq 0 ]; then
+                break
+            elif [ $EXIT_CODE -eq 42 ]; then
+                continue
+            else
+                sleep 2
+            fi
+        done
+        exit 0
+    fi
+    
+    # Function to log messages with error handling
+    log_message() {
+        if ! echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" | sudo tee -a "$LOG_FILE" >/dev/null; then
+            echo "Warning: Failed to write to log file: $1"
+        fi
+    }
+    
+    log_message "Starting TSU BBS application"
+    
+    while true; do
+        log_message "Launching TSU application"
+        ./tsu 2>&1 | sudo tee -a "$LOG_FILE"
+        EXIT_CODE=${PIPESTATUS[0]}  # Get exit code of ./tsu, not tee
+
+        if [ $EXIT_CODE -eq 0 ]; then
+            log_message "TSU BBS shutdown complete"
+            break
+        elif [ $EXIT_CODE -eq 42 ]; then
+            log_message "REIPL requested"
+            continue
+        else
+            log_message "TSU exited with code $EXIT_CODE"
+            sleep 2
+        fi
+    done
+    
+    log_message "TSU BBS shutdown complete"
 else
-    BIN="./tsu"
-fi
+    # Non-Linux machine - run without logging
+    echo "=== TSU BBS Startup Script ==="
+    echo "Non-Linux system detected - logging disabled"
+    echo "Logging is only available on Linux systems"
+    echo "========================================"
+    echo
+    
+    while true; do
+        ./tsu
+        EXIT_CODE=$?
 
-if [ ! -f "$BIN" ]; then
-    print_error "TSU binary '$BIN' not found."
-    print_error "Build it first with:  go build -o tsu ."
-    print_error "Or point this script at it with:  TSU_BIN=/path/to/tsu $0"
-    exit 1
+        if [ $EXIT_CODE -eq 0 ]; then
+            break
+        elif [ $EXIT_CODE -eq 42 ]; then
+            continue
+        else
+            sleep 2
+        fi
+    done
 fi
-if [ ! -x "$BIN" ]; then
-    print_error "TSU binary '$BIN' is not executable (chmod +x it)."
-    exit 1
-fi
-
-# exec, not a subshell: the binary owns the terminal from here on, so its
-# no-echo password prompt and its exit status are the operator's directly.
-exec "$BIN" --change-admin-password "$@"
