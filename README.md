@@ -8,7 +8,7 @@ Just to make it clear, this BBS need to be accessed with an **IBM 3270 terminal 
   
 This README is for BBS operators who want to install, upgrade and operate 3270BBS. 
   
-Users of the 3270BBS can read the extensive 3270BBS User Guide[here](https://github.com/moshix/3270BBS/blob/main/3270UserGuide.pdf) 
+Users of the 3270BBS can read the extensive 3270BBS User Guide [here](https://github.com/moshix/3270BBS/blob/main/3270UserGuide.pdf) 
 
 ## Table of Contents
 
