@@ -113,10 +113,10 @@ You only need:
 
 
 
-1. **start the BBS with the provided start script** it will optionally get the latest version from Releases and guide you thru configuration and will create the tsu.cnf configuration file for you.  It also  creates **3 users**:
+1. **start the BBS with the provided start_bbs.bash script** it will optionally get the latest version from Releases and guide you thru configuration and will create the tsu.cnf configuration file for you. It also  creates **3 users**:
    - `admin/admin` - Administrative account change password immediately
    - `noreply/noreply` - Internal system messages account change password immediately
-   - 'dmarc/dmarc' - Needed if you want to receive internet email change password immediately
+   - 'dmarc/dmarc' - Needed if you want to receive internet email. Change password immediately
       
 Learn how to adapt the tsu.cnf configuration file manually from [this](https://github.com/moshix/3270BBS/blob/main/ConfigurationFile_HowTo.md) document
 
