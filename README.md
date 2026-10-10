@@ -6,7 +6,7 @@ This is the same code that runs [my Forum3270 BBS](https://www.moshix.tech:3270)
 
 Just to make it clear, this BBS need to be accessed with an **IBM 3270 terminal emulator**, not Putty, or telnet. A web 3270 emulator is included in 3270BBS, but it can also be downloaded separately [here](https://github.com/moshix/web3270)
   
-This README is for BBS operators who want to install, upgrade and operate 3270BBS. 
+This README is for BBS operators who want to install, upgrade and operate 3270BBS. A detailed guide on how to install, configure and operate 3270BBS with all Admin-only screens and feature is available [here](https://github.com/moshix/3270BBS/blob/main/3270BBS_AdminGuide.pdf).
   
 Users of the 3270BBS can read the extensive 3270BBS User Guide [here](https://github.com/moshix/3270BBS/blob/main/3270UserGuide.pdf) 
 
