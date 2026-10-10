@@ -117,15 +117,15 @@ You only need:
    - `admin/admin` - Administrative account change password immediately
    - `noreply/noreply` - Internal system messages account change password immediately
    - 'dmarc/dmarc' - Needed if you want to receive internet email change password immediately
-   - Learn how to adapt tsu.cnf manually from [this](https://github.com/moshix/3270BBS/blob/main/ConfigurationFile_HowTo.md)document
+      
+Learn how to adapt the tsu.cnf configuration file manually from [this](https://github.com/moshix/3270BBS/blob/main/ConfigurationFile_HowTo.md) document
 
 2. Edit the sample `tsu.greet` file (greeting for new users, max 80 characters wide)
-
   
 3. Connect to either the included browser 3270 terminal (if you specified a port for it) or with a 3270 terminal emulator to the specified (during configuraiton) non-TLS or TLS port. You can look up again the ports in tsu.cnf  
-
+  
 4. Announce your new BBS and consider submitting it to be listed in the Public Servers section
-
+  
 For installation questions, reach out to moshix on Forum3270.
 
 ## Configuration
