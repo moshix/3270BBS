@@ -36,13 +36,13 @@ Users of the 3270BBS can read the extensive 3270BBS User Guide [here](https://gi
 
 ## Overview
 
-3270BBS is an extremely efficient bulletin board system designed for IBM 3270 terminals. It uses minimal resources - supporting many thousands of concurrent users. All data is stored in either an SQLite3 or a Postgres database, and after six months of heavy activity with hundreds of users and many hundreds of posted topics, the database remains under 50MB.
+3270BBS is an efficient bulletin board system designed for IBM 3270 terminals. It uses minimal resources - supporting many thousands of concurrent users. All data is stored in either an SQLite3 or a Postgres database, and after six months of heavy activity with hundreds of users and many hundreds of posted topics, the database remains under 50MB.
 
-The system is heavily multi-threaded, and highly performance-optmimized, making it blazing fast even on single-core systems, though more cores improve performance even further. It runs perfectly on small servers like Raspberry Pi or basic VPS instances, and particularly loves Linux/s390x.
+The system is heavily multi-threaded, and highly performance-optmimized, making it very fast even on single-core systems like a Rapsberry Pi, though more cores improve performance even further.
 
-There is a guided set-up which configuruation of your BBS, when you first start a fresh copy of 3270BBS. 
+**The software runs you thru a guided set-up when you install it for the first time.** 
 
-It comes with a built-in database, so you don't need to install any database server, although it can also work with Postgres optionally.
+It comes with a built-in database, so you don't need to install any database server, although it can also work with Postgres optionally (typically for larger BBS instances). A migration to Postgres is included. 
 
 
 ## Requirements
@@ -65,7 +65,6 @@ You only need:
 | FreeBSD             | :white_check_mark: |
 | macOS Universal     | :white_check_mark: |
 | Windows             |:white_check_mark:  |
-| Is it awesome?      | :white_check_mark: |
 
 ## Features
 
@@ -115,7 +114,7 @@ You only need:
 
 
 
-1. Download the [binary for your platform](https://github.com/moshix/3270BBS/releases/tag/26.7) and **rename it to tsu**
+1. Download the [binary for your platform](https://github.com/moshix/3270BBS/releases)
 
 2. **start the BBS with the provided start script** it will guide you thru configuration and will create the tsu.cnf configuration file for you.  It also  creates **3 users**:
    - `admin/admin` - Administrative account change password immediately
