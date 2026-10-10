@@ -413,4 +413,4 @@ By using this software, you agree to abide by any applicable local, national, or
 
 ---
 
-**Moshix, October  2026 - New York**
+**Moshix, October  2026 - Munich**
