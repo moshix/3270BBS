@@ -113,16 +113,16 @@ You only need:
 
 
 
-1. **start the BBS with the provided start_bbs.bash script** it will optionally get the latest version from Releases and guide you thru configuration and will create the tsu.cnf configuration file for you. It also  creates **3 users**:
+1. **start the BBS with the provided start_bbs.bash script** it will optionally get the latest version from Releases and guide you thru configuration and will create the 3270bbs.cnf configuration file for you. It also  creates **3 users**:
    - `admin/admin` - Administrative account change password immediately
    - `noreply/noreply` - Internal system messages account change password immediately
    - 'dmarc/dmarc' - Needed if you want to receive internet email. Change password immediately
       
-Learn how to adapt the tsu.cnf configuration file manually from [this](https://github.com/moshix/3270BBS/blob/main/ConfigurationFile_HowTo.md) document
+Learn how to adapt the 3270bbs.cnf configuration file manually from [this](https://github.com/moshix/3270BBS/blob/main/ConfigurationFile_HowTo.md) document
 
 2. Edit the sample `tsu.greet` file (greeting for new users, max 80 characters wide)
   
-3. Connect to either the included browser 3270 terminal (if you specified a port for it) or with a 3270 terminal emulator to the specified (during configuraiton) non-TLS or TLS port. You can look up again the ports in tsu.cnf  
+3. Connect to either the included browser 3270 terminal (if you specified a port for it) or with a 3270 terminal emulator to the specified (during configuraiton) non-TLS or TLS port. You can look up again the ports in 3270bbs.cnf.  
   
 4. Announce your new BBS and consider submitting it to be listed in the Public Servers section
   
@@ -130,7 +130,7 @@ For installation questions, reach out to moshix on [Forum3270](https://www.moshi
 
 ## Configuration
 
-When you run the **start_bbs.bash** script for the first time it will guide you thru a dialog to produce the **tsu.cnf** file for you.
+When you run the **start_bbs.bash** script for the first time it will guide you thru a dialog to produce the **3270bbs.cnf ** file for you.
 
 You can change it a later time with your favorite editor. Below we explain the main config options: 
 
@@ -216,7 +216,8 @@ newsgroup_db_name=
 # remote mainframe settings for v27.0 and up
 # Up to 15 can be configured.
 # The remote hosts are being read in dynamically at runtime
-# So you can make changes to the tsu.cnf file for remote hosts without needing to restart the BBS
+# So you can make changes to the 3270bbs.cnf file for remote hosts without needing to restart the BBS
+
 remote1=Forum3270
 remote1_description="moshix Forum3270"
 remote1_addr=www.moshix.tech
@@ -235,18 +236,18 @@ remote3_port=3270
 
 **Custom Logo:** Customize `tsu.logo` for your logon screen (only first 8 lines used)
 
-**Required Conferences:** To prevent users from unsubscribing from certain conferences, add to tsu.cnf:
+**Required Conferences:** To prevent users from unsubscribing from certain conferences, add to 3270bbs.cnf:
 ```
 required_conferences="General","3270BBS","User content"
 ```
 
 ### TLS Terminal Access
 
-For secure TLS access, you'll need certificates specified in tsu.cnf with the `tlscert` and `tlskey` parameters.
+For secure TLS access, you'll need certificates specified in 3270bbs.cnf  with the `tlscert` and `tlskey` parameters.
 
 ### Web access
 
-If you enable web access in tsu.cnf, then you users can log in over a browser to view Conferences and topics.Here are the necessary config options to get web going:
+If you enable web access in 3270bbs.cnf , then you users can log in over a browser to view Conferences and topics.Here are the necessary config options to get web going:
   
 ```
 # web interface
@@ -267,7 +268,7 @@ If you enable web3270 (the browser-based 3270 emulator which comes delivered wit
 
 ### SSH Access
 
-Configure the SSHD port in tsu.cnf. Users must be registered to use SSH access, using the same password as 3270 access. SSH mode provides limited features (chat and topics) as this is primarily a 3270 BBS.  
+Configure the SSHD port in 3270bbs.cnf. Users must be registered to use SSH access, using the same password as 3270 access. SSH mode provides limited features (chat and topics) as this is primarily a 3270 BBS.  
 ```
 # ssh server settings
 start_SSHD=yes
@@ -374,7 +375,7 @@ Additional admin panels for Users, Topics, and Posts management are also availab
 
 ## Proxying to Another Mainframe
 
-3270BBS can proxy users to other mainframes configured in tsu.cnf (enable PROXY server in config or from SDSF). The remote system can be another 3270BBS instance or any mainframe.
+3270BBS can proxy users to other mainframes configured in 3270bbs.cnf  (enable PROXY server in config or from SDSF). The remote system can be another 3270BBS instance or any mainframe.
 
 **Return to BBS:** Press **PA3** attention key in your terminal emulator.
 
