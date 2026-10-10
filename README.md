@@ -113,28 +113,24 @@ You only need:
 
 
 
-
-1. Download the [binary for your platform](https://github.com/moshix/3270BBS/releases)
-
-2. **start the BBS with the provided start script** it will guide you thru configuration and will create the tsu.cnf configuration file for you.  It also  creates **3 users**:
+1. **start the BBS with the provided start script** it will optionally get the latest version from Releases and guide you thru configuration and will create the tsu.cnf configuration file for you.  It also  creates **3 users**:
    - `admin/admin` - Administrative account change password immediately
    - `noreply/noreply` - Internal system messages account change password immediately
    - 'dmarc/dmarc' - Needed if you want to receive internet email change password immediately
    - Learn how to adapt tsu.cnf manually from [this](https://github.com/moshix/3270BBS/blob/main/ConfigurationFile_HowTo.md)document
 
-3. Edit the sample `tsu.greet` file (greeting for new users, max 80 characters wide)
+2. Edit the sample `tsu.greet` file (greeting for new users, max 80 characters wide)
 
-4. Start the BBS using again the provided `start_bbs.bash` script
   
-5. Connect to either the included browser 3270 terminal (if you specified a port for it) or with a 3270 terminal emulator to the specified (during configuraiton) non-TLS or TLS port. You can look up again the ports in tsu.cnf  
+3. Connect to either the included browser 3270 terminal (if you specified a port for it) or with a 3270 terminal emulator to the specified (during configuraiton) non-TLS or TLS port. You can look up again the ports in tsu.cnf  
 
-6. Announce your new BBS and consider submitting it to be listed in the Public Servers section
+4. Announce your new BBS and consider submitting it to be listed in the Public Servers section
 
 For installation questions, reach out to moshix on Forum3270.
 
 ## Configuration
 
-When you run the **tsu** command for the first time it will guide you thru a dialog to produce the **tsu.cnf** file for you.
+When you run the **start_bbs.bash** script for the first time it will guide you thru a dialog to produce the **tsu.cnf** file for you.
 
 You can change it a later time with your favorite editor. Below we explain the main config options: 
 
@@ -261,7 +257,7 @@ start_HTTPD=yes
 
 
 <img src="Screenshot%202026-06-25%20at%2008.17.40.png" width="360">
-Only very few features of the BBS are available over the web. For the full experience, a 3270 terminal is needed. 
+Only a few features of the BBS are available over the web. For the full experience, a 3270 terminal is needed. 
 
 If you enable web3270 (the browser-based 3270 emulator which comes delivered with 3270BBS) then you can conveniently log in to 3270BBS with your web browser, eliminating the need for a 3270 terminal emulator completely. 
 
@@ -278,6 +274,9 @@ start_SSHD=yes
 sshd_port=3296
 ```
 
+### Finger Daemon
+You can optionally enable finger on a specific port so people from the internet can query users of the BBS by finger. Although finger has long gone into disuse in the UNIX world, it is still used in the BBS world. 
+
 ### Federated Chat
 
 3270BBS instances can participate in federated worldwide chat, provided they have at least 50 registered users. Operators must contact moshix for credentials and configuration. Good standing in Forum3270 is required.
@@ -286,7 +285,9 @@ sshd_port=3296
 
 ### Content Editing
 
-3270BBS includes a built-in editor for Topics, Posts, Notes, marketplace items, and Messages. The editor features a spell checker enhanced with mainframe terminology (JCL, ABEND, etc.).  There is also a built-in ISPF editor to edit BASIC and Assembler programs. 
+3270BBS includes a built-in editor for Topics, Posts, Notes, marketplace items, and Messages. The editor features a spell checker enhanced with mainframe terminology (JCL, ABEND, etc.). It has included IMPROVE command to let AI (if you added an openAI API key) improve the whole post, or portions of it. 
+
+There is also a built-in ISPF editor to edit BASIC and Assembler programs... because ISPF is great for editing code.  
 
 **We use ANSI code page 037 as the standard code page in 3270BBS** This means we don't support foreign language character sets. 
 
@@ -315,6 +316,11 @@ F15 = Make left aligned box
 Save content with SAVE
 Exit editor unsaved with CANCEL
 ```
+
+### BBS:// Linking
+
+3270BBS has a mechanism to link between posts, screens, notes, One Liners etc. with the bbs:// URL scheme and function key F22 to follow links. 
+
 
 ### User and Content Management
 
