@@ -126,7 +126,7 @@ Learn how to adapt the tsu.cnf configuration file manually from [this](https://g
   
 4. Announce your new BBS and consider submitting it to be listed in the Public Servers section
   
-For installation questions, reach out to moshix on Forum3270.
+For installation questions, reach out to moshix on [Forum3270](https://www.moshix.tech:3270).
 
 ## Configuration
 
