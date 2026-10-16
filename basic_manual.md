@@ -645,6 +645,7 @@ START:
   and execution continues after the matching `NEXT`.
 - `NEXT` may include the loop variable (`NEXT I`); when it does, the
   variable name must match the innermost open `FOR`.
+- `NEXT J, I` closes two loops at once; it is the same as `NEXT J : NEXT I`.
 
 ### WHILE/WEND - Conditional Loops
 ```basic
@@ -681,6 +682,9 @@ The SELECT CASE statement provides a cleaner alternative to multiple IF/ELSEIF c
 - Only the first matching CASE block executes (no fall-through)
 - CASE ELSE is optional and executes if no other CASE matches
 - SELECT CASE blocks can be nested
+- Ranges (`CASE 1 TO 5`) and comparisons (`CASE IS > 5`) are not
+  supported and are a `?SYNTAX ERROR`; list the values, or use
+  `IF`/`ELSEIF`
 
 **String matching example (label-based):**
 ```basic
@@ -1303,6 +1307,8 @@ Close an open file:
 ```basic
 CLOSE #1        ' Close file #1
 CLOSE           ' Close all open files
+CLOSE #1, #2    ' Close several files
+CLOSE 1         ' The # is optional
 ```
 
 **Important:** Always CLOSE files when done. Files are also automatically closed when program ends.
@@ -2229,7 +2235,9 @@ The following control structures have no explicit depth limit and are limited on
 - Case insensitive (`count` and `COUNT` are the same variable)
 - **No length truncation** — `INTEREST_RATE` and `INTEREST_RATIO` are
   distinct (prior versions silently aliased names beyond 12 characters)
-- Reserved keywords cannot be used as variable names
+- Reserved keywords cannot be used as variable names, not even with a
+  suffix: `KEY$`, `REC$` and `BASE` are errors. Names may not start with
+  `FN` (that starts a `DEF FN` function call)
 
 ### String Limits
 
@@ -2242,6 +2250,9 @@ The following control structures have no explicit depth limit and are limited on
 ### Error Handling
 
 - No `ON ERROR GOTO`; every runtime error ends the program
+- Anything left on a line after a complete statement, other than `:` and a
+  comment (`REM` or `'`), is a `?SYNTAX ERROR`, reported by both RUN and
+  CHECK
 
 ---
 
@@ -2284,6 +2295,13 @@ act differently; the items marked "changed" are the ones to check.**
   case.
 - **Syntax:** changed: text left over after a complete statement is a
   `?SYNTAX ERROR`. It used to be ignored silently.
+- **Syntax, more:** `NEXT J, I` closes both loops (it used to close only
+  `J`); `CLOSE #1, #2` closes both files and `CLOSE 1` closes file 1 (it
+  closed all files). Changed: `CASE 1 TO 5` and `CASE IS > 5` were never
+  supported (they matched only the first value) and are now a
+  `?SYNTAX ERROR`; so is code after `ELSE`/`ELSEIF ... THEN` on the same
+  line of a block IF, which was dropped. CHECK now reports every error RUN
+  would, and accepts `PRINT X : ...` and `OPTION BASE`.
 - **Messages:** `?BAD FILE NUMBER (MUST BE 1-8)` (said 1-4).
 - **Manual:** corrected the DEF FN and RND examples, RND, INT, STR$, file
   limits, CHECK warnings and ISAM details; documented arithmetic rules,
