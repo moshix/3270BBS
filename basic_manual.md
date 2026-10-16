@@ -2,9 +2,19 @@
 
 **Copyright © 2025-2026 by moshix. All rights reserved.**
 
-Welcome to the BASIC/3270BBS interpreter and compiler! This manual will guide you through writing and running BASIC programs on the 3270BBS system.
+Welcome to the BASIC/3270BBS interpreter/compiler! This manual will guide you through writing and running BASIC programs on the 3270BBS system. You can play with BASIC/3270BBS [here](www.moshix.tech:3270)
 
-As of version 2.3.0 of BASIC/3270BBS, programs can be traditional line numbered (e.g. 100 PRINT "Hello, world") or without line numbers and use labels instead, in which case every program must start with a START: label.
+BASIC/3270BBS programs can be traditional line numbered (e.g. 100 PRINT "Hello, world") **or** without line numbers and use labels instead, in which case every program must start with a START: label.
+
+**What's new in 3.0.1** (bug fixes — see "Version 3.0.1" near the end of this manual):
+
+- `CHAIN` to a label-based program works; the caller resumes after `CHAIN`, also from inside `GOSUB`, `FOR` or `WHILE`.
+- `GOTO`/`GOSUB` to the line that is running restarts that line (`10 X=X+1: IF X<3 THEN GOTO 10`).
+- `INPUT` and `INPUT #` store into array elements (`INPUT #1, N(2)`).
+- `STR$` of a literal now has the same leading space as `STR$` of a variable.
+- ISAM: `DELETED(n)` reports the recrd `GET` returned; no extra pass at `EOF`.
+- `U{} = $UserInfo` replaces the array; missing keys in BBS data and ISAM records read as `""`.
+- Text left over after a statement is a `?SYNTAX ERROR` instead of being ignored.
 
 **What's new in 3.0.0** (semantic and correctness fixes — see "Changes in 3.0.0" near the end of this manual):
 
@@ -26,7 +36,7 @@ As of version 2.3.0 of BASIC/3270BBS, programs can be traditional line numbered 
 From the Extended Menu, press **B** to enter BASIC/3270BBS . You'll see:
 
 ```
-      TIMESHARING BASIC/3270BBS V3.0.0
+      TIMESHARING BASIC/3270BBS V3.0.1
 TYPE HELP FOR COMMANDS, BYE TO EXIT
 READY
 >
@@ -2218,6 +2228,45 @@ The following control structures have no explicit depth limit and are limited on
 ---
 
 ## Version History
+
+### Version 3.0.1
+
+**Bug fixes. A few programs that relied on the old, wrong behaviour can
+act differently; the items marked "changed" are the ones to check.**
+
+- **CHAIN:** a label-based callee used to be loaded as an empty program, so
+  it never ran and the caller never resumed. It now starts at its `START:`
+  label. The caller's GOSUB, FOR, WHILE, IF and SELECT state is kept across
+  the CHAIN, so `RETURN` after a CHAIN inside a subroutine works. CHAIN
+  depth is limited to 256.
+- **Labels:** jumps to a label landed on the line after it, and code after
+  `LABEL:` on the same line was dropped; both are fixed. Changed: a
+  keyword followed by a colon (`10 CLS: PRINT "X"`) is a statement, not a
+  label, and text after a label must be valid code. `RENUM`, `DELETE` and
+  typing numbered lines keep the label table up to date.
+- **GOTO/GOSUB/RETURN to the current line** restart it instead of falling
+  through to the next line.
+- **INPUT / INPUT #:** array elements (`A(I)`, `M$(I,J)`) and associative
+  elements (`C{K}`) are stored correctly; before, the value went into the
+  plain variable of the same name.
+- **Optimizer:** constant folding uses the same routines as run time, so
+  `STR$(5)` is `" 5"` (was `"5"`), and expressions that fail at run time
+  (`10^400`, `VAL("Inf")`) are no longer folded into wrong values.
+- **ISAM:** `DELETED(n)` reported the record after the one returned;
+  `WHILE NOT EOF` made an extra pass when the last record was deleted;
+  `GET KEY=`/`REC=` followed by `GET NEXT` returned the same record twice.
+  Changed: a GET that finds nothing leaves the array as it was (it used to
+  empty it).
+- **Associative arrays:** changed: `A{} = $UserInfo` (and any whole-array
+  assignment) replaces the array instead of merging into it. A missing key
+  in BBS data and ISAM records reads as `""`; key names of BBS data ignore
+  case.
+- **Syntax:** changed: text left over after a complete statement is a
+  `?SYNTAX ERROR`. It used to be ignored silently.
+- **Messages:** `?BAD FILE NUMBER (MUST BE 1-8)` (said 1-4).
+- **Manual:** corrected the DEF FN and RND examples, RND, INT, STR$, file
+  limits, CHECK warnings and ISAM details; documented arithmetic rules,
+  CHAIN, DEF FN, label entry, file buffering and missing functions.
 
 ### Version 3.0.0
 
