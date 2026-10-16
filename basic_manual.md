@@ -1255,6 +1255,14 @@ reading a single line `10,20,30` this way raises `?INPUT PAST END`. To read
 comma-separated values, read the line into a string and split it with
 `INSTR` and `MID$`.
 
+A target can be a plain variable, an array element (`A(I)`, `M$(I, J)`,
+subscripts may be expressions) or an associative array element (`C{K}`).
+Each value is stored before the next target's subscript is evaluated, so
+`INPUT #1, I, A(I)` stores into the element named by the `I` just read.
+The same applies to keyboard `INPUT`. A subscript out of range or an array
+not declared with `DIM` stops the program with the same error as an
+assignment would.
+
 ### CLOSE Statement
 
 Close an open file:
