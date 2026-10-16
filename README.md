@@ -75,18 +75,15 @@ You only need:
 | Discussion groups                                | :white_check_mark: |
 | A full BASIC interpreter inside the BBS!         | :white_check_mark: |
 | A S/360 assembler learning environment           | :white_check_mark: |
-| Federation of chat                               | :white_check_mark: |
+| Federation                                       | :white_check_mark: |
 | Conferences and conference mgmt by moderators    | :white_check_mark: |
 | Moderators can ban users from conferences        | :white_check_mark: |
 | Messages                                         | :white_check_mark: |
 | Live Chat                                        | :white_check_mark: |
 | Private chat                                     | :white_check_mark: |
 | Marketplace                                      | :white_check_mark: |
-| User rolodex                                     | :white_check_mark: |
-| About me page thru PUBLIC note                   | :white_check_mark: |
 | User management                                  | :white_check_mark: |
 | Admin panels                                     | :white_check_mark: |
-| Session management                               | :white_check_mark: |
 | Sqlite3 and PostgreSQL support                   | :white_check_mark: |
 | FTP Server for notes access                      | :white_check_mark: |
 | Web Server for notes, topics, sysadmin access    | :white_check_mark: |
@@ -104,7 +101,6 @@ You only need:
 | User email verification during sign-up           | :white_check_mark: |
 | bcrypt passwords for all accounts                | :white_check_mark: |
 | No root privileges required                      | :white_check_mark: |
-| SysOp-definable, dynamic logon screen logo       | :white_check_mark: |
 | Support Sqlite3 and Postgres                     | :white_check_mark: |
 | Print by PDF to email                            | :white_check_mark: |
 | internal finger daemon                           | :white_check_mark: |
