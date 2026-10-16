@@ -455,6 +455,10 @@ For more complex logic, use block IF with ELSEIF and END IF:
 100 END IF
 ```
 
+An IF whose THEN is followed only by a comment (`IF X THEN REM ...` or
+`IF X THEN ' ...`) is a block IF and needs `END IF`. The same goes for
+`ELSEIF ... THEN REM ...` and `ELSE REM ...`.
+
 Comparison operators: `=`, `<>`, `<`, `>`, `<=`, `>=`
 
 Both operands of a comparison must agree on type — comparing a string to a
@@ -2260,7 +2264,10 @@ The following control structures have no explicit depth limit and are limited on
 - No `ON ERROR GOTO`; every runtime error ends the program
 - Anything left on a line after a complete statement, other than `:` and a
   comment (`REM` or `'`), is a `?SYNTAX ERROR`, reported by both RUN and
-  CHECK
+  CHECK. A statement typed at `READY` without a line number is checked the
+  same way, and nothing of the line runs
+- A string literal is always a value, never an operator: `PRINT 1 "+" 2`
+  prints `1+2`, and `X = 1 "+" 2` is a `?SYNTAX ERROR`
 
 ---
 
@@ -2319,6 +2326,12 @@ act differently; the items marked "changed" are the ones to check.**
 - **CHECK:** new warnings for complex lines (3+ statements), long lines
   (over 120 characters) and too few comments; the old comment INFO line,
   which overflowed column 79, is replaced by the warning.
+- **Immediate mode:** a statement typed at `READY` with leftover text is a
+  `?SYNTAX ERROR` and does not run (part of it used to run).
+- **Block IF:** changed: `IF X THEN REM ...` opens a block IF, like
+  `IF X THEN ' ...` (it was a single-line IF with an empty body).
+- **Operators:** a string such as `"+"` is never taken as an operator;
+  `X = 1 "+" 2` used to give 3.
 - **Messages:** `?BAD FILE NUMBER (MUST BE 1-8)` (said 1-4).
 - **Manual:** corrected the DEF FN and RND examples, RND, INT, STR$, file
   limits, CHECK warnings and ISAM details; documented arithmetic rules,
