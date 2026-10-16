@@ -12,7 +12,7 @@ BASIC/3270BBS programs can be traditional line numbered (e.g. 100 PRINT "Hello, 
 - `GOTO`/`GOSUB` to the line that is running restarts that line (`10 X=X+1: IF X<3 THEN GOTO 10`).
 - `INPUT` and `INPUT #` store into array elements (`INPUT #1, N(2)`).
 - `STR$` of a literal now has the same leading space as `STR$` of a variable.
-- ISAM: `DELETED(n)` reports the record `GET` returned; no extra pass at `EOF`.
+- ISAM: `GET ... NEXT` reads in key order; a successful PUT empties the array; `DELETED(n)` reports the record `GET` returned.
 - `U{} = $UserInfo` replaces the array; missing keys in BBS data and ISAM records read as `""`.
 - Text left over after a statement is a `?SYNTAX ERROR` instead of being ignored.
 
@@ -1445,10 +1445,18 @@ WHILE NOT EOF(1)
 WEND
 ```
 
-Sequential access (`RESET` then `GET ... NEXT`) returns records in record
-number order, which is the order they were first written. It is **not**
-sorted by key: records written with keys `"003"`, `"001"`, `"002"` come
-back as 003, 001, 002. The key is for direct access with `KEY =`.
+Sequential access (`RESET` then `GET ... NEXT`) returns the records in
+**key order**: ascending, comparing keys as strings character by
+character. Digits sort before upper-case letters, upper-case before
+lower-case. Numbers stored as text do not sort by value: `"10"` comes
+before `"9"`. Pad them to one width (`"009"`, `"010"`) for numeric order.
+Record numbers (`REC =`) do not change: they count records in the order
+they were first written.
+
+The read position is a key: `GET ... NEXT` returns the record with the
+smallest key after the last one read. So changing the file during a scan
+is safe. A record PUT with a later key is read further on in the same
+scan, one with an earlier key is not, and a deleted record is skipped.
 
 **How GET behaves:**
 - A successful GET replaces the array's contents with exactly the
@@ -1457,22 +1465,25 @@ back as 003, 001, 002. The key is for direct access with `KEY =`.
   case-sensitive.
 - A GET that finds nothing sets `FOUND(n)` and `DELETED(n)` to 0 and leaves
   the array unchanged.
-- `GET ... NEXT` skips deleted records. `EOF(n)` is 1 once no undeleted
-  record is left, so deleted records at the end do not cause an extra pass.
+- `GET ... NEXT` skips deleted records. `EOF(n)` is 1 once no record with
+  a later key is left, so deleted records do not cause an extra pass. A
+  PUT of a later key after the end makes `EOF(n)` 0 again.
 - `KEY =` never finds a deleted record (DELETE removes the key).
 - `REC =` on a deleted record returns it, with `FOUND(n)` = 1 and
   `DELETED(n)` = 1. This is the only way to read a deleted record.
-- After `KEY =` or `REC =`, a `GET ... NEXT` continues with the record that
-  follows the one just read.
+- After `KEY =` or `REC =`, a `GET ... NEXT` continues with the record
+  whose key follows the key just read (also when `REC =` read a deleted
+  record). A `KEY =` that finds nothing does not move the position.
 
-**PUT writes every field the array holds.** The array keeps its fields
-after a PUT, so to write a new record with different fields, `DIM` the
-array again first; otherwise fields of the previous record are written
-too:
+**A successful PUT empties the array**, as if it were `DIM`med again, so
+the next record never picks up fields of the previous one. Read the fields
+you still need before the PUT, or `GET` the record again afterwards. A PUT
+that fails (for example `?KEY FIELD NOT SET`) leaves the array unchanged.
 
 ```basic
-DIM C{} : C{"id"} = "1" : C{"name"} = "Alice" : PUT #1, C{}
-DIM C{} : C{"id"} = "2" : C{"city"} = "NYC" : PUT #1, C{}   ' no name field
+DIM C{}
+C{"id"} = "1" : C{"name"} = "Alice" : PUT #1, C{}
+C{"id"} = "2" : C{"city"} = "NYC" : PUT #1, C{}   ' no name field
 ```
 
 ### Deleting Records
@@ -2262,8 +2273,11 @@ act differently; the items marked "changed" are the ones to check.**
 - **ISAM:** `DELETED(n)` reported the record after the one returned;
   `WHILE NOT EOF` made an extra pass when the last record was deleted;
   `GET KEY=`/`REC=` followed by `GET NEXT` returned the same record twice.
-  Changed: a GET that finds nothing leaves the array as it was (it used to
-  empty it).
+  `DELETE #n, REC =` of a record whose key also belonged to a later record
+  unindexed the live one. Changed: a GET that finds nothing leaves the
+  array as it was (it used to empty it); `GET ... NEXT` returns records in
+  key order (it was the order of first write); a successful PUT empties the
+  array.
 - **Associative arrays:** changed: `A{} = $UserInfo` (and any whole-array
   assignment) replaces the array instead of merging into it. A missing key
   in BBS data and ISAM records reads as `""`; key names of BBS data ignore
