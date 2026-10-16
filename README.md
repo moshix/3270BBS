@@ -286,7 +286,6 @@ You can optionally enable finger on a specific port so people from the internet 
 
 There is also a built-in ISPF editor to edit BASIC and Assembler programs... because ISPF is great for editing code.  
 
-**We use ANSI code page 037 as the standard code page in 3270BBS** This means we don't support foreign language character sets. 
 
 **Rendering Tags:**
 Messages and topics support color tags (best placed on their own lines):
@@ -392,8 +391,9 @@ Built using the [go3270](https://github.com/racingmars/go3270) library by **raci
 
 ## Code Page Support
 
-We support code page 037 thruout the application. If your terminal is capale of code page 310, then 3270BBS will automatically use it. 
-Emulators known to support CP310 are: x3270, c3270, Glink3270, Vista3270, pw3270. 
+We support code page 037 thruout the application, along with code page 310 which can display some graphic characters. The included web 3270 terminal is capable of code page 310, then 3270BBS will automatically use it.   
+
+Emulators known to support CP310 are: x3270, c3270, Vista3270, pw3270. 
 
 
 ## Final Notes
