@@ -4,7 +4,19 @@
 
 Welcome to the BASIC/3270BBS interpreter and compiler! This manual will guide you through writing and running BASIC programs on the 3270BBS system.
 
-As of version 2.3.0 of BASIC/3270BBS, programs can be traditional line numbered (e.g. 100 PRINT "Hello, world") or without line numbers and use labels instead, in which case every program must start with a START: label. 
+As of version 2.3.0 of BASIC/3270BBS, programs can be traditional line numbered (e.g. 100 PRINT "Hello, world") or without line numbers and use labels instead, in which case every program must start with a START: label.
+
+**What's new in 3.0.0** (semantic and correctness fixes — see "Changes in 3.0.0" near the end of this manual):
+
+- Operator `^` now uses real exponentiation: `2^0.5` is `≈1.414`, `8^(1/3)` is `2`.
+- Unary minus binds looser than `^`: `-2^2` is `-4` (was `4`).
+- `STEP 0` raises `STEP CANNOT BE ZERO` instead of looping forever.
+- `MID$` / `LEFT$` / `RIGHT$` / `INSTR` / `ASC` / `CHR$` are all Unicode rune-aware and consistent with `LEN`.
+- Mixing a string and a number in a comparison now raises `TYPE MISMATCH` (e.g. `5 = "5"` is no longer silently true).
+- Variable names are no longer silently truncated at 12 characters.
+- `OPTION BASE 0 | 1` is supported (must precede every `DIM`).
+- Type suffixes `%` (integer), `!` (single), `#` (double) join `$` (string) on identifiers.
+- `GOSUB` recursion is now bounded — runaway recursion gives `OUT OF STACK` instead of crashing the host.
   
 ---
 
@@ -14,7 +26,7 @@ As of version 2.3.0 of BASIC/3270BBS, programs can be traditional line numbered 
 From the Extended Menu, press **B** to enter BASIC/3270BBS . You'll see:
 
 ```
-      TIMESHARING BASIC/3270BBS V2.9.2
+      TIMESHARING BASIC/3270BBS V3.0.0
 TYPE HELP FOR COMMANDS, BYE TO EXIT
 READY
 >
@@ -44,7 +56,7 @@ READY
 
 | Command | Description |
 |---------|-------------|
-| `SAVE "name"` | Save program to file |
+| `SAVE "name"` | Save program to file (name: at most 10 characters, `.bas` is added) |
 | `LOAD "name"` | Load program from file |
 | `RENAME old.bas new.bas` | Rename a .bas file (both must include .bas) |
 | `EDIT "name"` | Edit file in full-screen editor |
@@ -117,9 +129,13 @@ The `CHECK` command performs a syntax analysis of the program currently in memor
 
 **Warnings Detected:**
 - **Loop without SLEEP:** FOR/NEXT, WHILE/WEND, or backward GOTO jumps without a `SLEEP` statement may trigger the loop detector or execution time termination
-- **Overly complex lines:** Lines with 3+ statements separated by colons are flagged as complex
-- **Very long lines:** Lines exceeding 120 characters are flagged for simplification
-- **Insufficient comments:** Programs with less than 1 REM statement per 10 lines of code receive a program-level warning
+
+- **No END statement:** the program has no `END`
+- **Loop variable reused:** a nested FOR loop uses the same variable as an
+  outer one
+
+CHECK can also add an information note when a long program has few `REM`
+comments. It does not flag long lines or lines with many statements.
 
 **Example usage:**
 ```basic
@@ -286,8 +302,8 @@ Users can share programs with each other by naming files with a `%` prefix. Thes
 | Command | Description |
 |---------|-------------|
 | `HELP` | Show help information |
-| `VARS` | List all variables |
-| `CLEAR` | Clear teh screen |
+| `VARS` | List simple (non-array) variables; arrays are not shown |
+| `CLEAR` | Clear the screen |
 | `BYE` / `EXIT` / `QUIT` | Exit BASIC |
 
 ---
@@ -348,8 +364,28 @@ START:
 20 LET NAME$ = "John"
 30 X = X + 1          ' LET is optional
 ```
-- Variables ending in `$` are strings
-- Variables wihtout `$` are numbers
+
+#### Variable names and type suffixes
+
+A variable name is a letter followed by zero or more letters, digits, or
+underscores, optionally followed by a single type suffix. The suffix is part
+of the name — `X`, `X%`, `X!`, `X#`, and `X$` are five **distinct** variables.
+Names are case-insensitive and **not truncated**: `INTEREST_RATE` and
+`INTEREST_RATIO` are different variables.
+
+| Suffix | Type | Notes |
+|--------|------|-------|
+| (none) | number (double) | default |
+| `$` | string | values are sequences of Unicode characters |
+| `%` | integer | the stored value is truncated toward zero on every assignment |
+| `!` | single-precision float | accepted as a synonym for the default number type |
+| `#` | double-precision float | accepted as a synonym for the default number type |
+
+```basic
+10 X% = 3.7        ' stored as 3 (integer suffix truncates)
+20 PRINT X%        ' 3
+30 SAMPLES_PER_SEC = 44100   ' long names are kept verbatim
+```
 
 ### INPUT - Get User Input
 ```basic
@@ -407,6 +443,10 @@ For more complex logic, use block IF with ELSEIF and END IF:
 
 Comparison operators: `=`, `<>`, `<`, `>`, `<=`, `>=`
 
+Both operands of a comparison must agree on type — comparing a string to a
+number raises `TYPE MISMATCH`. So `5 = "5"` is **not** true, it is an error.
+Convert explicitly with `STR$()` / `VAL()` if you really want the comparison.
+
 ### GOTO - Jump to Line
 ```basic
 10 PRINT "This loops forever!"
@@ -423,6 +463,12 @@ Comparison operators: `=`, `<>`, `<`, `>`, `<=`, `>=`
 110 PRINT "In subroutine"
 120 RETURN
 ```
+
+`RETURN` resumes execution at the statement immediately after the calling
+`GOSUB`, even if there are more statements on the same line.
+
+The GOSUB call stack is bounded (1024 active calls). Runaway recursion is
+caught with `OUT OF STACK` rather than crashing the host process.
 
 ### ON...GOTO / ON...GOSUB - Computed Jumps
 The ON statement provides computed branching based on the value of an expression. The expression is evaluated, and program flow jumps to the corresponding line number in the list (1-based index).
@@ -484,6 +530,15 @@ LabelName:
 - Labels can contain letters, digits, and underscores
 - Every label-mode program **must** have a `START:` label (execution begins there)
 - Labels must be unique within a program
+- Labels have no length limit
+- A keyword (`END`, `PRINT`, `RESET`, `INPUT` ...) cannot be a label
+- Code may follow a label on the same line: `LOOP: X = X + 1`. Anything
+  after the colon must be valid code; it is not a comment
+
+**Entering a label program:** a label program cannot be typed line by line
+at the `READY` prompt. A bare `START:` there is a `?SYNTAX ERROR`, because
+the prompt treats an unnumbered line as a command to run at once. Write the
+program in the editor (`EDIT "name"`) or `LOAD` it from a file.
 
 ### Example: Simple Label-Based Program
 ```basic
@@ -571,6 +626,16 @@ START:
     END
 ```
 
+**STEP rules:**
+- `STEP` defaults to `1` when omitted.
+- `STEP 0` is rejected with `STEP CANNOT BE ZERO` — a zero step would make
+  the loop run forever, so the interpreter refuses it instead of hanging.
+- If the start value already passes the end value in the direction of the
+  step (e.g. `FOR I = 5 TO 1` with no `STEP -1`), the loop body is skipped
+  and execution continues after the matching `NEXT`.
+- `NEXT` may include the loop variable (`NEXT I`); when it does, the
+  variable name must match the innermost open `FOR`.
+
 ### WHILE/WEND - Conditional Loops
 ```basic
 START:
@@ -623,6 +688,13 @@ START:
 ```
 
 ### DIM - Declare Arrays
+
+`DIM A(N)` reserves an array whose largest legal index is `N`. The lower
+bound — and therefore the number of elements — is controlled by `OPTION BASE`
+(see below). The default is base 0, in which case `DIM A(10)` makes 11
+elements indexed `0..10`. Under `OPTION BASE 1`, the same `DIM` makes 10
+elements indexed `1..10`; accessing `A(0)` raises `SUBSCRIPT OUT OF RANGE`.
+
 ```basic
 START:
     DIM SCORES(10)        ' 1D array
@@ -631,6 +703,21 @@ START:
     SCORES(1) = 95
     NAMES$(0) = "Alice"
     END
+```
+
+### OPTION BASE - Choose array lower bound
+
+`OPTION BASE 0` (default) or `OPTION BASE 1` selects the lower bound for
+every subsequent `DIM`. It must appear **before any `DIM`** in the program;
+issuing `OPTION BASE` after an array has been dimensioned raises
+`OPTION BASE MUST PRECEDE ANY DIM`.
+
+```basic
+10 OPTION BASE 1
+20 DIM A(5)              ' indices 1..5 (5 elements)
+30 FOR I = 1 TO 5 : A(I) = I*I : NEXT I
+40 PRINT A(1); A(5)      ' 1   25
+50 PRINT A(0)            ' SUBSCRIPT OUT OF RANGE
 ```
 
 ### Associative Arrays (Dictionaries)
@@ -671,18 +758,23 @@ DEF FNname(parameter) = expression
 **Examples (label-based):**
 ```basic
 START:
-    REM Define distance function
+    REM Distance from the origin to (X, Y)
     DEF FND(X) = SQR(X^2 + Y^2)
-    X = 3: Y = 4
-    PRINT "Distance: "; FND(0)
+    Y = 4
+    PRINT "Distance: "; FND(3)
     REM Output: Distance: 5
     END
 ```
 
+Inside the function body, `X` is the parameter, not the global `X`: the
+parameter hides any global variable with the same name. `Y` is not a
+parameter, so the body reads the global `Y`. With `X = 3` set globally,
+`FND(0)` would still be `SQR(0^2 + 4^2)` = 4.
+
 ```basic
 START:
     REM Random number in range
-    DEF FNR(N) = INT(RND(1) * N + 1)
+    DEF FNR(N) = INT(RND(0) * N) + 1
     FOR I = 1 TO 5
         PRINT "Random 1-10: "; FNR(10)
     NEXT I
@@ -703,8 +795,22 @@ START:
 - Function names must start with `FN` followed by a letter (e.g., `FNA`, `FNB`, `FND`)
 - Functions can have one parameter
 - The function body must be a single expression
-- User-defined functions can reference global variables
+- User-defined functions can reference global variables; the parameter
+  hides a global of the same name
 - Call functions using `FNname(argument)`
+- `DEF FN` is a statement that runs: the function exists only after its
+  `DEF FN` line has executed. Calling it earlier, or after a `GOTO` that
+  jumped over the `DEF FN` line, fails because the function is undefined
+- A function can be redefined by executing another `DEF FN` for the same
+  name. `NEW` removes all functions; they survive `CHAIN`
+- The type of the result comes from the expression, not from a `$` in the
+  name
+
+### Error handling
+
+There is no `ON ERROR GOTO` (it raises `?ILLEGAL FUNCTION CALL`). A runtime
+error always stops the program. Check values before using them, for example
+test a divisor for zero or use `EOF(n)` before `INPUT #n`.
 
 ### REM and ' - Comments
 ```basic
@@ -730,10 +836,42 @@ The apostrophe (`'`) can be used anywhere on a line to start a comment. Everythi
 
 ## 🟧 Math Functions
 
+### Operators and precedence
+
+From tightest-binding to loosest:
+
+| Level | Operators | Notes |
+|-------|-----------|-------|
+| 1 | `( )`, function call | Parentheses force evaluation order |
+| 2 | `^` | Exponentiation, **right-associative**; supports fractional and negative exponents (`2^0.5` ≈ `1.414`, `2^-3` = `0.125`) |
+| 3 | unary `-`, unary `+` | Unary minus binds **looser than `^`** — `-2^2` is `-(2^2) = -4` (use parentheses for `(-2)^2 = 4`) |
+| 4 | `*`, `/`, `MOD` | `MOD` is integer remainder; both operands are truncated to `int64` |
+| 5 | `+`, `-` | `+` also concatenates strings (both sides must be strings to error-free) |
+| 6 | `=`, `<>`, `<`, `>`, `<=`, `>=` | Both sides must agree on type — mixing string/number raises `TYPE MISMATCH` |
+| 7 | `NOT` | Logical not |
+| 8 | `AND` | Logical and |
+| 9 | `OR` | Logical or |
+
+Boolean results are `-1` for true and `0` for false (classic BASIC convention).
+
+More arithmetic rules:
+- `^` is right-associative: `2^3^2` is `2^(3^2)` = 512
+- `/` always divides in floating point: `10/3` is `3.333...`; use `INT(10/3)`
+  for an integer quotient
+- The sign of `MOD`'s result follows the dividend: `-7 MOD 3` is `-1`,
+  `7 MOD -3` is `1`
+- `0^0` is `1`
+- `x/0` and `x MOD 0` raise `?DIVISION BY ZERO`
+- These raise `?ILLEGAL QUANTITY ERROR`: `SQRT` of a negative number, `LOG`
+  of zero or a negative number, `ASIN`/`ACOS` outside -1 to 1, and a
+  negative number raised to a fractional power, such as `(-8)^(1/3)`
+
+### Math functions
+
 | Function | Description | Example |
 |----------|-------------|---------|
 | `ABS(x)` | Absolute value | `ABS(-5)` → `5` |
-| `INT(x)` | Integer part (floor) | `INT(3.7)` → `3` |
+| `INT(x)` | Floor: largest integer not greater than x (rounds down, also for negative numbers) | `INT(3.7)` → `3`, `INT(-3.7)` → `-4` |
 | `SGN(x)` | Sign (-1, 0, or 1) | `SGN(-5)` → `-1` |
 | `SQRT(x)` | Square root | `SQRT(16)` → `4` |
 | `SQR(x)` | Square root (alias for SQRT) | `SQR(16)` → `4` |
@@ -745,7 +883,33 @@ The apostrophe (`'`) can be used anywhere on a line to start a comment. Everythi
 | `ACOS(x)` | Arccosine (radians), x must be -1 to 1 | `ACOS(0)` → `1.5707...` |
 | `LOG(x)` | Natural logarithm | `LOG(2.718)` → `1` |
 | `EXP(x)` | e raised to power | `EXP(1)` → `2.718...` |
-| `RND(x)` | Random nubmer 0-1 | `RND(1)` → `0.xxxxx` |
+| `RND(x)` | Random number, see below | `RND(0)` → `0.xxxxx`, `RND(6)` → `1`..`6` |
+
+**RND(x)** depends on its argument:
+
+| Call | Result |
+|------|--------|
+| `RND(0)` | Random number from 0 up to, but not including, 1 |
+| `RND(n)`, n ≥ 1 | Random whole number from 1 to `INT(n)` (`RND(6)` is a die roll) |
+| `RND(1)` | Always `1` (the only whole number from 1 to 1) |
+| `RND(n)`, n < 0 | Reseeds the generator with n (a repeatable sequence), returns a number from 0 up to 1 |
+| `RND(x)`, 0 < x < 1 | `?ILLEGAL QUANTITY ERROR` |
+
+So `RND(1)` is not a random number from 0 to 1, as in some other BASICs.
+Use `RND(0)` for that.
+
+**Not available:** `ROUND`, `CEIL`, `FLOOR`, `MIN` and `MAX` do not exist.
+A call such as `MIN(1,2)` is read as an array reference and raises
+`?ARRAY NOT DIMENSIONED`. Use these instead:
+
+| Wanted | Use |
+|--------|-----|
+| Round to nearest | `INT(X + 0.5)` |
+| Round to 2 decimals | `INT(X * 100 + 0.5) / 100` |
+| Floor | `INT(X)` |
+| Ceiling | `-INT(-X)` |
+| Truncate toward zero | `SGN(X) * INT(ABS(X))` |
+| Minimum / maximum | `IF A < B THEN M = A ELSE M = B` |
 
 ### Trigonometric Conversion Functions
 
@@ -769,16 +933,21 @@ Example:
 
 ## 🟪 String Functions
 
+All length-, position-, and slicing-related string functions count **Unicode
+characters** (runes), not bytes. `LEN("café")` is `4`; `MID$("café", 4, 1)`
+returns `"é"`; `INSTR("€uro", "u")` returns `2`. Position arguments are
+1-based throughout.
+
 | Function | Description | Example |
 |----------|-------------|---------|
-| `LEN(s$)` | String length | `LEN("Hello")` → `5` |
+| `LEN(s$)` | String length in characters | `LEN("Hello")` → `5` |
 | `LEFT$(s$,n)` | Left n characters | `LEFT$("Hello",2)` → `"He"` |
 | `RIGHT$(s$,n)` | Right n characters | `RIGHT$("Hello",2)` → `"lo"` |
-| `MID$(s$,p,n)` | Substring | `MID$("Hello",2,3)` → `"ell"` |
-| `CHR$(n)` | Character from ASCII | `CHR$(65)` → `"A"` |
+| `MID$(s$,p,n)` | Substring (1-based start) | `MID$("Hello",2,3)` → `"ell"` |
+| `CHR$(n)` | Character from Unicode code point | `CHR$(65)` → `"A"`, `CHR$(233)` → `"é"` |
 | `BOXCHAR$(n)` | Box-drawing character (1-6) | `BOXCHAR$(1)` → `"┌"` |
-| `ASC(s$)` | ASCII from character | `ASC("A")` → `65` |
-| `STR$(n)` | Number to string | `STR$(42)` → `"42"` |
+| `ASC(s$)` | Unicode code point of first character | `ASC("A")` → `65`, `ASC("é")` → `233` |
+| `STR$(n)` | Number to string; a number that is not negative gets a leading space (classic BASIC) | `STR$(42)` → `" 42"`, `STR$(-5)` → `"-5"` |
 | `VAL(s$)` | String to number | `VAL("42")` → `42` |
 | `SPACE$(n)` | n spaces | `SPACE$(5)` → `"     "` |
 | `UCASE$(s$)` | Uppercase | `UCASE$("hi")` → `"HI"` |
@@ -786,8 +955,11 @@ Example:
 | `TRIM$(s$)` | Remove leading/trailing whitespace | `TRIM$("  hi  ")` → `"hi"` |
 | `LTRIM$(s$)` | Remove leading whitespace | `LTRIM$("  hi")` → `"hi"` |
 | `RTRIM$(s$)` | Remove trailing whitespace | `RTRIM$("hi  ")` → `"hi"` |
-| `INSTR(s$,find$)` | Find position of substring (0 if not found) | `INSTR("hello","ll")` → `3` |
+| `INSTR(s$,find$)` | Find 1-based character position of substring (0 if not found) | `INSTR("hello","ll")` → `3` |
 | `REPLACE$(s$,old$,new$)` | Replace all occurrences | `REPLACE$("hello","l","L")` → `"heLLo"` |
+
+Because of `STR$`'s leading space, pad a number with zeros as
+`RIGHT$("0" + TRIM$(STR$(N)), 2)` (5 gives `"05"`).
 
 ### BOXCHAR$(n) - Box Drawing Characters
 Returns box-drawing characters, useful for creating frames and boxes. On CP310 capable terminals, these display as graphical line characters. On CP037 terminals, use traditional mainframe boxdrawing characters (+, -, |).
@@ -854,6 +1026,10 @@ Returns graphic characters from Code Page 310. Use with CP310-capable terminals 
 | `MONTH()` | Current month (1-12) | `MONTH()` → `12` |
 | `DAY()` | Day of month (1-31) | `DAY()` → `16` |
 | `SLEEP(n)` | Pause execution for n seconds | `SLEEP(1.5)` pauses 1.5 sec |
+
+`TIME$()` and `DATE$()` return zero-padded strings (`"09:05:03"`,
+`"2026-01-07"`). `HOUR()`, `MINUTE()`, `SECOND()`, `YEAR()`, `MONTH()` and
+`DAY()` return plain numbers (`9`, not `"09"`).
 
 ### SLEEP Function
 
@@ -1005,8 +1181,21 @@ When the chained program ends (via END), control returns to the calling program 
 ```
 
 **Notes:**
-- Programs must exist in your directory or community folder
+- Programs must exist in your directory or community folder; a missing
+  one stops the caller with `?PROGRAM NOT FOUND: name`
 - COMMON declarations must appear before CHAIN is executed
+- Only the caller needs `COMMON`. The callee may repeat it (as above) but
+  does not have to
+- Either program can be line-numbered or label-based, in any combination.
+  A label-based callee starts at its `START:` label
+- The callee must finish with `END` to return to the caller. If it runs off
+  its last line without `END`, the caller does not resume
+- Open files and `DEF FN` functions also carry over to the chained
+  program
+- Chains can be nested, and a program can chain to itself; well over 200
+  levels work
+- CHAIN works only inside a running program, not at the `READY` prompt
+  (`?UNKNOWN STATEMENT: CHAIN`)
 
 ---
 
@@ -1029,7 +1218,17 @@ OPEN "filename.dat" FOR APPEND AS #3
 - `OUTPUT` - Create new file (overwrites if exists)
 - `APPEND` - Add to end of existing file (creates if not exists)
 
-**File Numbers:** Use #1 through #4 (max 4 files open at once)
+**File Numbers:** Use #1 through #8 (max 8 files open at once)
+
+**File names:** letters, digits and underscores, ending in `.dat`, at most
+32 characters including the `.dat`. Sequential and indexed files both use
+`.dat`; any other extension (`.idx` included) is `?ILLEGAL FILE NAME`.
+
+**When data reaches the disk:** `PRINT #` collects output in memory. It is
+written to the file when the file is closed, by `CLOSE` or when the
+program ends normally. If a runtime error stops the program, the output
+collected so far can be lost, and a new file may not be created at all.
+`CLOSE` a file as soon as you have finished writing it.
 
 ### PRINT # Statement
 
@@ -1050,7 +1249,11 @@ INPUT #1, LINE$
 INPUT #1, DATA$
 ```
 
-Each INPUT reads one line from the file.
+Each variable reads one whole line from the file. `INPUT #1, A, B, C` reads
+three lines, one per variable. It does not split one line on commas, so
+reading a single line `10,20,30` this way raises `?INPUT PAST END`. To read
+comma-separated values, read the line into a string and split it with
+`INSTR` and `MID$`.
 
 ### CLOSE Statement
 
@@ -1121,7 +1324,7 @@ START:
 ```
 
 **Limits and Security:**
-- File names must end in `.dat` or in '.idx'
+- File names must end in `.dat` (at most 32 characters)
 - Files stored in your BASIC directory only
 - No path separators allowed in filenames
 
@@ -1130,7 +1333,7 @@ START:
 |-------|-------------|
 | `?FILE NOT FOUND` | File doesn't exist (INPUT mode) |
 | `?FILE ALREADY OPEN` | File handle already in use |
-| `?BAD FILE NUMBER` | Invalid handle (not 1-4) or not open |
+| `?BAD FILE NUMBER` | Invalid handle (not 1-8) or not open |
 | `?FILE SIZE LIMIT EXCEEDED` | Write would exceed 256KB |
 | `?ILLEGAL FILE NAME` | Invalid characters or missing .dat |
 | `?INPUT PAST END` | Attempted read after EOF |
@@ -1201,6 +1404,34 @@ WHILE NOT EOF(1)
 WEND
 ```
 
+Sequential access (`RESET` then `GET ... NEXT`) returns records in record
+number order, which is the order they were first written. It is **not**
+sorted by key: records written with keys `"003"`, `"001"`, `"002"` come
+back as 003, 001, 002. The key is for direct access with `KEY =`.
+
+**How GET behaves:**
+- A successful GET replaces the array's contents with exactly the
+  record's fields and sets `FOUND(n)` to 1.
+- A GET that finds nothing sets `FOUND(n)` and `DELETED(n)` to 0 and leaves
+  the array unchanged.
+- `GET ... NEXT` skips deleted records. `EOF(n)` is 1 once no undeleted
+  record is left, so deleted records at the end do not cause an extra pass.
+- `KEY =` never finds a deleted record (DELETE removes the key).
+- `REC =` on a deleted record returns it, with `FOUND(n)` = 1 and
+  `DELETED(n)` = 1. This is the only way to read a deleted record.
+- After `KEY =` or `REC =`, a `GET ... NEXT` continues with the record that
+  follows the one just read.
+
+**PUT writes every field the array holds.** The array keeps its fields
+after a PUT, so to write a new record with different fields, `DIM` the
+array again first; otherwise fields of the previous record are written
+too:
+
+```basic
+DIM C{} : C{"id"} = "1" : C{"name"} = "Alice" : PUT #1, C{}
+DIM C{} : C{"id"} = "2" : C{"city"} = "NYC" : PUT #1, C{}   ' no name field
+```
+
 ### Deleting Records
 
 Delete by key or record number:
@@ -1215,7 +1446,7 @@ DELETE #1, REC = 2
 | Function | Description |
 |----------|-------------|
 | `FOUND(n)` | Returns 1 if last GET found a record |
-| `DELETED(n)` | Returns 1 if current record is deleted |
+| `DELETED(n)` | Returns 1 if the record the last GET returned is deleted (only `REC =` can return one) |
 | `EOF(n)` | Returns 1 if at end of file |
 | `RESET #n` | Rewind file for sequential reading |
 
@@ -1253,7 +1484,8 @@ LISTALL:
 | Error | Description |
 |-------|-------------|
 | `?FILE NOT OPENED FOR INDEXED` | Using PUT/GET on non-indexed file |
-| `?ARRAY NOT DEFINED` | Associative array not declared with DIM |
+| `?ARRAY NOT DEFINED: name` | PUT of an associative array not declared with DIM |
+| `?ARRAY NOT DIMENSIONED: name` | Any other use of an array not declared with DIM |
 | `?KEY FIELD NOT SET` | PUT without setting the key field |
 
 ---
@@ -1440,7 +1672,7 @@ For certain built-in functions called with constant (literal) arguments, the com
 20 MSG_LEN = LEN("Hello, World!")
 30 CHAR_A = CHR$(65)
 40 VALUE = VAL("42.5")
-50 TEXT = STR$(100)
+50 TEXT$ = STR$(100)
 ```
 
 **After optimization (internally):**
@@ -1449,7 +1681,7 @@ For certain built-in functions called with constant (literal) arguments, the com
 20 MSG_LEN = 13
 30 CHAR_A = "A"
 40 VALUE = 42.5
-50 TEXT = "100"
+50 TEXT$ = " 100"
 ```
 
 **Precomputed functions:**
@@ -1459,7 +1691,7 @@ For certain built-in functions called with constant (literal) arguments, the com
 | `ASC()` | Character to ASCII | `ASC("A")` | `65` |
 | `CHR$()` | ASCII to character | `CHR$(65)` | `"A"` |
 | `VAL()` | String to number | `VAL("123")` | `123` |
-| `STR$()` | Number to string | `STR$(42)` | `"42"` |
+| `STR$()` | Number to string | `STR$(42)` | `" 42"` |
 
 ### Viewing Optimizations
 
@@ -1484,6 +1716,8 @@ The optimizer only applies safe transformations that do not change program behav
 
 - Only constant expressions are folded (variables are never evaluated at compile time)
 - Division/MOD by zero is not optimized (proper runtime error handling preserved)
+- Folded values are computed by the same routines the program uses at run time, so `STR$(5)` and `STR$(N)` with `N=5` both give `" 5"`
+- An expression that would raise a runtime error (for example `10^400`, `ASC("")` or `CHR$(-1)`) is not optimized, so the error still occurs when the line runs
 - Functions with side effects (like `RND`, `TIMER()`, `INKEY$`) are never precomputed
 - String concatenation with variables is not optimized
 
@@ -1895,7 +2129,9 @@ Programs that call `SLEEP` with duration >= 0.1 seconds receive credit that exte
 
 | Limit | Value | Description |
 |-------|-------|-------------|
-| Open files | 4 | Maximum concurrent open files (#1 to #4) |
+| Open files | 8 | Maximum concurrent open files (#1 to #8) |
+| Data file name | 32 characters | Including the `.dat` extension |
+| Program name | 10 characters | Not counting the `.bas` extension |
 | File size | 256 KB | Maximum size for data files |
 | Output buffer | 1,000 lines | Maximum lines in screen output buffer |
 
@@ -1920,19 +2156,80 @@ The following control structures have no explicit depth limit and are limited on
 ### Variable Names
 
 - Must start with a letter (A-Z)
-- Can contain letters and digits
-- String variables end with `$` (e.g., `NAME$`)
+- Can contain letters, digits, and underscores
+- A single optional type suffix `$`, `%`, `!`, or `#` ends the name
 - Case insensitive (`count` and `COUNT` are the same variable)
+- **No length truncation** — `INTEREST_RATE` and `INTEREST_RATIO` are
+  distinct (prior versions silently aliased names beyond 12 characters)
 - Reserved keywords cannot be used as variable names
 
 ### String Limits
 
-- Strings are dynamically sized with no fixed maximum length
-- String functions like `SPACE$()` and `STRING$()` cap repetition at 255 characters
+- A string holds at most 2048 bytes; a longer result raises
+  `?STRING TOO LONG (MAX 2048 BYTES)`
+- `SPACE$(n)` is capped at 255 characters
+- There is no `STRING$()` function. Build repeated characters with
+  `REPLACE$(SPACE$(n), " ", "*")`
+
+### Error Handling
+
+- No `ON ERROR GOTO`; every runtime error ends the program
 
 ---
 
 ## Version History
+
+### Version 3.0.0
+
+**Semantic and correctness fixes — read these carefully if you have older
+programs, since several edge cases that previously appeared to work now
+report errors.**
+
+- **Operator `^` uses real exponentiation.** The exponent is no longer
+  truncated to an integer, so `2^0.5` returns `≈1.4142`, `8^(1/3)` returns
+  `2`, and `2^-3` returns `0.125`. Programs that relied on the old
+  truncating behaviour (e.g. `2^0.5` evaluating to `1`) will see different
+  results.
+- **Unary minus binds looser than `^`.** `-2^2` now evaluates to `-4`
+  (matching GW-BASIC, QBASIC, and most modern BASICs); previously it was
+  `4`. Use `(-2)^2` for the squared-negative-base case.
+- **`STEP 0` is rejected** with `STEP CANNOT BE ZERO` instead of looping
+  forever.
+- **`MID$`, `LEFT$`, `RIGHT$`, `INSTR`, `ASC`, and `CHR$` are Unicode
+  rune-aware** and consistent with `LEN`. Position arguments and return
+  values are character counts, not byte counts. `CHR$` accepts the full
+  Unicode range so `CHR$(ASC(c$))` round-trips for any character.
+- **Mixing string and numeric in a comparison raises `TYPE MISMATCH`.**
+  `5 = "5"` is no longer silently true; convert explicitly via `STR$()` or
+  `VAL()`.
+- **Variable names are no longer truncated at 12 characters.** Long names
+  that previously aliased (e.g. `INTEREST_RATE` and `INTEREST_RATIO` both
+  collapsing to `INTEREST_RAT`) are now distinct.
+- **`OPTION BASE 0 | 1` is supported.** Must precede every `DIM`. Defaults
+  to 0 for backwards compatibility.
+- **Type suffixes `%` (integer), `!` (single), `#` (double)** join `$`
+  (string) on identifiers. The suffix is part of the variable name. `%`
+  also coerces stored values to integer (truncate toward zero).
+- **`NEXT` matches the loop variable name** when one is provided. A `NEXT J`
+  no longer terminates a `FOR I` loop. `skipToNext` (used when a `FOR`
+  body should not execute) now walks every line as tokens, so multi-statement
+  lines like `FOR I=5 TO 1 : NEXT I` are handled correctly.
+- **`GOSUB` recursion is bounded** at 1024 active calls. Runaway recursion
+  produces `OUT OF STACK` instead of crashing the host process.
+
+---
+
+### Version 2.9.3
+
+**GOSUB/RETURN now follows standard BASIC semantics:**
+
+- When a `GOSUB` appears mid-line (e.g. `A = 1 : GOSUB HASH : PRINT A`), `RETURN` now resumes at the *next statement on the same line* (`PRINT A`), matching GW-BASIC, BBC BASIC, and ANSI Full BASIC X3.113-1987. Previously the trailing statements were silently skipped because `RETURN` jumped to the next line.
+
+**LOAD is now resilient:**
+
+- Lines that fail validation (invalid characters, oversize) now produce a warning and are skipped, instead of aborting the entire load. The remainder of the program loads normally.
+
+---
 
 ### Version 2.9.2
 
@@ -1976,7 +2273,7 @@ This feature enables database-like operations using associative arrays as record
 
 ---
 
-### Version 2.9.2
+### Version 2.8.0
 
 **Syntax Checker Improvements:**
 
@@ -1992,4 +2289,4 @@ This feature enables database-like operations using associative arrays as record
 
 ---
 
-*TIMESHARING BASIC/3270BBS v2.9.2 - Happy coding!* 🚀
+*TIMESHARING BASIC/3270BBS v2.9.3 - Happy coding!* 🚀
