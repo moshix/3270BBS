@@ -12,7 +12,7 @@ BASIC/3270BBS programs can be traditional line numbered (e.g. 100 PRINT "Hello, 
 - `GOTO`/`GOSUB` to the line that is running restarts that line (`10 X=X+1: IF X<3 THEN GOTO 10`).
 - `INPUT` and `INPUT #` store into array elements (`INPUT #1, N(2)`).
 - `STR$` of a literal now has the same leading space as `STR$` of a variable.
-- ISAM: `DELETED(n)` reports the recrd `GET` returned; no extra pass at `EOF`.
+- ISAM: `DELETED(n)` reports the record `GET` returned; no extra pass at `EOF`.
 - `U{} = $UserInfo` replaces the array; missing keys in BBS data and ISAM records read as `""`.
 - Text left over after a statement is a `?SYNTAX ERROR` instead of being ignored.
 
@@ -755,13 +755,18 @@ numeric array and `""` in a string array, so a counter needs no setup:
     COUNT{W$} = COUNT{W$} + 1
 ```
 
-`A{} = B{}` copies all of `B{}` into `A{}`, replacing what `A{}` held. The two
-arrays are independent afterwards.
+Arrays filled from BBS data (`U{} = $UserInfo` and the others) or by an
+ISAM `GET` are *records*:
 
-Arrays filled from BBS data (`$UserInfo` and the others) or by an ISAM `GET`
-are records: in them a missing key reads as `""` whatever the array's name.
+- A missing key reads as `""` whatever the array's name.
+- Every value in a record is a string. Use `VAL()` for arithmetic
+  (`VAL(M{"id"}) + 1`) and compare with strings (`IF M{"read"} = "1"`).
+- Setting single elements keeps an array a record; `DIM U{}` makes it an
+  ordinary empty array again.
+
 See [3270BBS Data Access](#-3270bbs-data-access) and
-[Indexed Files](#indexed-files-isam).
+[Indexed Files](#indexed-files-isam). There is no assignment of one of your
+own arrays to another (`A{} = B{}`).
 
 Keys can be variables or expressions:
 ```basic
@@ -1540,8 +1545,10 @@ every one of them:
   gone; it then holds exactly the keys of the source.
 - **A missing key reads as `""`**, also in an array without `$` in its
   name. `U{"nokey"}` is an empty string, not 0.
+- **All values are strings**: use `VAL()` for arithmetic, e.g.
+  `VAL(M{"id"}) + 1`.
 - **Key names ignore case.** `U{"USERNAME"}` and `U{"username"}` are the
-  same field. (Your own associative arrays and ISAM records keep exact,
+  same field, and `U{"Country"} = "X"` updates the existing `country`. (Your own associative arrays and ISAM records keep exact,
   case-sensitive keys.)
 
 ### $ChatMessage(n) - Chat Messages (Associative Array)
