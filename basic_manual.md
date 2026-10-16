@@ -15,6 +15,8 @@ BASIC/3270BBS programs can be traditional line numbered (e.g. 100 PRINT "Hello, 
 - ISAM: `GET ... NEXT` reads in key order; a successful PUT empties the array; `DELETED(n)` reports the record `GET` returned.
 - `U{} = $UserInfo` replaces the array; missing keys in BBS data and ISAM records read as `""`.
 - Text left over after a statement is a `?SYNTAX ERROR` instead of being ignored.
+- A CHAINed program returns to its caller also without `END`; `STOP` ends the whole run.
+- `RND(1)` is a random number from 0 to 1 again; new `STRING$(n, c$)`; `.idx` file names; three more CHECK warnings.
 
 **What's new in 3.0.0** (semantic and correctness fixes — see "Changes in 3.0.0" near the end of this manual):
 
@@ -143,9 +145,11 @@ The `CHECK` command performs a syntax analysis of the program currently in memor
 - **No END statement:** the program has no `END`
 - **Loop variable reused:** a nested FOR loop uses the same variable as an
   outer one
-
-CHECK can also add an information note when a long program has few `REM`
-comments. It does not flag long lines or lines with many statements.
+- **Complex line:** 3 or more statements on one line (colons inside
+  strings and comments do not count, nor do `REM` statements)
+- **Long line:** a source line longer than 120 characters
+- **Too few comments:** fewer than one `REM` or `'` comment per 10 lines of
+  code (one warning for the whole program)
 
 **Example usage:**
 ```basic
@@ -862,6 +866,11 @@ The apostrophe (`'`) can be used anywhere on a line to start a comment. Everythi
 100 END    ' Terminates program execution
 ```
 
+In a CHAINed program, `END` (or running past the last line) returns to
+the caller, after the `CHAIN` statement. `STOP` always ends the whole run:
+every pending CHAIN level is abandoned and the top-level program stays
+loaded.
+
 ### CLS - Clear Screen
 ```basic
 10 CLS    ' Clears the screen
@@ -925,13 +934,12 @@ More arithmetic rules:
 | Call | Result |
 |------|--------|
 | `RND(0)` | Random number from 0 up to, but not including, 1 |
-| `RND(n)`, n ≥ 1 | Random whole number from 1 to `INT(n)` (`RND(6)` is a die roll) |
-| `RND(1)` | Always `1` (the only whole number from 1 to 1) |
+| `RND(1)` | The same: 0 up to, but not including, 1 (also any x with 1 ≤ x < 2) |
+| `RND(n)`, n ≥ 2 | Random whole number from 1 to `INT(n)` (`RND(6)` is a die roll) |
 | `RND(n)`, n < 0 | Reseeds the generator with n (a repeatable sequence), returns a number from 0 up to 1 |
 | `RND(x)`, 0 < x < 1 | `?ILLEGAL QUANTITY ERROR` |
 
-So `RND(1)` is not a random number from 0 to 1, as in some other BASICs.
-Use `RND(0)` for that.
+`INT(RND(1) * N + 1)` gives a whole number from 1 to N, as in other BASICs.
 
 **Not available:** `ROUND`, `CEIL`, `FLOOR`, `MIN` and `MAX` do not exist.
 A call such as `MIN(1,2)` is read as an array reference and raises
@@ -985,6 +993,7 @@ returns `"é"`; `INSTR("€uro", "u")` returns `2`. Position arguments are
 | `STR$(n)` | Number to string; a number that is not negative gets a leading space (classic BASIC) | `STR$(42)` → `" 42"`, `STR$(-5)` → `"-5"` |
 | `VAL(s$)` | String to number | `VAL("42")` → `42` |
 | `SPACE$(n)` | n spaces | `SPACE$(5)` → `"     "` |
+| `STRING$(n, c$)` | n copies of the first character of c$; with a number, of `CHR$(code)`. n is cut to 255; n < 0 or an empty c$ is `?ILLEGAL QUANTITY ERROR` | `STRING$(3, "*")` → `"***"`, `STRING$(4, 45)` → `"----"` |
 | `UCASE$(s$)` | Uppercase | `UCASE$("hi")` → `"HI"` |
 | `LCASE$(s$)` | Lowercase | `LCASE$("HI")` → `"hi"` |
 | `TRIM$(s$)` | Remove leading/trailing whitespace | `TRIM$("  hi  ")` → `"hi"` |
@@ -1192,7 +1201,8 @@ Load and run another BASIC program:
 CHAIN "programname"
 ```
 
-When the chained program ends (via END), control returns to the calling program at the line after CHAIN. COMMON variables are preserved in both directions.
+When the chained program ends (via `END`, or by running past its last
+line), control returns to the calling program at the line after CHAIN. COMMON variables are preserved in both directions.
 
 **Example - Main Program:**
 ```basic
@@ -1223,8 +1233,7 @@ When the chained program ends (via END), control returns to the calling program 
   does not have to
 - Either program can be line-numbered or label-based, in any combination.
   A label-based callee starts at its `START:` label
-- The callee must finish with `END` to return to the caller. If it runs off
-  its last line without `END`, the caller does not resume
+- `STOP` in a chained program ends the whole run instead of returning
 - Open files and `DEF FN` functions also carry over to the chained
   program
 - Chains can be nested, and a program can chain to itself, up to 256
@@ -1257,9 +1266,10 @@ OPEN "filename.dat" FOR APPEND AS #3
 
 **File Numbers:** Use #1 through #8 (max 8 files open at once)
 
-**File names:** letters, digits and underscores, ending in `.dat`, at most
-32 characters including the `.dat`. Sequential and indexed files both use
-`.dat`; any other extension (`.idx` included) is `?ILLEGAL FILE NAME`.
+**File names:** letters, digits and underscores, ending in `.dat` or `.idx`
+(lower case), at most 32 characters including the extension. Both
+extensions work in every OPEN mode; any other name is
+`?ILLEGAL FILE NAME`.
 
 **When data reaches the disk:** `PRINT #` collects output in memory. It is
 written to the file when the file is closed, by `CLOSE` or when the
@@ -1371,7 +1381,7 @@ START:
 ```
 
 **Limits and Security:**
-- File names must end in `.dat` (at most 32 characters)
+- File names must end in `.dat` or `.idx` (at most 32 characters)
 - Files stored in your BASIC directory only
 - No path separators allowed in filenames
 
@@ -1382,7 +1392,7 @@ START:
 | `?FILE ALREADY OPEN` | File handle already in use |
 | `?BAD FILE NUMBER` | Invalid handle (not 1-8) or not open |
 | `?FILE SIZE LIMIT EXCEEDED` | Write would exceed 256KB |
-| `?ILLEGAL FILE NAME` | Invalid characters or missing .dat |
+| `?ILLEGAL FILE NAME` | Invalid characters, or not ending in .dat or .idx |
 | `?INPUT PAST END` | Attempted read after EOF |
 
 ---
@@ -2140,7 +2150,7 @@ COMPUTED:  ON expr GOTO line1,line2,...  ' Jump based on expression value
 MATH:      ABS INT SGN SQRT SQR SIN COS TAN ATAN ASIN ACOS LOG EXP RND
            PI() RADIANS(deg) DEGREES(rad)
 
-STRING:    LEN LEFT$ RIGHT$ MID$ CHR$ ASC STR$ VAL SPACE$ UCASE$ LCASE$
+STRING:    LEN LEFT$ RIGHT$ MID$ CHR$ ASC STR$ VAL SPACE$ STRING$ UCASE$ LCASE$
            TRIM$ LTRIM$ RTRIM$ INSTR REPLACE$
 
 FILE I/O:  OPEN "file.dat" FOR INPUT|OUTPUT|APPEND AS #n
@@ -2243,9 +2253,7 @@ The following control structures have no explicit depth limit and are limited on
 
 - A string holds at most 2048 bytes; a longer result raises
   `?STRING TOO LONG (MAX 2048 BYTES)`
-- `SPACE$(n)` is capped at 255 characters
-- There is no `STRING$()` function. Build repeated characters with
-  `REPLACE$(SPACE$(n), " ", "*")`
+- `SPACE$(n)` and `STRING$(n, c$)` are capped at 255 characters
 
 ### Error Handling
 
@@ -2302,6 +2310,15 @@ act differently; the items marked "changed" are the ones to check.**
   `?SYNTAX ERROR`; so is code after `ELSE`/`ELSEIF ... THEN` on the same
   line of a block IF, which was dropped. CHECK now reports every error RUN
   would, and accepts `PRINT X : ...` and `OPTION BASE`.
+- **CHAIN end:** a chained program that runs past its last line returns
+  to the caller as `END` does (it used to end the whole run). Changed:
+  `STOP` in a chained program ends the whole run (it used to return).
+- **Functions:** changed: `RND(1)` (any 1 ≤ x < 2) returns a random number
+  from 0 up to 1; it always returned 1. New `STRING$(n, c$)`.
+- **Files:** `OPEN` accepts `.idx` names as well as `.dat`.
+- **CHECK:** new warnings for complex lines (3+ statements), long lines
+  (over 120 characters) and too few comments; the old comment INFO line,
+  which overflowed column 79, is replaced by the warning.
 - **Messages:** `?BAD FILE NUMBER (MUST BE 1-8)` (said 1-4).
 - **Manual:** corrected the DEF FN and RND examples, RND, INT, STR$, file
   limits, CHECK warnings and ISAM details; documented arithmetic rules,
