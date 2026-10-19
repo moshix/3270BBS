@@ -17,8 +17,13 @@ BASIC/3270BBS programs can be traditional line numbered (e.g. 100 PRINT "Hello, 
 - Text left over after a statement is a `?SYNTAX ERROR` instead of being ignored.
 - A CHAINed program returns to its caller also without `END`; `STOP` ends the whole run.
 - `RND(1)` is a random number from 0 to 1 again; new `STRING$(n, c$)`; `.idx` file names; three more CHECK warnings.
+- `CASE 1 TO 9` and `CASE IS > 9`; `TIMER`, `RND`, `TIME$`, `PI`... work without parentheses; CHECK reports `GOTO`/`GOSUB` to missing lines.
+- `!=`, `\`, `&HFF`, `1E` and a broken `PRINT` expression are a `?SYNTAX ERROR` instead of being misread silently.
+- **Changed, check older programs:** a built-in function name can no longer be a variable: `PI = 3.14159` stops with `?PI IS A BUILT-IN FUNCTION - RENAME VARIABLE` (list under "Reserved names").
+- A program may hold at most 10 MB; it stops when its session ends (disconnect, SDSF `C U=`); waiting at `INPUT` no longer counts toward the time limit.
+- `FOR` and `WHILE` loops work inside a single-line `IF ... THEN` branch; text held back by a trailing `;` is always shown; `ON n GOTO` with n = 0 or past the list continues with the next statement.
 
-**What's new in 3.0.0** (semantic and correctness fixes — see "Changes in 3.0.0" near the end of this manual):
+**What's new in 3.0.0** (semantic and correctness fixes — see "Version 3.0.0" near the end of this manual):
 
 - Operator `^` now uses real exponentiation: `2^0.5` is `≈1.414`, `8^(1/3)` is `2`.
 - Unary minus binds looser than `^`: `-2^2` is `-4` (was `4`).
@@ -134,6 +139,10 @@ The `CHECK` command performs a syntax analysis of the program currently in memor
 **What CHECK does:**
 - Validates syntax of each line
 - Identifies syntax errors without running the program
+- In a line-numbered program, reports every `GOTO`, `GOSUB`, `THEN n`,
+  `ELSE n` and `ON ... GOTO/GOSUB` target that is not a line of the
+  program (`UNDEFINED LINE 50`, at the line holding the jump), which RUN
+  would only find when the jump executes
 - Detects potential problems and issues warnings
 - Builds a variable cross-reference (where each variable is defined and used)
 - Creates a data dictionary (all variables and arrays)
@@ -331,6 +340,12 @@ Users can share programs with each other by naming files with a `%` prefix. Thes
 30 PRINT A; " + "; B; " = "; A+B
 ```
 
+A trailing `;` (or `,`) keeps the line open: the next `PRINT` continues
+it. Text still open when the program ends is always shown: at `END` or
+`STOP`, after the last line, on a run-time error, `?LOOP IN CODE?`, the
+time limit or a PA1/PA2 break (the message then follows on a line of its
+own), and at `READY` as soon as the statement is done.
+
 #### COLOR Attribute
 You can add color to your output using the optional `COLOR` attribute at the end of a PRINT statement:
 
@@ -372,6 +387,16 @@ START:
 - Colors and modifiers are rendered using 3270 terminal extended attributes
 - Not all terminal emulators support all colors or highlighting modes
 
+**What the screen shows of a line:**
+- Each line shows at most 79 columns; a longer line is cut on the screen
+- A screen line holds at most 2048 bytes. A longer one, including a line
+  built from many `PRINT ...;` statements, is cut at 2048 bytes
+- Control characters (codes 0-31 and 127-159, e.g. `CHR$(7)`, `CHR$(17)`)
+  are not shown: they are left out on the screen (a tab, `CHR$(9)`, shows
+  as one blank), so text from a string, a file, `$ChatMessage` or `$Mail`
+  can never act as a terminal command. The string itself keeps them
+  (`LEN` counts them, `PRINT #` writes them)
+
 ### LET - Assign Variables
 ```basic
 10 LET X = 10
@@ -401,12 +426,51 @@ Names are case-insensitive and **not truncated**: `INTEREST_RATE` and
 30 SAMPLES_PER_SEC = 44100   ' long names are kept verbatim
 ```
 
+**Reserved names (changed in 3.0.1).** The name of a built-in function
+cannot be a variable, an array, a FOR or INPUT variable, a DEF FN parameter
+or a COMMON name. Older programs often did this (`PI = 3.14159` was the
+usual GW-BASIC idiom); such a line is now refused with
+`?PI IS A BUILT-IN FUNCTION - RENAME VARIABLE`. Rename the variable
+(`MYPI = 3.14159`), or for `PI` simply delete the assignment and use the
+built-in `PI`. The reserved names are:
+
+<!-- reserved-names: keep in sync with basicBuiltinNames (basic_parser.go) -->
+```
+ABS ACOS ASC ASIN ATAN BOXCHAR$ CHR$ COS CP310$ DATE$ DAY DEGREES DELETED
+EOF EXP FOUND HOUR INSTR INT LCASE$ LEFT$ LEN LOG LTRIM$ MID$ MINUTE MONTH
+PI RADIANS REPLACE$ RIGHT$ RND RTRIM$ SECOND SGN SIN SLEEP SPACE$ SQR SQRT
+STR$ STRING$ TAB TAN TIME$ TIMER TRIM$ UCASE$ VAL YEAR
+```
+<!-- /reserved-names -->
+
+Names that merely contain or extend one are ordinary: `LEN%`, `PI2`,
+`TIMERS`, `MYPI`. `EVAL` without parentheses is an ordinary variable.
+There is no `MID$` statement: `MID$(A$, 1, 1) = "J"` is
+`?MID$ STATEMENT NOT SUPPORTED`; write `A$ = "J" + MID$(A$, 2)`.
+
+Only letters, digits, `_`, the suffixes above, operators, `( ) { } , ; : #
+?`, `"` strings, `'` and `REM` comments make up a line. Any other character
+outside a string or comment is a `?SYNTAX ERROR`; the commonest are `!=`
+(write `<>`; also `A!=5` is refused, write `A! = 5` to use the variable
+`A!`), `&HFF` (no hex literals), `\` (use `INT(A / B)`) and `%` as an
+operator (use `MOD`). A malformed number such as `1E`, `12AB` or `1.2.3` is
+a `?SYNTAX ERROR` too. A type suffix on a number, as GW-BASIC writes it, is
+accepted and ignored (every number is a double): `1.5!`, `2#`, `100%` (`%`
+only on a whole number: `1.5%` is a `?SYNTAX ERROR`). These used to be dropped or misread silently, so
+`IF A != 5` ran as `IF A = 5`.
+
 ### INPUT - Get User Input
 ```basic
 10 INPUT "Enter your name: ", NAME$
 20 INPUT "Enter a number: ", N
 30 PRINT "Hello, "; NAME$; "! Your number is "; N
 ```
+
+The input field always starts right after the prompt and is at least 20
+columns wide. A prompt longer than 57 characters wraps: whole rows of 79
+characters above the input row, the rest in front of the input field.
+The time spent waiting for the reply does not count toward the 15-second
+execution limit.
 
 ### IF/THEN/ELSE - Conditional Execution
 
@@ -416,6 +480,16 @@ BASIC supports both single-line and multi-line IF statements.
 ```basic
 10 INPUT "Enter age: ", AGE
 20 IF AGE >= 18 THEN PRINT "Adult" ELSE PRINT "Minor"
+```
+
+Everything after `THEN` (up to `ELSE`) and after `ELSE` is the branch, and
+it may hold any statements, also nested single-line IFs. A whole loop can
+sit in a branch, and a `NEXT` or `WEND` in a branch loops back as anywhere
+else; `GOSUB` and `INPUT` continue inside the branch afterwards:
+
+```basic
+10 IF N > 0 THEN FOR I = 1 TO N: PRINT I;: NEXT I: PRINT " DONE"
+20 IF X THEN WHILE K < 3: K = K + 1: GOSUB 100: WEND: PRINT "BACK"
 ```
 
 #### Multi-Line Block IF
@@ -488,6 +562,21 @@ Convert explicitly with `STR$()` / `VAL()` if you really want the comparison.
 The GOSUB call stack is bounded (1024 active calls). Runaway recursion is
 caught with `OUT OF STACK` rather than crashing the host process.
 
+Each `GOSUB` level has its own `FOR` and `WHILE` loops, as in GW-BASIC:
+
+- `RETURN` closes every `FOR` and `WHILE` loop the subroutine left open, so
+  it is safe to `RETURN` from inside a loop; the caller's next `NEXT` or
+  `WEND` continues the caller's own loop.
+- A recursive subroutine may use the same `FOR` variable in every call
+  (`FOR P = 1 TO 8 : GOSUB Self : NEXT P`): each call's loop is separate.
+  The variable itself is shared, so save it if the caller needs it later.
+- A `NEXT` or `WEND` inside a subroutine cannot close a loop of its caller:
+  that is `?NEXT WITHOUT FOR` / `?WEND WITHOUT WHILE`.
+- Block `IF` and `SELECT CASE` work the same way: `RETURN` from inside the
+  subroutine's own block closes it, and `ELSE`, `ELSEIF`, `END IF`, `CASE`
+  and `END SELECT` inside a subroutine cannot act on a block its caller has
+  open (`?END IF WITHOUT IF`, `?CASE WITHOUT SELECT`, ...).
+
 ### ON...GOTO / ON...GOSUB - Computed Jumps
 The ON statement provides computed branching based on the value of an expression. The expression is evaluated, and program flow jumps to the corresponding line number in the list (1-based index).
 
@@ -521,7 +610,16 @@ ON expression GOSUB line1, line2, line3, ...
 ```
 
 **Behavior:**
-- If the expression evaluates to a value less than 1 or greater than the number of line numbers, execution continues to the next line (no jump occurs)
+- The fraction of the value is dropped, not rounded (`2.7` selects the
+  second target, `-0.5` counts as 0)
+- If the value is 0 or greater than the number of targets, no jump occurs
+  and execution continues with the next statement (on the same line, if
+  there is one), as in classic BASIC. This holds for any value, also above
+  255 (GW-BASIC raises `?ILLEGAL FUNCTION CALL` there)
+- A negative value is an error: `?ILLEGAL FUNCTION CALL`; a string is
+  `?TYPE MISMATCH`
+- `ON ERROR GOTO` is not error trapping (see "Error handling"): it stays
+  `?ILLEGAL FUNCTION CALL` instead of continuing silently
 - ON...GOTO jumps to the target line
 - ON...GOSUB calls the target as a subroutine (use RETURN to come back)
 
@@ -612,7 +710,7 @@ Quit:
 | Entry point | First line number | `START:` label |
 | Line format | `10 PRINT "Hello"` | `PRINT "Hello"` |
 | Jump target | `GOTO 100` | `GOTO Done` |
-| Listing format | Shows line numbers | Shows line index |
+| Listing format | Shows line numbers | Shows line numbers 1, 2, 3 ... as loaded (the new numbers after `RENUM`) |
 
 ### When to Use Labels
 - **New programs** - More readable, easier to maintain
@@ -621,7 +719,13 @@ Quit:
 
 ### Compatibility Notes
 - All BASIC features work identically in both modes
-- The `CHECK` command validates label programs and shows "INDX" instead of "LINE"
+- The `CHECK` command validates label programs; its listing heads the
+  first column `STMT` and shows the line number, the same number run-time
+  errors print as `IN LINE n`
+- A label defined twice is reported with both line numbers
+  (`?DUPLICATE LABEL AT LINE n (FIRST AT LINE m): NAME`); RUN and CHAIN
+  refuse the program until it is fixed. A program without `START:` gives
+  `?MISSING START: LABEL`
 - `RENUM` command is not applicable to label-based programs
 
 ---
@@ -650,7 +754,16 @@ START:
   the loop run forever, so the interpreter refuses it instead of hanging.
 - If the start value already passes the end value in the direction of the
   step (e.g. `FOR I = 5 TO 1` with no `STEP -1`), the loop body is skipped
-  and execution continues after the matching `NEXT`.
+  and execution continues after the matching `NEXT`. It is found in program
+  order from the `FOR` on, counting nested `FOR`/`NEXT` pairs, also those
+  inside single-line IF branches. When the `FOR` itself is in a THEN or
+  ELSE branch, a `NEXT` later in that same branch is the match. A `NEXT` in
+  the branch of a later IF (a "continue" such as `IF I > 3 THEN NEXT I`) is
+  passed over in favour of a plain `NEXT` further on, and used only when no
+  other follows. A `NEXT` in the ELSE of the IF whose THEN holds the `FOR`
+  never matches (that loop can never reach it): `?FOR WITHOUT NEXT`. A
+  `WHILE` whose condition is false the first time skips to its `WEND` the
+  same way.
 - `NEXT` may include the loop variable (`NEXT I`); when it does, the
   variable name must match the innermost open `FOR`.
 - `NEXT J, I` closes two loops at once; it is the same as `NEXT J : NEXT I`.
@@ -686,13 +799,39 @@ The SELECT CASE statement provides a cleaner alternative to multiple IF/ELSEIF c
 
 **Key features:**
 - The test expression is evaluated once at SELECT CASE
-- Each CASE can have multiple comma-separated values to match
+- Each CASE can have multiple comma-separated tests; it matches if any one
+  does. A test is one of:
+  - a value: `CASE 5`, `CASE "MON"`
+  - a range: `CASE 1 TO 9` matches 1 up to and including 9 (`CASE 9 TO 1`
+    matches nothing)
+  - a comparison: `CASE IS > 10`, with `<`, `<=`, `>`, `>=`, `=` or `<>`
+- The forms mix freely: `CASE 1, 3 TO 5, IS > 10`
+- Ranges and comparisons work on strings too (`CASE "A" TO "M"`,
+  `CASE IS >= "N"`), comparing character codes like `<` and `>`; comparing
+  a string with a number in a range or `IS` test is `?TYPE MISMATCH`
 - Only the first matching CASE block executes (no fall-through)
 - CASE ELSE is optional and executes if no other CASE matches
 - SELECT CASE blocks can be nested
-- Ranges (`CASE 1 TO 5`) and comparisons (`CASE IS > 5`) are not
-  supported and are a `?SYNTAX ERROR`; list the values, or use
-  `IF`/`ELSEIF`
+- `CASE` and `END SELECT` may share a line with other statements
+  (`CASE 1: PRINT "ONE"`, `END SELECT: PRINT "DONE"`), and a whole SELECT
+  can be on one line, in a program and typed at `READY`, also nested in
+  another SELECT on that line or in the THEN/ELSE branch of a single-line
+  IF (`IF OK THEN SELECT CASE X: CASE 1: PRINT "A": END SELECT`)
+
+**Ranges and comparisons:**
+```basic
+10 INPUT "Score: ", S
+20 SELECT CASE S
+30     CASE IS < 0, IS > 100
+40         PRINT "Invalid"
+50     CASE 90 TO 100
+60         PRINT "A"
+70     CASE 75 TO 89
+80         PRINT "B"
+90     CASE ELSE
+100        PRINT "C or below"
+110 END SELECT
+```
 
 **String matching example (label-based):**
 ```basic
@@ -760,7 +899,8 @@ START:
 ```
 
 Keys are case-sensitive: `PHONEBOOK${"Alice"}` and `PHONEBOOK${"alice"}`
-are two different entries. Reading a key that was never set gives `0` in a
+are two different entries. (Arrays filled from BBS data, such as
+`U{} = $UserInfo`, are the exception: their keys ignore case.) Reading a key that was never set gives `0` in a
 numeric array and `""` in a string array, so a counter needs no setup:
 
 ```basic
@@ -845,13 +985,15 @@ START:
   `DEF FN` line has executed. Calling it earlier, or after a `GOTO` that
   jumped over the `DEF FN` line, fails because the function is undefined
 - A function can be redefined by executing another `DEF FN` for the same
-  name. `NEW` removes all functions; they survive `CHAIN`
+  name. `NEW` removes all functions; they carry over to a `CHAIN`ed
+  program, whose own definitions are dropped when it returns
 - The type of the result comes from the expression, not from a `$` in the
   name
 
 ### Error handling
 
-There is no `ON ERROR GOTO` (it raises `?ILLEGAL FUNCTION CALL`). A runtime
+There is no `ON ERROR GOTO` (it raises `?ILLEGAL FUNCTION CALL`; CHECK
+reports it as `ON ERROR NOT SUPPORTED`). A runtime
 error always stops the program. Check values before using them, for example
 test a divisor for zero or use `EOF(n)` before `INPUT #n`.
 
@@ -944,6 +1086,8 @@ More arithmetic rules:
 | `RND(x)`, 0 < x < 1 | `?ILLEGAL QUANTITY ERROR` |
 
 `INT(RND(1) * N + 1)` gives a whole number from 1 to N, as in other BASICs.
+`RND` without parentheses is `RND(1)`, as in GW-BASIC: `INT(RND * 6) + 1`
+is a die roll.
 
 **Not available:** `ROUND`, `CEIL`, `FLOOR`, `MIN` and `MAX` do not exist.
 A call such as `MIN(1,2)` is read as an array reference and raises
@@ -962,7 +1106,7 @@ A call such as `MIN(1,2)` is read as an array reference and raises
 
 | Function | Description | Example |
 |----------|-------------|---------|
-| `PI()` | Returns the value of π | `PI()` → `3.14159...` |
+| `PI()` | Returns the value of π (also written `PI`) | `PI()` → `3.14159...` |
 | `RADIANS(deg)` | Convert degrees to radians | `RADIANS(180)` → `3.14159...` |
 | `DEGREES(rad)` | Convert radians to degrees | `DEGREES(PI())` → `180` |
 
@@ -1005,6 +1149,13 @@ returns `"é"`; `INSTR("€uro", "u")` returns `2`. Position arguments are
 | `RTRIM$(s$)` | Remove trailing whitespace | `RTRIM$("hi  ")` → `"hi"` |
 | `INSTR(s$,find$)` | Find 1-based character position of substring (0 if not found) | `INSTR("hello","ll")` → `3` |
 | `REPLACE$(s$,old$,new$)` | Replace all occurrences | `REPLACE$("hello","l","L")` → `"heLLo"` |
+
+A count or position larger than the string means "up to the end":
+`LEFT$(S$, 1E30)` is all of S$, `MID$(S$, 2, 1E30)` is S$ from its second
+character. A negative count or position, or a value that is not a number
+(`EXP(1000)-EXP(1000)` gives one), is `?ILLEGAL QUANTITY ERROR`; so is
+`CHR$` of such a value. `SPACE$`, `STRING$` and `TAB` cut a huge count to
+their maximum.
 
 Because of `STR$`'s leading space, pad a number with zeros as
 `RIGHT$("0" + TRIM$(STR$(N)), 2)` (5 gives `"05"`).
@@ -1079,12 +1230,20 @@ Returns graphic characters from Code Page 310. Use with CP310-capable terminals 
 `"2026-01-07"`). `HOUR()`, `MINUTE()`, `SECOND()`, `YEAR()`, `MONTH()` and
 `DAY()` return plain numbers (`9`, not `"09"`).
 
+These functions, `PI` and `RND` can also be written without parentheses, as
+in GW-BASIC: `PRINT TIME$; " "; DATE$`, `T = TIMER`. Every other built-in
+needs its arguments in parentheses: `PRINT LEN "ABC"` is
+`?EXPECTED ( AFTER LEN`.
+
 ### SLEEP Function
 
 The `SLEEP(n)` function pauses program execution for the specified number of seconds. Any call of SLEEP with more than 0.25 seconds will reward the program with more allowed iterations and wall clock time before the program is halted for excessive computation or wall clock. SLEEP spares the CPU as it is a non-busy wait function. 
 
-- **Range:** 0.1 to 255 seconds
+- **Range:** 0.1 to 255 seconds (a value that is not a number, such as
+  `EXP(1000)-EXP(1000)`, is out of range too)
 - **Fractions:** Supports decimal values (e.g., `SLEEP(0.5)` for half a second)
+- **Disconnect:** if the user's connection is closed during the wait, the
+  program ends at once (see Execution Limits)
 - **CPU-friendly:** Does not consume CPU cylces during the wait
 - **Returns:** 0 (can be ignored)
 
@@ -1197,6 +1356,21 @@ COMMON var1, var2, var3$
 
 Variables declared with COMMON retain their values when you CHAIN to another program. Variables not declared as COMMON are cleared.
 
+What is shared is decided by the **calling** program's COMMON list at the
+moment of the CHAIN, in both directions. A COMMON statement in the chained
+program does not make a variable of the caller shared: if the caller's `Y`
+is not in its COMMON list, the caller still has its own `Y` back when the
+chained program ends, whatever the chained program did with a `Y`. The
+chained program starts with a copy of the caller's COMMON list, so those
+variables are passed on to any program it chains to in turn; its own COMMON
+statements add to that copy only.
+
+Arrays work the same way: a chained program starts with no arrays, and when
+it ends the caller's arrays (and its `OPTION BASE`) are exactly as they were
+before the CHAIN. To share an array, name it in COMMON: `COMMON A` covers
+`A`, `A()` and `A{}`, and `COMMON A$` covers `A$` and `A$()`. A shared
+array is passed in both directions, like a COMMON variable.
+
 ### CHAIN Statement
 
 Load and run another BASIC program:
@@ -1238,10 +1412,30 @@ line), control returns to the calling program at the line after CHAIN. COMMON va
 - Either program can be line-numbered or label-based, in any combination.
   A label-based callee starts at its `START:` label
 - `STOP` in a chained program ends the whole run instead of returning
-- Open files and `DEF FN` functions also carry over to the chained
-  program
+- A run-time error in a chained program also ends the whole run. The
+  message names the program and its line (`?DIVISION BY ZERO IN leaf
+  LINE 20`), and the top-level program stays loaded
+- `DEF FN` functions carry over to the chained program, which can call
+  them. What it defines itself is its own: when it ends, the caller has
+  exactly the functions it had before the CHAIN (a redefinition such as
+  `DEF FNF(X)=X+100` in the chained program does not replace the caller's
+  `FNF`, and a new function is gone)
+- Open files are shared in both directions: the chained program can use
+  the caller's open files, and a file it opens (or closes) is still open
+  (or closed) when the caller continues, under the same number
 - Chains can be nested, and a program can chain to itself, up to 256
   levels deep (`?CHAIN NESTED TOO DEEPLY (MAX 256)`)
+- The 10 MB memory limit covers the whole chain: what every caller keeps
+  (its variables and arrays, also a COMMON array the callee re-`DIM`s)
+  counts while the callee runs, and so does each chained program itself,
+  one copy per level (a program that CHAINs itself holds one copy per
+  level). A chained program costs its text, 64 bytes per line and 36
+  bytes per word, number, string or operator: about what the compiled
+  program really takes, so a program packed with long expressions costs
+  up to 30 times its file size and one of 300 KB can exceed the 10 MB on
+  its own (`?OUT OF MEMORY` at the CHAIN), while comments cost little
+  more than their text. What the callee allocated is given back when it
+  returns
 - CHAIN can be used inside GOSUB, FOR, WHILE, IF and SELECT; when the
   callee ends, the caller continues there (`RETURN`, `NEXT` work as usual)
 - CHAIN works only inside a running program, not at the `READY` prompt
@@ -1494,6 +1688,9 @@ scan, one with an earlier key is not, and a deleted record is skipped.
 - After `KEY =` or `REC =`, a `GET ... NEXT` continues with the record
   whose key follows the key just read (also when `REC =` read a deleted
   record). A `KEY =` that finds nothing does not move the position.
+
+A PUT from a record filled from BBS data (`U{} = $UserInfo` and the like)
+finds the `KEY` field ignoring case.
 
 **A successful PUT empties the array**, as if it were `DIM`med again, so
 the next record never picks up fields of the previous one. Read the fields
@@ -2109,8 +2306,8 @@ AskAgain:
 | Key | Action |
 |-----|--------|
 | **Enter** | Execute comand / Submit input |
-| **Clear** | Clear screen, show new READY prompt |
-| **PA1** / **PA2** | Break/stop running program |
+| **Clear** | Clear screen, show new READY prompt (ends a program waiting at INPUT) |
+| **PA1** / **PA2** | Break/stop running program, also one waiting at INPUT |
 | **PF11** / **PF12** | Step through command history |
 
 ---
@@ -2200,28 +2397,66 @@ This section documents the built-in limits of the BASIC interpreter.
 | Limit | Value | Description |
 |-------|-------|-------------|
 | Dimension size | 10,000 | Maximum size per array dimension |
-| Total elements | 100,000,000 | Maximum for 2D array (10000 x 10000) |
-| Associative arrays | Unlimited | Limited only by available memory |
+| Total elements | 65,535 | Maximum cells of one array (`?ARRAY TOO LARGE (MAX 65535 ELEMENTS)`) |
+| Associative arrays | No key limit | Limited by the 10 MB program memory (below) |
+
+### Memory Limit
+
+| Limit | Value | Description |
+|-------|-------|-------------|
+| Program memory | 10 MB | Everything a program holds at once |
+
+The 10 MB cover the variables, arrays, associative arrays (keys and
+values), the screen output buffer, the open files (lines read, lines
+written but not yet closed, indexed records) and, in a chained program,
+what every calling program keeps and the chained programs themselves
+(see CHAIN). A program that needs more stops with
+`?OUT OF MEMORY (MAX 10 MB) IN LINE n`, like any run-time error. `DIM` and
+`OPEN` are refused before they allocate (a file larger than the memory
+left is not read).
+
+Memory is counted as the BBS uses it, not just the characters of the
+strings: each variable, array cell and associative-array entry costs some
+bytes of its own. As a guide, a number in an array costs 56 to 80 bytes,
+so a full 65,535-cell array of numbers is about 3.6 MB; a string costs its
+length plus about 50 bytes; an associative-array entry its key and value
+plus about 110 bytes. Replacing a value never adds up, `DIM A{}` gives an
+associative array's memory back, `CLOSE` a file's, and `RUN`, `NEW` and
+the end of a chained program give back everything they drop.
 
 ### Execution Limits
 
 | Limit | Value | Description |
 |-------|-------|-------------|
 | Iterations | 55,000,000 | Maximum loop iterations before timeout |
-| Execution time | 15 seconds | Maximum runtime (excluding SLEEP) |
+| Execution time | 15 seconds | Maximum runtime (excluding SLEEP and waiting at INPUT) |
 | Sleep credit | 15% | Percentage of used resources credited back when SLEEP is called |
 
 Programs that call `SLEEP` with duration >= 0.1 seconds receive credit that extends both iteration and time limits.
+
+Every `FN` call and every `EVAL` counts as an iteration too, and both
+limits are also checked inside a statement that does much work (a chain
+of `FN`s or `EVAL`s), on every `CHAIN` and on every `OPEN`. The message
+is the same wherever the limit is hit: `?EXECUTION TIME LIMIT REACHED` or
+`?LOOP IN CODE?`. A statement typed at `READY` has the same limits.
+
+A program stops when its user's connection is gone: the terminal is
+closed or disconnects, an operator cancels the session (SDSF `C U=`), or
+the user logs off with the program waiting at INPUT in another virtual
+session. The program ends before its next statement, a `SLEEP` ends at
+once, and the open files are written and closed as by `END`. The job log
+shows the job ended with `RC=0008`; held output (if enabled) ends with
+`?PROGRAM CANCELLED - SESSION ENDED`.
 
 ### File I/O Limits
 
 | Limit | Value | Description |
 |-------|-------|-------------|
 | Open files | 8 | Maximum concurrent open files (#1 to #8) |
-| Data file name | 32 characters | Including the `.dat` extension |
+| Data file name | 32 characters | Including the `.dat` or `.idx` extension |
 | Program name | 10 characters | Not counting the `.bas` extension |
 | File size | 256 KB | Maximum size for data files |
-| Output buffer | 1,000 lines | Maximum lines in screen output buffer |
+| Output buffer | 1,000 lines | Maximum lines in screen output buffer, each at most 2048 bytes |
 
 ### SLEEP Statement
 
@@ -2232,14 +2467,11 @@ Programs that call `SLEEP` with duration >= 0.1 seconds receive credit that exte
 
 ### Control Structure Nesting
 
-The following control structures have no explicit depth limit and are limited only by available memory:
-
-- **GOSUB/RETURN** - Subroutine call stack
-- **FOR/NEXT** - Loop nesting
-- **WHILE/WEND** - Loop nesting
-- **IF/END IF** - Conditional block nesting
-- **SELECT CASE/END SELECT** - Case block nesting
-- **CHAIN** - Program chaining stack
+| Structure | Limit |
+|-----------|-------|
+| GOSUB/RETURN | 1,024 nested calls |
+| CHAIN | 256 nested programs (`?CHAIN NESTED TOO DEEPLY (MAX 256)`) |
+| FOR/NEXT, WHILE/WEND, IF/END IF, SELECT CASE | 256 open of each kind, counted over all GOSUB levels |
 
 ### Variable Names
 
@@ -2262,6 +2494,9 @@ The following control structures have no explicit depth limit and are limited on
 ### Error Handling
 
 - No `ON ERROR GOTO`; every runtime error ends the program
+- `?INTERNAL ERROR IN LINE n` means the interpreter itself failed on that
+  line (a bug, please report it with the program); the program ends, the
+  session goes on
 - Anything left on a line after a complete statement, other than `:` and a
   comment (`REM` or `'`), is a `?SYNTAX ERROR`, reported by both RUN and
   CHECK. A statement typed at `READY` without a line number is checked the
@@ -2295,7 +2530,8 @@ act differently; the items marked "changed" are the ones to check.**
   plain variable of the same name.
 - **Optimizer:** constant folding uses the same routines as run time, so
   `STR$(5)` is `" 5"` (was `"5"`), and expressions that fail at run time
-  (`10^400`, `VAL("Inf")`) are no longer folded into wrong values.
+  (such as `10^400`) are no longer folded into wrong values; `VAL("Inf")`
+  is folded to 0, as at run time (it was folded to infinity).
 - **ISAM:** `DELETED(n)` reported the record after the one returned;
   `WHILE NOT EOF` made an extra pass when the last record was deleted;
   `GET KEY=`/`REC=` followed by `GET NEXT` returned the same record twice.
@@ -2310,13 +2546,21 @@ act differently; the items marked "changed" are the ones to check.**
   case.
 - **Syntax:** changed: text left over after a complete statement is a
   `?SYNTAX ERROR`. It used to be ignored silently.
-- **Syntax, more:** `NEXT J, I` closes both loops (it used to close only
-  `J`); `CLOSE #1, #2` closes both files and `CLOSE 1` closes file 1 (it
-  closed all files). Changed: `CASE 1 TO 5` and `CASE IS > 5` were never
-  supported (they matched only the first value) and are now a
-  `?SYNTAX ERROR`; so is code after `ELSE`/`ELSEIF ... THEN` on the same
-  line of a block IF, which was dropped. CHECK now reports every error RUN
+- **Syntax, more:** changed: a trailing comma, as in `NEXT I,`, is a
+  `?SYNTAX ERROR` (it was ignored); a single one after `CLOSE` (`CLOSE #1,`)
+  is still accepted, also before the `ELSE` of a single-line IF
+  (`IF X THEN CLOSE #1, ELSE ...`). `NEXT J, I` closes both loops (it used
+  to close only `J`); `CLOSE #1, #2` closes both files and `CLOSE 1` closes
+  file 1 (it closed all files). Changed: code after `ELSE`/`ELSEIF ... THEN`
+  on the same line of a block IF, which was dropped, is a
+  `?SYNTAX ERROR`. CHECK now reports every error RUN
   would, and accepts `PRINT X : ...` and `OPTION BASE`.
+- **GOSUB and loops:** changed: each `GOSUB` level has its own `FOR` and
+  `WHILE` loops, block `IF`s and `SELECT CASE`s. A subroutine left with
+  `GOTO` instead of `RETURN` keeps its level open, so a later `NEXT`,
+  `WEND`, `END IF` or `END SELECT` of the caller's is `?NEXT WITHOUT FOR`,
+  `?WEND WITHOUT WHILE` etc. (it used to work). Leave subroutines with
+  `RETURN`.
 - **CHAIN end:** a chained program that runs past its last line returns
   to the caller as `END` does (it used to end the whole run). Changed:
   `STOP` in a chained program ends the whole run (it used to return).
@@ -2332,7 +2576,102 @@ act differently; the items marked "changed" are the ones to check.**
   `IF X THEN ' ...` (it was a single-line IF with an empty body).
 - **Operators:** a string such as `"+"` is never taken as an operator;
   `X = 1 "+" 2` used to give 3.
+- **SELECT CASE:** new: ranges and comparisons, as in QBasic:
+  `CASE 1 TO 9`, `CASE IS > 10`, mixed with values (`CASE 1, 3 TO 5,
+  IS > 10`), for numbers and strings. `CASE IS > 3` used to compare with
+  a variable `IS` worth 0. `END SELECT` followed by a comment or another
+  statement, `END  SELECT`, a `CASE` after another statement on its line
+  and a SELECT on one line work (they ended in `?SELECT WITHOUT END SELECT`).
+- **Syntax, characters:** changed: a character the language does not use
+  (`!=`, `&HFF`, `7 \ 2`, `10 % 3`) and a malformed number (`1E`, `12AB`,
+  `1.2.3`) are a `?SYNTAX ERROR`, at RUN, at `READY`, in `EVAL` and in
+  CHECK. They used to be dropped: `IF A != 5` ran as `IF A = 5`, and
+  `PRINT 7 \ 2` printed `72`.
+- **PRINT:** a malformed expression (`PRINT (1+2`, `PRINT 5 +`,
+  `PRINT A(1`) is an error; it used to end the PRINT list silently, so a
+  blank or partial line was printed and CHECK found nothing.
+- **Built-in functions:** **changed, check older programs:** no built-in
+  function name can be a variable any more. `PI = 3.14159`, `LEN = 5`,
+  `FOR DAY = 1 TO 7` or `INPUT TIMER` stop with
+  `?PI IS A BUILT-IN FUNCTION - RENAME VARIABLE`; such a program must be
+  edited (see "Reserved names" under LET for the list). In return `RND`,
+  `PI`, `TIMER`, `TIME$`, `DATE$`, `HOUR`, `MINUTE`, `SECOND`, `YEAR`,
+  `MONTH` and `DAY` work without parentheses; they used to be variables,
+  so `TIMER` was always 0 and `INT(RND * 6) + 1` always 1. Other built-ins
+  without `(` are `?EXPECTED ( AFTER name`.
+- **CHECK, jumps:** a line-numbered program's `GOTO`, `GOSUB`, `THEN n`,
+  `ELSE n` and `ON ... GOTO/GOSUB` targets must exist: a missing one is
+  reported as `UNDEFINED LINE n` (CHECK passed such a program, RUN failed
+  when the jump executed). `ON ERROR GOTO` is reported as
+  `ON ERROR NOT SUPPORTED`. The listing shows every error of a line under
+  it (it showed only one), and the ERRORS section is in line order.
+- **CHAIN, more:** fixed: a CHAIN inside a single-line IF lost the rest of
+  that line when the callee ended inside an IF. Changed: arrays are no
+  longer shared with a chained program unless named in COMMON (a callee's
+  `DIM` used to wipe the caller's array); a run-time error in a chained
+  program ends the whole run and leaves the top-level program loaded.
+  Errors from a chained program fit the 79-column screen with their line
+  number.
+- **Labels, more:** every duplicate label is reported and RUN refuses the
+  program (later labels used to be lost); CHECK shows line numbers, not
+  positions; the editor and LOAD number label programs the same way.
+- **CHECK, more:** accepts `DIM A(N)` with a variable size.
 - **Messages:** `?BAD FILE NUMBER (MUST BE 1-8)` (said 1-4).
+- **Memory:** new: a program may hold at most 10 MB (variables, arrays,
+  associative arrays, output, open files), else `?OUT OF MEMORY (MAX 10
+  MB)`, chained programs included. Associative arrays used to be
+  unlimited. A screen line is cut at 2048 bytes, also when built with
+  `PRINT ...;`.
+- **Limits inside a statement:** `FN` calls and `EVAL`s count as
+  iterations, and a single statement doing much work, `CHAIN` and `OPEN`
+  check the time limit (a chain of `FN`s in one `PRINT` used to run for
+  ever).
+- **Disconnect:** a program now stops when its connection is closed or
+  cancelled (SDSF `C U=`); `SLEEP` no longer outlives the session, open
+  files are written and the job is logged as ended.
+- **Overflow:** `MID$` with a huge length (`MID$(S$, 2, 1E30)`) could end
+  the user's session; it now returns the rest of the string. A huge count
+  works the same on every computer in `LEFT$`, `RIGHT$`, `SPACE$`,
+  `STRING$`, `TAB`; a value that is not a number is `?ILLEGAL QUANTITY
+  ERROR` (`SLEEP` of one is out of range: it used to switch the time limit
+  off). An interpreter failure is `?INTERNAL ERROR` instead of a lost
+  session.
+- **Screen:** control characters in PRINT output and INPUT prompts are no
+  longer sent to the terminal; reverse and blinking lines with accented
+  characters, long INPUT prompts and F12 at an INPUT prompt no longer run
+  past column 79; a prompt without a trailing blank keeps its last letter.
+- **INPUT:** time spent waiting for the reply no longer counts toward the
+  15-second limit.
+- **Loops in single-line IF branches:** `IF X THEN FOR I=1 TO 3: ... :
+  NEXT I` and `IF X THEN WHILE ...: WEND` ran the body once (or stopped
+  with `?FOR WITHOUT NEXT` / `?WHILE WITHOUT WEND`); a `NEXT` or `WEND` in
+  a branch after an `INPUT` or `GOSUB` there ended the loop, and
+  `IF X THEN NEXT I: PRINT "Y"` ran the rest of the branch on every pass.
+  All fixed, at any depth of nested IFs. Changed: a skipped `FOR`/`WHILE`
+  counts loops inside single-line IF branches, and uses a `NEXT`/`WEND` in
+  a later IF's branch when no plain one follows (it gave `?FOR WITHOUT
+  NEXT`).
+- **PRINT `;` at the end of a run:** text held back by a trailing `;` was
+  lost when the program ran off its last line or stopped on an error; it
+  is now shown.
+- **CHAIN, COMMON and DEF FN:** changed: only the caller's COMMON list
+  decides what flows back; a COMMON in the chained program used to make
+  the caller's private variable of that name take the callee's value. The
+  chained program's `DEF FN` definitions no longer replace the caller's.
+- **SELECT CASE, more:** a SELECT nested on the line of its outer SELECT
+  no longer ends in `?CASE WITHOUT SELECT`, and a SELECT in a single-line
+  IF branch no longer in `?SELECT WITHOUT END SELECT` (CHECK accepts it
+  too).
+- **Break at INPUT:** PA1, PA2 or Clear at an INPUT prompt now ends the
+  program like any other end: a CHAINed program returns to the top-level
+  one (which used to be lost at the next RUN), files are written and
+  closed, and the job log shows the job ended.
+- **MID$:** `MID$(A$, 1, 1) = "J"` (the GW-BASIC MID$ statement, never
+  supported) says `?MID$ STATEMENT NOT SUPPORTED`.
+- **ON ... GOTO/GOSUB:** changed: a value of 0 or past the end of the list
+  continues with the next statement, as the manual's menu example expects
+  (it raised `?ILLEGAL FUNCTION CALL`); a negative value is still that
+  error, and so is `ON ERROR GOTO` (see "Error handling").
 - **Manual:** corrected the DEF FN and RND examples, RND, INT, STR$, file
   limits, CHECK warnings and ISAM details; documented arithmetic rules,
   CHAIN, DEF FN, label entry, file buffering and missing functions.
