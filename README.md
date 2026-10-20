@@ -116,7 +116,7 @@ You only need:
       
 Learn how to adapt the 3270bbs.cnf configuration file manually from [this](https://github.com/moshix/3270BBS/blob/main/ConfigurationFile_HowTo.md) document
 
-2. Edit the sample `tsu.greet` file (greeting for new users, max 80 characters wide)
+2. Edit the sample `3270bbs.greet` file (greeting for new users, max 80 characters wide)
   
 3. Connect to either the included browser 3270 terminal (if you specified a port for it) or with a 3270 terminal emulator to the specified (during configuraiton) non-TLS or TLS port. You can look up again the ports in 3270bbs.cnf.  
   
@@ -230,7 +230,7 @@ remote3_addr=9.9.1.1       # IPv6 also works!
 remote3_port=3270
 ```
 
-**Custom Logo:** Customize `tsu.logo` for your logon screen (only first 8 lines used)
+**Custom Logo:** Customize `3270bbs.logo` for your logon screen (only first 8 lines used)
 
 **Required Conferences:** To prevent users from unsubscribing from certain conferences, add to 3270bbs.cnf:
 ```
@@ -376,11 +376,11 @@ Additional admin panels for Users, Topics, and Posts management are also availab
 
 ## Backup Strategy
 
-Since the SQLite3 database runs in WAL mode, you cannot simply copy tsu.db. Instead, dump the database regularly to .sql files:
+Since the SQLite3 database runs in WAL mode, you cannot simply copy 3270bbs.db. Instead, dump the database regularly to .sql files:
 
 ```bash
 # Example backup command
-sqlite3 tsu.db .dump > backup_$(date +%Y%m%d).sql
+sqlite3 3270bbs.db .dump > backup_$(date +%Y%m%d).sql
 ```
 
 ## Technical Implementation Details
