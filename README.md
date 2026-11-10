@@ -411,4 +411,4 @@ By using this software, you agree to abide by any applicable local, national, or
 
 ---
 
-**Moshix, November  2026 - Stavanager**
+**Moshix, November  2026 - Stavanger**
