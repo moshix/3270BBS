@@ -75,7 +75,7 @@ You only need:
 | Discussion groups                                | :white_check_mark: |
 | NJE client and server, including VM NOTES        | :white_check_mark: |
 | A full BASIC interpreter inside the BBS!         | :white_check_mark: |
-| A S/360 assembler learning environment           | :white_check_mark: |
+| A S/360 assembler quality learing environment    | :white_check_mark: |
 | Federation                                       | :white_check_mark: |
 | Conferences and conference mgmt by moderators    | :white_check_mark: |
 | Moderators can ban users from conferences        | :white_check_mark: |
