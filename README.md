@@ -73,6 +73,7 @@ You only need:
 | Includes its own 3270 client in browser          | :white_check_mark: |
 | Virtual sessions mgmt with F23/F24               | :white_check_mark: |
 | Discussion groups                                | :white_check_mark: |
+| NJE client and server, including VM NOTES        | :white_check_mark: |
 | A full BASIC interpreter inside the BBS!         | :white_check_mark: |
 | A S/360 assembler learning environment           | :white_check_mark: |
 | Federation                                       | :white_check_mark: |
@@ -410,4 +411,4 @@ By using this software, you agree to abide by any applicable local, national, or
 
 ---
 
-**Moshix, November  2026 - Copenhagen**
+**Moshix, November  2026 - Stavanager**
