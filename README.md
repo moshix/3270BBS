@@ -255,7 +255,7 @@ start_HTTPD=yes
 
 
 <img src="Screenshot%202026-06-25%20at%2008.17.40.png" width="360">
-Only a few features of the BBS are available over the web. For the full experience, a 3270 terminal is needed. 
+Only a few features of the BBS are available in HTML form or thru SSH. For the full experience, a 3270 terminal is needed. 
 
 If you enable web3270 (the browser-based 3270 emulator which comes delivered with 3270BBS) then you can conveniently log in to 3270BBS with your web browser, eliminating the need for a 3270 terminal emulator completely. 
 
