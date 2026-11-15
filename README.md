@@ -108,7 +108,7 @@ You only need:
 | Built-in INFOCOM games and interpreter           | :white_check_mark: |
 
 
-<img src="infocomlist.png" width="410"> <img src="deadline.png" width="410">
+<img src="infocomlist.png" width="430"> <img src="deadline.png" width="430">
 
   
 ## Installation
