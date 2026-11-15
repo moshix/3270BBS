@@ -107,9 +107,9 @@ You only need:
 | internal finger daemon                           | :white_check_mark: |
 | Built-in INFOCOM games and interpreter           | :white_check_mark: |
 
-<img src="infocomlist.png" width="300">
 
-<img src="deadline.png" width="300">
+<img src="infocomlist.png" width="360"> <img src="deadline.png" width="360">
+
   
 ## Installation
 
