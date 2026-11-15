@@ -105,6 +105,7 @@ You only need:
 | Support Sqlite3 and Postgres                     | :white_check_mark: |
 | Print by PDF to email                            | :white_check_mark: |
 | internal finger daemon                           | :white_check_mark: |
+| Built-in INFOCOM games and interpreter           | :white_check_mark: |
 
 ## Installation
 
